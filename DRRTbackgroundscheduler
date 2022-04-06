@@ -2,17 +2,14 @@
 # DRRT Alliance Assembler, SUMMER DRRT
 ### REMEMBER! ONLY WORKS IN WSL!! ###
 
-# Print commands being executed
-#set -x
+echo DRRT Alliance Assembler.
+echo "Works only in WSL."
 
-# Input validation:
-#if [ $# -eq 0 ]; then
-#    echo "Please specify arguments to pass to MatchMaker."
-#    exit
-#fi
-
-# where we are:
-WHERE="/mnt/c/Users/Magnus/Desktop/ShipsNStuff/001_-_Debris_Regional_Tournament"
+# $SCRIPT_DIR finds the directory the script is in
+# $WHERE is the directory where the root DRRT folder is
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+WHERE="${SCRIPT_DIR}/../.."
+echo $WHERE
 
 # all ship files are members of the ${participants[@]} array
 . "$WHERE/DRRT-6/scripts/shipIndex.conf"
@@ -31,7 +28,7 @@ if [ -f rawSchedule.txt ]; then
 
     while true; do
         if [ $# -eq 0 ]; then
-            echo "No arguments supplied, using current schedule."
+            #echo "No arguments supplied, using current schedule."
             REPLY="n"
         else
             read -p "Generate new schedule? [Y/n]: " -n 1 -r
