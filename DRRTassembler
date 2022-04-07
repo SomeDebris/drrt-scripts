@@ -12,7 +12,7 @@
 #echo "Starting match creation . . ."
 
 # input validation
-if [ -z "$6" ]; then
+if [ ! -f "$6" ]; then
     echo Not Enough Arguments! 
     echo Stop.
     exit
