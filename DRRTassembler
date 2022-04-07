@@ -24,9 +24,8 @@ if [ ! -f "$4" ]; then echo "File '$4' not found!"; echo Stop.; exit; fi
 if [ ! -f "$5" ]; then echo "File '$5' not found!"; echo Stop.; exit; fi
 if [ ! -f "$6" ]; then echo "File '$6' not found!"; echo Stop.; exit; fi
 
-
-# "$WHERE" is the location of the DRRT Directory
-WHERE="/mnt/c/Users/Magnus/Desktop/ShipsNStuff/001_-_Debris_Regional_Tournament"
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+WHERE="${SCRIPT_DIR}/../.."
 #echo "$WHERE"
 
 # Sources the shipIndex.conf file
