@@ -41,13 +41,6 @@ if [ -f rawSchedule.txt ]; then
                 rm "$WHERE/DRRT-6/scripts/spreadsheetSCH.txt"
                 echo "rawSchedule.txt deleted."
                 
-                # Input validation:
-                #if [ $# -eq 0 ]; then
-                #    echo "Please specify arguments to pass to MatchMaker."
-                #    echo "Stop."
-                #    exit
-                #fi
-                
                 # run the matchmaker with the quoted args from the initial call. 
                 # add -o option to adapt for a small ship count. 
                 # send the output to rawSchedule.txt
