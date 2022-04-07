@@ -150,9 +150,8 @@ echo "Scheduler done."
 echo "Lets get this tournament started!"
 echo "Now import spreadsheetSCH.txt into the DRRT Datasheet."
 
-# Ask the user if they want 
-# to open scripts directory 
-# with file explorer?
+# Ask the user if they want to open 
+# scripts directory with file explorer?
 while true; do
     # Get user input
     read -p 'Open the scripts directory in Windows Explorer? [Y/n]: ' -n 1 -r
