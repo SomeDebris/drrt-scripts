@@ -68,7 +68,7 @@ run_matchmaker () {
 # so that the DRRTassembler script doesn't have trouble
 # saving new files in that directory.
 # i.e. deletes contents of the 'Qualifications/' directory
-if [ -f $WHERE/DRRT-6/Qualifications/* ]; then 
+if [[ -f $WHERE/DRRT-6/Qualifications/* ]]; then 
     echo "Deleting contents of 'Qualifications/' . . ."
     rm $WHERE/DRRT-6/Qualifications/*
 fi
