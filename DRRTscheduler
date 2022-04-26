@@ -12,6 +12,27 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 WHERE="${SCRIPT_DIR}/../.."
 echo $WHERE
 
+#### MAKE SURE DIRECTORIES ARE STRUCTURED CORRECTLY!
+
+# The Qualifications folder needs to exist!
+# The Assembler outputs fleet files there.
+if [ ! -d $WHERE/DRRT-6/Qualifications/ ]; then
+    mkdir $WHERE/DRRT-6/Qualifications/
+fi
+
+# These scripts do not touch these folders, but it's a 
+# simple thing that can be automated with a script, so
+# why not?
+if [ ! -d $WHERE/DRRT-6/Playoffs/ ]; then
+    mkdir $WHERE/DRRT-6/Playoffs/
+fi
+
+if [ ! -d $WHERE/DRRT-6/oldships/ ]; then
+    mkdir $WHERE/DRRT-6/oldships/
+fi
+
+
+
 # TODO: use getopts or something to get the options without
 #       using a stupid string
 
@@ -24,19 +45,19 @@ echo $WHERE
 # `$1` is the matchmaker options as a string.
 run_matchmaker () {
     echo "Running MatchMaker.exe . . ."
-    "$WHERE/Matchmaker/MatchMaker.exe" -o $1 >> "$WHERE/DRRT-6/scripts/rawSchedule.txt"
+    "$WHERE/Matchmaker/MatchMaker.exe" -o $1 >> "$WHERE/DRRT-6/drrt-scripts/rawSchedule.txt"
 
     echo "rawSchedule.txt generated with MatchMaker.exe output."
  
     echo "Contents of rawSchedule.txt:"
-    cat "$WHERE/DRRT-6/scripts/rawSchedule.txt"
+    cat "$WHERE/DRRT-6/drrt-scripts/rawSchedule.txt"
 }
 
 # all ship files are members of the ${participants[@]} array.
 # Needed for the program to find all the ship files!
-. "$WHERE/DRRT-6/scripts/shipIndex.conf"
+. "$WHERE/DRRT-6/drrt-scripts/shipIndex.conf"
 #echo "shipIndex.conf contents:"
-#cat "$WHERE/DRRT-6/scripts/shipIndex.conf"
+#cat "$WHERE/DRRT-6/drrt-scripts/shipIndex.conf"
 
 # Deletes all Qualification fleet files created previously
 # so that the DRRTassembler script doesn't have trouble
@@ -62,8 +83,8 @@ if [ -f rawSchedule.txt ]; then
         case $REPLY in
             [Yy]* ) 
                 echo "Deleting 'rawSchedule.txt' . . ."
-                rm "$WHERE/DRRT-6/scripts/rawSchedule.txt"
-                rm "$WHERE/DRRT-6/scripts/spreadsheetSCH.txt"
+                rm "$WHERE/DRRT-6/drrt-scripts/rawSchedule.txt"
+                rm "$WHERE/DRRT-6/drrt-scripts/spreadsheetSCH.txt"
                 echo "rawSchedule.txt deleted."
                 
                 # Remember, this is a function defined above
@@ -100,10 +121,10 @@ fi
 # Create a spreadsheet-suitable match schedule file.
 # Note that this doesnt allow for match schedules with more
 # than 99 matches.
-if [ ! -f "$WHERE/DRRT-6/scripts/spreadsheetSCH.txt" ]; then
+if [ ! -f "$WHERE/DRRT-6/drrt-scripts/spreadsheetSCH.txt" ]; then
 
     echo "Creating spreadsheet-suitable schedule 'spreadsheetSCH.txt' . . ."
-    grep '^ [0-9 ][0-9]:' "$WHERE/DRRT-6/scripts/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$WHERE/DRRT-6/scripts/spreadsheetSCH.txt"
+    grep '^ [0-9 ][0-9]:' "$WHERE/DRRT-6/drrt-scripts/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$WHERE/DRRT-6/drrt-scripts/spreadsheetSCH.txt"
     echo "spreadsheetSCH.txt created."
 
 else
@@ -114,7 +135,7 @@ fi
 # The MatchMaker will append '*' to surrogate ships.
 # This command will remove these asterisks in the file called '.no_asterisks'
 # so that the next section doesnt get confused.
-sed 's/\*/ /g' "$WHERE/DRRT-6/scripts/spreadsheetSCH.txt" > "$WHERE/DRRT-6/scripts/.no_asterisks"
+sed 's/\*/ /g' "$WHERE/DRRT-6/drrt-scripts/spreadsheetSCH.txt" > "$WHERE/DRRT-6/drrt-scripts/.no_asterisks"
 #cat .no_asterisks
 
 i=1
@@ -144,11 +165,11 @@ while read p; do
     #echo "Assembler set loose!"
     
     let "i += 1"
-done <"$WHERE/DRRT-6/scripts/.no_asterisks"
+done <"$WHERE/DRRT-6/drrt-scripts/.no_asterisks"
 
 # `.no_asterisks` is a temporary file. Use `rawSchedule.txt` if you want to see
 # the schedule!
-rm "$WHERE/DRRT-6/scripts/.no_asterisks"
+rm "$WHERE/DRRT-6/drrt-scripts/.no_asterisks"
 
 echo "Scheduler done."
 
@@ -156,12 +177,12 @@ echo "Lets get this tournament started!"
 echo "Now import spreadsheetSCH.txt into the DRRT Datasheet."
 
 while true; do
-    read -p 'Open the scripts directory in Windows Explorer? [Y/n]: ' -n 1 -r
+    read -p 'Open the drrt-scripts directory in Windows Explorer? [Y/n]: ' -n 1 -r
 
     case $REPLY in
         [Yy]* ) echo 
-            echo "Opening directory '$(wslpath -w $WHERE)\DRRT-6\scripts'. . ." 
-            explorer.exe "$(wslpath -w $WHERE)\DRRT-6\scripts"
+            echo "Opening directory '$(wslpath -w $WHERE)\DRRT-6\drrt-scripts'. . ." 
+            explorer.exe "$(wslpath -w $WHERE)\DRRT-6\drrt-scripts"
             break;;
 
         [NnQq]* ) echo 
