@@ -111,7 +111,7 @@ else
 fi
 
 # file '.no_asterisks' is temporary. Used to assemble alliances.
-# Matchmaker.exe will append '*' to surrogate ships.
+# The MatchMaker will append '*' to surrogate ships.
 # This command will remove these asterisks in the file called '.no_asterisks'
 # so that the next section doesnt get confused.
 sed 's/\*/ /g' "$WHERE/DRRT-6/scripts/spreadsheetSCH.txt" > "$WHERE/DRRT-6/scripts/.no_asterisks"
