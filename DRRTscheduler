@@ -7,23 +7,48 @@ echo "Works only in WSL."
 
 # $SCRIPT_DIR finds the directory the script is in
 # $WHERE is the directory where the root DRRT folder is
+# Makes it easier to reference the working directory.
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 WHERE="${SCRIPT_DIR}/../.."
 echo $WHERE
 
-# all ship files are members of the ${participants[@]} array
+# TODO: use getopts or something to get the options without
+#       using a stupid string
+
+#### FUNCTIONS
+
+# Calls the matchmaker with the right parameters and 
+# writes schedule.
+# Made into a function because I use this multiple times.
+# `-o` option for a small ship count.
+# `$1` is the matchmaker options as a string.
+run_matchmaker () {
+    echo "Running MatchMaker.exe . . ."
+    "$WHERE/Matchmaker/MatchMaker.exe" -o $1 >> "$WHERE/DRRT-6/scripts/rawSchedule.txt"
+
+    echo "rawSchedule.txt generated with MatchMaker.exe output."
+ 
+    echo "Contents of rawSchedule.txt:"
+    cat "$WHERE/DRRT-6/scripts/rawSchedule.txt"
+}
+
+# all ship files are members of the ${participants[@]} array.
+# Needed for the program to find all the ship files!
 . "$WHERE/DRRT-6/scripts/shipIndex.conf"
 #echo "shipIndex.conf contents:"
 #cat "$WHERE/DRRT-6/scripts/shipIndex.conf"
 
 # Deletes all Qualification fleet files created previously
+# so that the DRRTassembler script doesn't have trouble
+# saving new files in that directory.
 # i.e. deletes contents of the 'Qualifications/' directory
 echo "Deleting contents of 'Qualifications/' . . ."
 rm $WHERE/DRRT-6/Qualifications/*
 
-# remove rawSchedule.txt if it already exists
+# If a match schedule file already exists, this asks the user
+# if they want to use it to assemble alliances.
+# Needed to 
 if [ -f rawSchedule.txt ]; then
-
     echo "A match schedule already exists!"
 
     while true; do
@@ -41,15 +66,8 @@ if [ -f rawSchedule.txt ]; then
                 rm "$WHERE/DRRT-6/scripts/spreadsheetSCH.txt"
                 echo "rawSchedule.txt deleted."
                 
-                # run the matchmaker with the quoted args from the initial call. 
-                # add -o option to adapt for a small ship count. 
-                # send the output to rawSchedule.txt
-                echo "Running MatchMaker.exe . . ."
-                "$WHERE/Matchmaker/MatchMaker.exe" -o $1 >> "$WHERE/DRRT-6/scripts/rawSchedule.txt"
-                echo "rawSchedule.txt generated with MatchMaker.exe output."
-                
-                echo "Contents of rawSchedule.txt:"
-                cat "$WHERE/DRRT-6/scripts/rawSchedule.txt"
+                # Remember, this is a function defined above
+                run_matchmaker $1
                 
                 break;;
             [NnQq]* )
@@ -73,15 +91,8 @@ else
         exit
     fi
     
-    # run the matchmaker with the quoted args from the initial call. 
-    # add -o option to adapt for a small ship count. 
-    # send the output to rawSchedule.txt
-    echo "Running MatchMaker.exe . . ."
-    "$WHERE/Matchmaker/MatchMaker.exe" -o $1 >> "$WHERE/DRRT-6/scripts/rawSchedule.txt"
-    echo "rawSchedule.txt generated with MatchMaker.exe output."
-    
-    echo "Contents of rawSchedule.txt:"
-    cat "$WHERE/DRRT-6/scripts/rawSchedule.txt"
+    # Remember, this is a function defined above
+    run_matchmaker $1
 fi
 
 # Create a spreadsheet-suitable match schedule file.
