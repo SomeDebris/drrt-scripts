@@ -5,7 +5,7 @@ These scripts were made to work on my machine only, so don't expect them to work
 
 #### Usage
 
-These scripts were meant to run **only on Windows in WSL2.** The [MatchMaker](https://idleloop.com/matchmaker/) program, used by the scripts to generate a MATCH SCHEDULE, does have a MacOS and some linux versions, but I haven't tested it whatsoever. Neither the `DRRTassembler` or the `DRRTscheduler` have been run on any machine other than my own.
+These scripts were meant to run **only on Windows in WSL2.** The [MatchMaker](https://idleloop.com/matchmaker/) program, used by the scripts to generate a MATCH SCHEDULE, does have a MacOS and some linux versions, but I haven't tested it whatsoever. Neither the `DRRTassembler` nor the `DRRTscheduler` have been run on any machine other than my own.
 
 My DRRT directory looks like this before running the scripts, where `#` represents the number of the DRRT being held.
 
