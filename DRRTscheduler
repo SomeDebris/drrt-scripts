@@ -42,6 +42,13 @@ fi
 # `-o` option for a small ship count.
 # `$1` is the matchmaker options as a string.
 run_matchmaker () {
+    # If the matchmaker isn't there, this script can't be used
+    if [ ! -f $WHERE/Matchmaker/MatchMaker.exe ]; then
+        echo "MatchMaker.exe not at '$WHERE/Matchmaker/'! Get it and put it there to run this script."
+        echo Stop.
+        exit
+    fi
+
     echo "Running MatchMaker.exe . . ."
     "$WHERE/Matchmaker/MatchMaker.exe" -o $1 >> "$WHERE/DRRT-6/drrt-scripts/rawSchedule.txt"
 
