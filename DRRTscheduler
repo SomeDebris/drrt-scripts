@@ -84,7 +84,9 @@ if [ -f rawSchedule.txt ]; then
 else
     echo "A new rawSchedule.txt will be generated."
 
-    # Input validation:
+    # Program won't work if user doesn't send arguments!
+    # Stop here with a more explanatory error message
+    # instead of letting the MatchMaker freak out.
     if [ $# -eq 0 ]; then
         echo "Please specify arguments to pass to MatchMaker."
         echo "Stop."
@@ -117,8 +119,8 @@ sed 's/\*/ /g' "$WHERE/DRRT-6/scripts/spreadsheetSCH.txt" > "$WHERE/DRRT-6/scrip
 
 i=1
 while read p; do
-    
-    # $ships is the list of arguments passed to DRRTassembler.
+    # use `$ships` variable because it's easier
+    # to pass as an argument to the DRRTassembler.
     ships="" 
     
     # 'for' loop grabs the ships from shipIndex.conf 
@@ -130,23 +132,22 @@ while read p; do
         let "j+=1"
     done
     
-    # 'printf' command creates $matchNumber, 
-    # which is $i but with prepended zeros
+    # Prepend zeros to order alliances correctly in Reassembly's import
+    # screen.
     printf -v matchNumber "%03d" $i
     
-    # notify user about which alliance is being assembled
-    echo "Assembling match $matchNumber. . ."
+    #echo "Assembling match $matchNumber. . ."
 
-    # Call the assembler
+    # Runs in background because this takes a while.
     ./DRRTassembler $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" & 
     
-    echo "Assembler set loose!"
+    #echo "Assembler set loose!"
     
-    # increment the loop
     let "i += 1"
 done <"$WHERE/DRRT-6/scripts/.no_asterisks"
 
-# remove the no-asterisk schedule file.
+# `.no_asterisks` is a temporary file. Use `rawSchedule.txt` if you want to see
+# the schedule!
 rm "$WHERE/DRRT-6/scripts/.no_asterisks"
 
 echo "Scheduler done."
@@ -154,10 +155,7 @@ echo "Scheduler done."
 echo "Lets get this tournament started!"
 echo "Now import spreadsheetSCH.txt into the DRRT Datasheet."
 
-# Ask the user if they want to open 
-# scripts directory with file explorer?
 while true; do
-    # Get user input
     read -p 'Open the scripts directory in Windows Explorer? [Y/n]: ' -n 1 -r
 
     case $REPLY in
