@@ -31,8 +31,6 @@ if [ ! -d $WHERE/DRRT-6/oldships/ ]; then
     mkdir $WHERE/DRRT-6/oldships/
 fi
 
-
-
 # TODO: use getopts or something to get the options without
 #       using a stupid string
 
