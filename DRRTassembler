@@ -8,7 +8,6 @@
 
 ### EXPECTS ABSOLUTE DIRECTORY NAMES ###
 
-# notify that the program is starting
 #echo "Starting match creation . . ."
 
 # input validation
@@ -28,7 +27,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 WHERE="${SCRIPT_DIR}/../.."
 #echo "$WHERE"
 
-# Sources the shipIndex.conf file
+# Needed for script to locate submitted ship files
 . shipIndex.conf
 
 if [ "$7" ]; then
@@ -92,9 +91,8 @@ echo "  playerprint={}}" >> "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua"
 gzip -f "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua"
 
 #zcat "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua.gz"
-# show the files we've just created:
+# show the files we've just created, clutter up the terminal
 #echo "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua"
 #echo "$WHERE/DRRT-6/Qualifications/$BLUE_NAME.lua"
 
-# Done!
 #echo "Alliances are assembled"
