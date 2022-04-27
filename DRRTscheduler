@@ -186,7 +186,6 @@ if [[ $NO_T -eq 1 && $NO_R -eq 0 ]]; then
 fi
 
 run_matchmaker () {
-
     echo "Running MatchMaker.exe . . ."
 
     "$MATCHMAKER" -o -t $t -r $r $QUALITY > "$SCRIPT_DIR/rawSchedule.txt"
