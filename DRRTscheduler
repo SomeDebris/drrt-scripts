@@ -28,8 +28,7 @@ if [ ! -d $SCRIPT_DIR/../oldships/ ]; then
     mkdir $SCRIPT_DIR/../oldships/
 fi
 
-# TODO: use getopts or something to get the options without
-#       using a stupid string
+# TODO: use getopts or something to get the options without using a stupid string
 
 run_matchmaker () {
     if [ ! -f $WHERE/Matchmaker/MatchMaker.exe ]; then
