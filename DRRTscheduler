@@ -59,6 +59,33 @@ fi
 
 eval set -- "$PARSED"
 
+t=0 r=10 v=0
+
+while true; do
+    case "$1" in
+        -s|--ships)
+            t="$2"
+
+            shift;;
+        -t|--teams)
+            t="$2"
+
+            shift;;
+        -r|--rounds)
+            r="$2"
+
+            shift;;
+        --)
+            shift
+
+            break;;
+        *)
+            echo 'getopt internal error!'
+
+            exit 1;;
+    esac
+done
+
 # just did that
 
 run_matchmaker () {
