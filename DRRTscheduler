@@ -16,6 +16,8 @@ RED='\033[0;31m'
 
 NOCOLOR='\033[0m'
 
+. "$SCRIPT_DIR/shipIndex.conf"
+
 if [ ! -d $SCRIPT_DIR/../Qualifications/ ]; then
     mkdir $SCRIPT_DIR/../Qualifications/
 fi
@@ -47,7 +49,7 @@ run_matchmaker () {
  
     echo "Contents of rawSchedule.txt:"
 
-    cat "$SCRIPT_DIR/../drrt-scripts/rawSchedule.txt"
+    cat "$SCRIPT_DIR/rawSchedule.txt"
 }
 
 assemble () {
@@ -124,8 +126,6 @@ assemble () {
     echo "  playerprint={}}" >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
     
     gzip -f "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
-    
-    . "$SCRIPT_DIR/../drrt-scripts/shipIndex.conf"
 }
 
 if [[ -f $SCRIPT_DIR/../Qualifications/* ]]; then 
@@ -194,6 +194,7 @@ echo "spreadsheetSCH.txt created."
 sed 's/\*/ /g' "$SCRIPT_DIR/spreadsheetSCH.txt" > "$SCRIPT_DIR/.no_asterisks"
 
 i=1
+
 while read p; do
     ships="" 
 
@@ -204,12 +205,13 @@ while read p; do
 
         ships+=" ${participants[k]}"
 
-        let "j+=1"
+        let "j += 1"
     done
     
     printf -v matchNumber "%03d" $i
      
     echo assemble $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" 
+
     assemble $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" & 
     
     let "i += 1"
