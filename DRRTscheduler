@@ -2,6 +2,8 @@
 # DRRT Alliance Assembler, SUMMER DRRT
 ### REMEMBER! ONLY WORKS IN WSL!! ###
 
+set -o errexit -o pipefail -o noclobber -o nounset
+
 echo DRRT Alliance Assembler.
 
 echo "Works only in WSL."
@@ -18,27 +20,54 @@ NOCOLOR='\033[0m'
 
 . "$SCRIPT_DIR/shipIndex.conf"
 
-if [ ! -d $SCRIPT_DIR/../Qualifications/ ]; then
+if [[ ! -d $SCRIPT_DIR/../Qualifications/ ]]; then
     mkdir $SCRIPT_DIR/../Qualifications/
 fi
 
-if [ ! -d $SCRIPT_DIR/../Playoffs/ ]; then
+if [[ ! -d $SCRIPT_DIR/../Playoffs/ ]]; then
     mkdir $SCRIPT_DIR/../Playoffs/
 fi
 
-if [ ! -d $SCRIPT_DIR/../oldships/ ]; then
+if [[ ! -d $SCRIPT_DIR/../oldships/ ]]; then
     mkdir $SCRIPT_DIR/../oldships/
 fi
 
+
+
+
+
 # TODO: use getopts or something to get the options without using a stupid string
+! getopt --test > /dev/null
+
+# so this checks to see if getopt is at the correct version?
+if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
+    echo '`getopt --test` failed in this environment.'
+
+    exit 1
+fi
+
+LONGOPTS=ships:,teams:,rounds:,verbose
+
+OPTIONS=s:t:r:v
+
+! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
+
+# and this checks if it fails to parse?
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
+    exit 2
+fi
+
+eval set -- "$PARSED"
+
+# just did that
 
 run_matchmaker () {
-    if [ ! -f $WHERE/Matchmaker/MatchMaker.exe ]; then
+    if [[ ! -f $WHERE/Matchmaker/MatchMaker.exe ]]; then
         echo -e "${RED}ERROR:${NOCOLOR} MatchMaker.exe not at '$WHERE/Matchmaker/'! Get it and put it there to run this script."
 
         echo Stop.
 
-        exit
+        exit 1
     fi
 
     echo "Running MatchMaker.exe . . ."
@@ -53,33 +82,33 @@ run_matchmaker () {
 }
 
 assemble () {
-    if [ ! -f "$6" ]; then
+    if [[ ! -f "$6" ]]; then
         echo Not Enough Arguments! 
     
         echo Stop.
     
-        exit
+        exit 1
     fi    
     
-    if [ ! -f "$1" ]; then echo "File '$1' not found!"; echo Stop.; exit; fi
+    if [[ ! -f "$1" ]]; then echo "File '$1' not found!"; echo Stop.; exit 1; fi
     
-    if [ ! -f "$2" ]; then echo "File '$2' not found!"; echo Stop.; exit; fi
+    if [[ ! -f "$2" ]]; then echo "File '$2' not found!"; echo Stop.; exit 1; fi
     
-    if [ ! -f "$3" ]; then echo "File '$3' not found!"; echo Stop.; exit; fi
+    if [[ ! -f "$3" ]]; then echo "File '$3' not found!"; echo Stop.; exit 1; fi
     
-    if [ ! -f "$4" ]; then echo "File '$4' not found!"; echo Stop.; exit; fi
+    if [[ ! -f "$4" ]]; then echo "File '$4' not found!"; echo Stop.; exit 1; fi
     
-    if [ ! -f "$5" ]; then echo "File '$5' not found!"; echo Stop.; exit; fi
+    if [[ ! -f "$5" ]]; then echo "File '$5' not found!"; echo Stop.; exit 1; fi
     
-    if [ ! -f "$6" ]; then echo "File '$6' not found!"; echo Stop.; exit; fi
+    if [[ ! -f "$6" ]]; then echo "File '$6' not found!"; echo Stop.; exit 1; fi
     
-    if [ "$7" ]; then
+    if [[ "$7" ]]; then
         RED_NAME="$7"
     else
         RED_NAME="Red Alliance"
     fi
     
-    if [ "$8" ]; then 
+    if [[ "$8" ]]; then 
         BLUE_NAME="$8"
     else
         BLUE_NAME="Blue Alliance"
@@ -134,11 +163,11 @@ if [[ -f $SCRIPT_DIR/../Qualifications/* ]]; then
     rm $SCRIPT_DIR/../Qualifications/*
 fi
 
-if [ -f rawSchedule.txt ]; then
+if [[ -f rawSchedule.txt ]]; then
     echo "A match schedule already exists!"
 
     while true; do
-        if [ $# -eq 0 ]; then
+        if [[ $# -eq 0 ]]; then
             REPLY="n"
         else
             read -p "Generate new schedule? [Y/n]: " -n 1 -r
@@ -174,12 +203,12 @@ if [ -f rawSchedule.txt ]; then
 else
     echo "A new rawSchedule.txt will be generated."
 
-    if [ $# -eq 0 ]; then
+    if [[ $# -eq 0 ]]; then
         echo -e "${RED}ERROR:${NOCOLOR} Please specify arguments to pass to MatchMaker."
 
         echo "Stop."
 
-        exit
+        exit 1
     fi
     
     run_matchmaker "$1"
@@ -201,7 +230,7 @@ while read p; do
     j=0
 
     for k in $p; do
-        if [ $j -ge 6 ]; then break; fi
+        if [[ $j -ge 6 ]]; then break; fi
 
         ships+=" ${participants[k]}"
 
