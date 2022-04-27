@@ -13,4 +13,5 @@ DRRT Scripts	README.md	/^# DRRT Scripts$/;"	c
 DRRTassembler	README.md	/^#### DRRTassembler$/;"	t	chapter:DRRT Scripts
 DRRTscheduler	README.md	/^#### DRRTscheduler$/;"	t	chapter:DRRT Scripts
 Usage	README.md	/^#### Usage$/;"	t	chapter:DRRT Scripts
+assemble	DRRTscheduler	/^assemble () {$/;"	f
 run_matchmaker	DRRTscheduler	/^run_matchmaker () {$/;"	f
