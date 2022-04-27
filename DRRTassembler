@@ -57,17 +57,17 @@ echo "{
   currentChild=0,
   blueprint={},
   children={},
-  blueprints={" > "$WHERE/DRRT-6/Qualifications/$BLUE_NAME.lua"
+  blueprints={" > "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
 
-zgrep '{data\| \{5,\}' "$4" | sed 's/}}}},/}}},/g' >> "$WHERE/DRRT-6/Qualifications/$BLUE_NAME.lua"
-zgrep '{data\| \{5,\}' "$5" | sed 's/}}}},/}}},/g' >> "$WHERE/DRRT-6/Qualifications/$BLUE_NAME.lua"
-zgrep '{data\| \{5,\}' "$6" >> "$WHERE/DRRT-6/Qualifications/$BLUE_NAME.lua"
+zgrep '{data\| \{5,\}' "$4" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+zgrep '{data\| \{5,\}' "$5" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+zgrep '{data\| \{5,\}' "$6" >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
 
-echo "  playerprint={}}" >> "$WHERE/DRRT-6/Qualifications/$BLUE_NAME.lua"
+echo "  playerprint={}}" >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
 
-gzip -f "$WHERE/DRRT-6/Qualifications/$BLUE_NAME.lua"
+gzip -f "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
 
-#zcat "$WHERE/DRRT-6/Qualifications/$BLUE_NAME.lua.gz"
+#zcat "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua.gz"
 
 # Red alliance header:
 # color0=0x766d3c
@@ -80,19 +80,19 @@ echo "{
   currentChild=0,
   blueprint={},
   children={},
-  blueprints={" > "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua"
+  blueprints={" > "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
 
-zgrep '{data\| \{5,\}' "$1" | sed 's/}}}},/}}},/g' >> "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua"
-zgrep '{data\| \{5,\}' "$2" | sed 's/}}}},/}}},/g' >> "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua"
-zgrep '{data\| \{5,\}' "$3" >> "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua"
+zgrep '{data\| \{5,\}' "$1" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+zgrep '{data\| \{5,\}' "$2" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+zgrep '{data\| \{5,\}' "$3" >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
 
-echo "  playerprint={}}" >> "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua"
+echo "  playerprint={}}" >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
 
-gzip -f "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua"
+gzip -f "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
 
-#zcat "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua.gz"
+#zcat "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua.gz"
 # show the files we've just created, clutter up the terminal
-#echo "$WHERE/DRRT-6/Qualifications/$RED_NAME.lua"
-#echo "$WHERE/DRRT-6/Qualifications/$BLUE_NAME.lua"
+#echo "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+#echo "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
 
 #echo "Alliances are assembled"
