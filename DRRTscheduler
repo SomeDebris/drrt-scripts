@@ -99,9 +99,7 @@ if [ -f rawSchedule.txt ]; then
                 echo "rawSchedule.txt deleted."
                 
                 # Remember, this is a function defined above
-                echo RUN FUNCTION
-                echo run_matchmaker $1
-                run_matchmaker $1
+                run_matchmaker "$1"
                 
                 break;;
             [NnQq]* )
@@ -128,7 +126,7 @@ else
     fi
     
     # Remember, this is a function defined above
-    run_matchmaker $1
+    run_matchmaker "$1"
 fi
 
 # Create a spreadsheet-suitable match schedule file.
