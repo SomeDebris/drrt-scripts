@@ -10,6 +10,7 @@ echo "Works only in WSL."
 # Makes it easier to reference the working directory.
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 WHERE="${SCRIPT_DIR}/../.."
+echo $SCRIPT_DIR/../
 
 # Colors make some things pop out
 RED='\033[0;31m'
@@ -130,15 +131,11 @@ fi
 # Create a spreadsheet-suitable match schedule file.
 # Note that this doesnt allow for match schedules with more
 # than 99 matches.
-if [ ! -f "$SCRIPT_DIR/../drrt-scripts/spreadsheetSCH.txt" ]; then
-
-    echo "Creating spreadsheet-suitable schedule 'spreadsheetSCH.txt' . . ."
-    grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/../drrt-scripts/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/../drrt-scripts/spreadsheetSCH.txt"
-    echo "spreadsheetSCH.txt created."
-
-else
-    echo "Using current spreadsheetSCH.txt."
-fi
+# I have to recreate this every time because I never know 
+# if it is different than rawSchedule.txt.
+echo "Creating spreadsheet-suitable schedule 'spreadsheetSCH.txt' . . ."
+grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/../drrt-scripts/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/../drrt-scripts/spreadsheetSCH.txt"
+echo "spreadsheetSCH.txt created."
 
 # file '.no_asterisks' is temporary. Used to assemble alliances.
 # The MatchMaker will append '*' to surrogate ships.
@@ -147,11 +144,13 @@ fi
 sed 's/\*/ /g' "$SCRIPT_DIR/../drrt-scripts/spreadsheetSCH.txt" > "$SCRIPT_DIR/../drrt-scripts/.no_asterisks"
 
 i=1
+cat $SCRIPT_DIR/../drrt-scripts/.no_asterisks
 while read p; do
     # use `$ships` variable because it's easier
     # to pass as an argument to the DRRTassembler.
     ships="" 
-    
+    echo
+    echo $ships
     # 'for' loop grabs the ships from shipIndex.conf 
     # and adds them to $ships.
     j=0
