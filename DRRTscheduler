@@ -12,6 +12,10 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 WHERE="${SCRIPT_DIR}/../.."
 echo $WHERE
 
+# Colors make some things pop out
+RED='\033[0;31m'
+NOCOLOR='\033[0m'
+
 #### MAKE SURE DIRECTORIES ARE STRUCTURED CORRECTLY!
 
 # The Qualifications folder needs to exist!
@@ -44,7 +48,7 @@ fi
 run_matchmaker () {
     # If the matchmaker isn't there, this script can't be used
     if [ ! -f $WHERE/Matchmaker/MatchMaker.exe ]; then
-        echo "MatchMaker.exe not at '$WHERE/Matchmaker/'! Get it and put it there to run this script."
+        echo "${RED}ERROR:${NOCOLOR} MatchMaker.exe not at '$WHERE/Matchmaker/'! Get it and put it there to run this script."
         echo Stop.
         exit
     fi
@@ -116,7 +120,7 @@ else
     # Stop here with a more explanatory error message
     # instead of letting the MatchMaker freak out.
     if [ $# -eq 0 ]; then
-        echo "Please specify arguments to pass to MatchMaker."
+        echo "${RED}ERROR:${NOCOLOR} Please specify arguments to pass to MatchMaker."
         echo "Stop."
         exit
     fi
