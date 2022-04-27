@@ -28,6 +28,18 @@ if [[ ! -d $SCRIPT_DIR/../oldships/ ]]; then
     mkdir $SCRIPT_DIR/../oldships/
 fi
 
+if [[ ! -d $DRRT_ROOT/Matchmaker/ ]]; then
+    mkdir $DRRT_ROOT/Matchmaker/
+fi
+
+if [[ ! -f $DRRT_ROOT/Matchmaker/MatchMaker* ]]; then
+    echo -e "${RED}ERROR:${NOCOLOR} MatchMaker binary not found at '$DRRT_ROOT/Matchmaker/'! Get it and put it there to run this script."
+
+    echo Stop.
+
+    exit 1
+fi
+
 ! getopt --test > /dev/null
 
 if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
@@ -146,13 +158,6 @@ if [[ $NO_T -eq 1 && $NO_R -eq 0 ]]; then
 fi
 
 run_matchmaker () {
-    if [[ ! -f $DRRT_ROOT/Matchmaker/MatchMaker.exe ]]; then
-        echo -e "${RED}ERROR:${NOCOLOR} MatchMaker.exe not at '$DRRT_ROOT/Matchmaker/'! Get it and put it there to run this script."
-
-        echo Stop.
-
-        exit 1
-    fi
 
     echo "Running MatchMaker.exe . . ."
 
