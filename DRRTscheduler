@@ -185,6 +185,14 @@ if [[ $NO_T -eq 1 && $NO_R -eq 0 ]]; then
     exit 1
 fi
 
+save_params () {
+    echo "saving match creation parameters"
+
+    if [[ -f $SCRIPT_DIR/.scheduler_params ]]; then
+        rm "$SCRIPT_DIR/.scheduler_params"
+    fi
+}
+
 run_matchmaker () {
     echo "Running MatchMaker.exe . . ."
 
