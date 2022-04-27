@@ -3,7 +3,7 @@
 This repository contains a couple script files that I use to run Debris Regional Reassembly Tournaments.
 These scripts were made to work on my machine only, so don't expect them to work instantly without modifications.
 
-#### Usage
+### Usage
 
 These scripts were meant to run **only on Windows in WSL2.** The [MatchMaker](https://idleloop.com/matchmaker/) program, used by the scripts to generate a MATCH SCHEDULE, does have a MacOS and some linux versions, but I haven't tested it whatsoever. Neither the `DRRTassembler` nor the `DRRTscheduler` have been run on any machine other than my own.
 
@@ -29,7 +29,7 @@ The `Reassembly_${SUBMISSION_NAME}_[by_${AUTHOR_NAME}]_DRRT_#_${REV}.lua.gz` fil
 
 The `Matchmaker/` directory is where the MatchMaker program is stored. The MatchMaker's functionality is explained [here.](https://idleloop.com/matchmaker/) The version of the MatchMaker program doesn't seem to matter. I am currently using Version 1.4 for Windows. DRRT 6, the most recent DRRT as of writing this, used this version.
 
-#### DRRTscheduler
+### DRRTscheduler
 
 The **DRRTscheduler** script, referred to as simply **"the Scheduler"**, runs the MatchMaker and generates ALLIANCES according to its output.
 
@@ -48,7 +48,7 @@ If the file `rawSchedule.txt` already exists AND you pass no arguments to the Sc
 
 Now that I've mentioned the Assembler:
 
-#### DRRTassembler
+### DRRTassembler
 
 The **DRRTassembler** script, referred to as simply **"the Assembler"**, takes 6 individual Reassembly Fleet files (`*.lua.gz` extension) and creates a RED ALLIANCE fleet file and a BLUE ALLIANCE fleet file, according to the order of arguments.
 
