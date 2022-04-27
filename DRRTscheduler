@@ -4,6 +4,8 @@
 
 set -o errexit -o pipefail -o nounset
 
+VERSION="v1.0"
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 WHERE="${SCRIPT_DIR}/../.."
@@ -88,13 +90,13 @@ while true; do
             echo 
             echo "Usage:"
             echo
-            echo -e '-v,\t--verbose\tEnables verbose output.'
+            echo -e '-v,\t--verbose\t\tEnables verbose output.'
             echo 
             echo -e '-s, -t\t--ships, --teams\tSets number of participating ships.'
             echo 
-            echo -e '-r,\t --rounds\tSets minimum number of rounds each ship plays. Defaults to 10.'
+            echo -e '-r,\t --rounds\t\tSets minimum number of rounds each ship plays. Defaults to 10.'
             echo 
-            echo -e '-h,\t --help\tShow this help and exit.'
+            echo -e '-h,\t--help\t\t\tShow this help and exit.'
             exit 0
             ;;
         --)
