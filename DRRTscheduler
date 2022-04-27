@@ -4,17 +4,19 @@
 
 set -o errexit -o pipefail -o nounset
 
+. "$SCRIPT_DIR/shipIndex.conf"
+
 VERSION="v1.0"
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 DRRT_ROOT="${SCRIPT_DIR}/../.."
 
+MATCHMAKER=$(find "$DRRT_ROOT/Matchmaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
+
 RED='\033[0;31m'
 
 NOCOLOR='\033[0m'
-
-. "$SCRIPT_DIR/shipIndex.conf"
 
 if [[ ! -d $SCRIPT_DIR/../Qualifications/ ]]; then
     mkdir $SCRIPT_DIR/../Qualifications/
