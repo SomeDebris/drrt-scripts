@@ -4,10 +4,6 @@
 
 set -o errexit -o pipefail -o noclobber -o nounset
 
-echo DRRT Alliance Assembler.
-
-echo "Works only in WSL."
-
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 WHERE="${SCRIPT_DIR}/../.."
@@ -32,10 +28,6 @@ if [[ ! -d $SCRIPT_DIR/../oldships/ ]]; then
     mkdir $SCRIPT_DIR/../oldships/
 fi
 
-
-
-
-
 # TODO: use getopts or something to get the options without using a stupid string
 ! getopt --test > /dev/null
 
@@ -46,9 +38,9 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     exit 1
 fi
 
-LONGOPTS=ships:,teams:,rounds:,verbose
+LONGOPTS=ships:,teams:,rounds:,verbose,help
 
-OPTIONS=s:t:r:v
+OPTIONS=s:t:r:vh
 
 ! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
 
@@ -59,35 +51,77 @@ fi
 
 eval set -- "$PARSED"
 
-t=0 r=10 v=0
+t=0 r=10 VERBOSE=false
 
 while true; do
     case "$1" in
         -s|--ships)
             t="$2"
 
-            shift;;
+            shift 2
+            
+            ;;
         -t|--teams)
             t="$2"
 
-            shift;;
+            shift 2
+            
+            ;;
         -r|--rounds)
             r="$2"
 
-            shift;;
+            shift 2
+            
+            ;;
+        -v|--verbose)
+            VERBOSE=true
+
+            shift
+            
+            ;;
+        -h|--help)
+            echo "DRRT ALLIANCE SCHEDULER ${VERSION}"
+            echo "Generates MATCH SCHEDULE and assembles all QUALIFICATION MATCH ALLIANCES."
+            echo 
+            echo "Works only in WSL2 on Windows."
+            echo 
+            echo "Usage:"
+            echo
+            echo -e '-v,\t--verbose\tEnables verbose output.'
+            echo 
+            echo -e '-s, -t\t--ships, --teams\tSets number of participating ships.'
+            echo 
+            echo -e '-r,\t --rounds\tSets minimum number of rounds each ship plays. Defaults to 10.'
+            echo 
+            echo -e '-h,\t --help\tShow this help and exit.'
+            exit 0
+            ;;
         --)
             shift
 
-            break;;
+            break
+            
+            ;;
         *)
-            echo 'getopt internal error!'
+            echo -e "${RED}ERROR:${NOCOLOR} getopt internal error!"
 
-            exit 1;;
+            exit 1
+            
+            ;;
     esac
 done
 
-# just did that
+if [[ $t -lt 6 ]]; then
+    echo -e "${RED}ERROR:${NOCOLOR} $t is lesser than minimum number of ships (6)."
 
+    echo "Stop."
+
+    exit 1
+fi
+
+# just did that
+echo leaving here for now..
+exit 
 run_matchmaker () {
     if [[ ! -f $WHERE/Matchmaker/MatchMaker.exe ]]; then
         echo -e "${RED}ERROR:${NOCOLOR} MatchMaker.exe not at '$WHERE/Matchmaker/'! Get it and put it there to run this script."
@@ -99,7 +133,7 @@ run_matchmaker () {
 
     echo "Running MatchMaker.exe . . ."
 
-    "$WHERE/Matchmaker/MatchMaker.exe" -o $1 > "$SCRIPT_DIR/rawSchedule.txt"
+    "$WHERE/Matchmaker/MatchMaker.exe" -o -t $t -r $r > "$SCRIPT_DIR/rawSchedule.txt"
 
     echo "rawSchedule.txt generated with MatchMaker.exe output."
  
@@ -210,35 +244,43 @@ if [[ -f rawSchedule.txt ]]; then
 
                 echo "rawSchedule.txt deleted."
                 
-                run_matchmaker "$1"
+                run_matchmaker 
                 
-                break;;
+                break
+                
+                ;;
             [NnQq]* )
                 echo 
 
                 echo "Current schedule will be used."
 
-                break;;
+                break
+                
+                ;;
             [A-Za-z]*) 
                 echo 
 
-                echo "Please answer [Y/n].";;
+                echo "Please answer [Y/n]."
+                
+                ;;
             * ) 
-                echo "Please answer [Y/n].";;
+                echo "Please answer [Y/n]."
+                
+                ;;
         esac
     done
 else
     echo "A new rawSchedule.txt will be generated."
 
     if [[ $# -eq 0 ]]; then
-        echo -e "${RED}ERROR:${NOCOLOR} Please specify arguments to pass to MatchMaker."
+        echo -e "${RED}ERROR:${NOCOLOR} Please specify number of ships!"
 
         echo "Stop."
 
         exit 1
     fi
     
-    run_matchmaker "$1"
+    run_matchmaker 
 fi
 
 echo "Creating spreadsheet-suitable schedule 'spreadsheetSCH.txt' . . ."
@@ -290,22 +332,32 @@ while true; do
 
             explorer.exe "$(wslpath -w "$SCRIPT_DIR")"
 
-            break;;
+            break
+            
+            ;;
         [NnQq]* ) 
             echo 
 
             echo "Stop."
 
-            break;;
+            break
+            
+            ;;
         [A-Za-z]* ) 
             echo
 
-            echo "Answer [Y/n].";;
+            echo "Answer [Y/n]."
+            
+            ;;
         ""* ) 
-            echo "Answer [Y/n].";;
+            echo "Answer [Y/n]."
+            
+            ;;
         * ) 
             echo
 
-            echo "Answer [Y/n].";;
+            echo "Answer [Y/n]."
+            
+            ;;
     esac
 done
