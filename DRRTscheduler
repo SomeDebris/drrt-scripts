@@ -7,6 +7,8 @@ echo "Works only in WSL."
 
 # $SCRIPT_DIR finds the directory the script is in
 # $WHERE is the directory where the root DRRT folder is
+# it follows that $SCRIPT_DIR/../ is the directory behind 
+# the current directory!
 # Makes it easier to reference the working directory.
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 WHERE="${SCRIPT_DIR}/../.."
@@ -54,14 +56,13 @@ run_matchmaker () {
     fi
 
     echo "Running MatchMaker.exe . . ."
-    "$WHERE/Matchmaker/MatchMaker.exe" -o $1 >> "$SCRIPT_DIR/../drrt-scripts/rawSchedule.txt"
+    "$WHERE/Matchmaker/MatchMaker.exe" -o $1 > "$SCRIPT_DIR/rawSchedule.txt"
 
     echo "rawSchedule.txt generated with MatchMaker.exe output."
  
     echo "Contents of rawSchedule.txt:"
     cat "$SCRIPT_DIR/../drrt-scripts/rawSchedule.txt"
 }
-
 # all ship files are members of the ${participants[@]} array.
 # Needed for the program to find all the ship files!
 . "$SCRIPT_DIR/../drrt-scripts/shipIndex.conf"
@@ -93,11 +94,13 @@ if [ -f rawSchedule.txt ]; then
         case $REPLY in
             [Yy]* ) 
                 echo "Deleting 'rawSchedule.txt' . . ."
-                rm "$SCRIPT_DIR/../drrt-scripts/rawSchedule.txt"
-                rm "$SCRIPT_DIR/../drrt-scripts/spreadsheetSCH.txt"
+                rm "$SCRIPT_DIR/rawSchedule.txt"
+                rm "$SCRIPT_DIR/spreadsheetSCH.txt"
                 echo "rawSchedule.txt deleted."
                 
                 # Remember, this is a function defined above
+                echo RUN FUNCTION
+                echo run_matchmaker $1
                 run_matchmaker $1
                 
                 break;;
@@ -134,14 +137,14 @@ fi
 # I have to recreate this every time because I never know 
 # if it is different than rawSchedule.txt.
 echo "Creating spreadsheet-suitable schedule 'spreadsheetSCH.txt' . . ."
-grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/../drrt-scripts/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/../drrt-scripts/spreadsheetSCH.txt"
+grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/spreadsheetSCH.txt"
 echo "spreadsheetSCH.txt created."
 
 # file '.no_asterisks' is temporary. Used to assemble alliances.
 # The MatchMaker will append '*' to surrogate ships.
 # This command will remove these asterisks in the file called '.no_asterisks'
 # so that the next section doesnt get confused.
-sed 's/\*/ /g' "$SCRIPT_DIR/../drrt-scripts/spreadsheetSCH.txt" > "$SCRIPT_DIR/../drrt-scripts/.no_asterisks"
+sed 's/\*/ /g' "$SCRIPT_DIR/spreadsheetSCH.txt" > "$SCRIPT_DIR/.no_asterisks"
 
 i=1
 while read p; do
@@ -166,11 +169,11 @@ while read p; do
     ./DRRTassembler $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" & 
     
     let "i += 1"
-done <"$SCRIPT_DIR/../drrt-scripts/.no_asterisks"
+done <"$SCRIPT_DIR/.no_asterisks"
 
 # `.no_asterisks` is a temporary file. Use `rawSchedule.txt` if you want to see
 # the schedule!
-rm "$SCRIPT_DIR/../drrt-scripts/.no_asterisks"
+rm "$SCRIPT_DIR/.no_asterisks"
 
 echo "Scheduler done."
 
@@ -182,8 +185,8 @@ while true; do
 
     case $REPLY in
         [Yy]* ) echo 
-            echo "Opening directory '$(wslpath -w "$SCRIPT_DIR/../")\drrt-scripts'. . ." 
-            explorer.exe "$(wslpath -w "$SCRIPT_DIR/../")\drrt-scripts"
+            echo "Opening directory '$(wslpath -w "$SCRIPT_DIR")'. . ." 
+            explorer.exe "$(wslpath -w "$SCRIPT_DIR")"
             break;;
 
         [NnQq]* ) echo 
