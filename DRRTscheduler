@@ -34,6 +34,22 @@ fi
 
 if [[ ! -f $DRRT_ROOT/Matchmaker/MatchMaker* ]]; then
     echo -e "${RED}ERROR:${NOCOLOR} MatchMaker binary not found at '$DRRT_ROOT/Matchmaker/'! Get it and put it there to run this script."
+   
+    echo "Attempting to download the MatchMaker (MatchMaker.exe). . ."
+   
+    set -x
+
+    if [[ ! -f $DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip ]]; then
+        curl "https://idleloop.com/matchmaker/MatchMaker_1_4_0.zip" --output "$DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip"
+    fi
+    
+    unzip "$DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip" -d "$DRRT_ROOT/Matchmaker/MatchMaker_output/"
+
+    MATCHMAKER=$(find "$DRRT_ROOT/Matchmaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
+
+    echo $MATCHMAKER
+
+    set +x 
 
     echo Stop.
 
