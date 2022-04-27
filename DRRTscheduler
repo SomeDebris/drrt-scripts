@@ -241,9 +241,11 @@ assemble () {
     gzip -f "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
 }
 
-echo "Deleting contents of 'Qualifications/' . . ."
-
-rm $SCRIPT_DIR/../Qualifications/*
+if [[ "$(ls -A $SCRIPT_DIR/../Qualifications/)" ]]; then
+    echo "Deleting contents of 'Qualifications/' . . ."
+    
+    rm $SCRIPT_DIR/../Qualifications/*
+fi
 
 if [[ -f rawSchedule.txt ]]; then
     echo "A match schedule already exists!"
