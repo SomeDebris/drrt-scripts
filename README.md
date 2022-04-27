@@ -33,13 +33,10 @@ The `Matchmaker/` directory is where the MatchMaker program is stored. The Match
 
 The **DRRTscheduler** script, referred to as simply **"the Scheduler"**, runs the MatchMaker and generates ALLIANCES according to its output.
 
-It takes a single string as an argument:
+Basic usage 
 ```
-./DRRTscheduler "-r $ROUNDS_PER_SHIP -t $SHIP_COUNT"`
+./DRRTscheduler [-r|--rounds NUMBER_OF_ROUNDS] [-t|-s|--ships|--teams NUMBER_OF_SHIPS] [-v] [-h] [-b] [-f]
 ```
-This string is directly passed to the MatchMaker.
-uhh, yeah I wrote this before I figured out how to use options. I'll update the script eventually!
-
 Run the MatchMaker and check out the options and what they mean. This will show you what arguments you need to pass to the Scheduler.
 
 The Scheduler ends by adding the files `rawSchedule.txt` and `spreadsheetSCH.txt` to the `drrt-scripts/` directory. It also creates all fleet files for the Red ALLIANCE and Blue ALLIANCE, named according to the match number. It creates those files with the Assembler.
