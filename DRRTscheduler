@@ -8,8 +8,6 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 WHERE="${SCRIPT_DIR}/../.."
 
-echo $SCRIPT_DIR/../
-
 RED='\033[0;31m'
 
 NOCOLOR='\033[0m'
@@ -119,9 +117,6 @@ if [[ $t -lt 6 ]]; then
     exit 1
 fi
 
-# just did that
-echo leaving here for now..
-exit 
 run_matchmaker () {
     if [[ ! -f $WHERE/Matchmaker/MatchMaker.exe ]]; then
         echo -e "${RED}ERROR:${NOCOLOR} MatchMaker.exe not at '$WHERE/Matchmaker/'! Get it and put it there to run this script."
