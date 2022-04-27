@@ -6,7 +6,7 @@ set -o errexit -o pipefail -o nounset
 
 . "$SCRIPT_DIR/shipIndex.conf"
 
-VERSION="v1.0"
+VERSION="v1.1.0"
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
@@ -34,15 +34,21 @@ if [[ ! -d $DRRT_ROOT/Matchmaker/ ]]; then
     mkdir $DRRT_ROOT/Matchmaker/
 fi
 
-if [[ ! -f $DRRT_ROOT/Matchmaker/MatchMaker* ]]; then
-    echo -e "${RED}ERROR:${NOCOLOR} MatchMaker binary not found at '$DRRT_ROOT/Matchmaker/'! Get it and put it there to run this script."
-   
+if [[ ! -f $MATCHMAKER ]]; then
     echo "Attempting to download the MatchMaker (MatchMaker.exe). . ."
    
     set -x
 
     if [[ ! -f $DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip ]]; then
         curl "https://idleloop.com/matchmaker/MatchMaker_1_4_0.zip" --output "$DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip"
+
+        if [[ ! $? -eq 0 ]]; then
+            echo -e "${RED}ERROR:${NOCOLOR} could not get MatchMaker program!"
+
+            echo "Stop."
+
+            exit 1
+        fi
     fi
     
     unzip "$DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip" -d "$DRRT_ROOT/Matchmaker/MatchMaker_output/"
@@ -51,11 +57,15 @@ if [[ ! -f $DRRT_ROOT/Matchmaker/MatchMaker* ]]; then
 
     echo $MATCHMAKER
 
-    set +x 
+    if [[ ! -f $MATCHMAKER ]]; then
+        echo -e "${RED}ERROR:${NOCOLOR} could not find MatchMaker.exe!"
 
-    echo Stop.
+        echo "Stop."
 
-    exit 1
+        exit 1
+    fi
+else
+    echo "MatchMaker.exe found."
 fi
 
 ! getopt --test > /dev/null
