@@ -39,8 +39,6 @@ MATCHMAKER=$(find "$DRRT_ROOT/Matchmaker/" -type f -regex '.*MatchMaker.exe$' -p
 if [[ ! -f $MATCHMAKER ]]; then
     echo "Attempting to download the MatchMaker (MatchMaker.exe). . ."
    
-    set -x
-
     if [[ ! -f $DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip ]]; then
         curl "https://idleloop.com/matchmaker/${MM_NAME}.zip" --output "$DRRT_ROOT/Matchmaker/${MM_NAME}.zip"
 
