@@ -185,8 +185,8 @@ while true; do
 
     case $REPLY in
         [Yy]* ) echo 
-            echo "Opening directory '$(wslpath -w $WHERE)\DRRT-6\drrt-scripts'. . ." 
-            explorer.exe "$(wslpath -w $WHERE)\DRRT-6\drrt-scripts"
+            echo "Opening directory '$(wslpath -w "$SCRIPT_DIR/../")\drrt-scripts'. . ." 
+            explorer.exe "$(wslpath -w "$SCRIPT_DIR/../")\drrt-scripts"
             break;;
 
         [NnQq]* ) echo 
