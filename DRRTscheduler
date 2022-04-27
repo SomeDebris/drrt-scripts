@@ -177,6 +177,10 @@ if [[ $t -lt 6 && $NO_T -eq 0 ]]; then
     exit 1
 fi
 
+if [[ $r -gt 10 ]]; then
+    echo "That's a lot of rounds ($r)! Make sure that all matches were generated!"
+fi
+
 if [[ $NO_T -eq 1 && $NO_R -eq 0 ]]; then
     echo -e "${RED}ERROR:${NOCOLOR} Rounds are set, but ship count is not set."
 
