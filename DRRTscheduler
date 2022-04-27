@@ -2,7 +2,7 @@
 # DRRT Alliance Assembler, SUMMER DRRT
 ### REMEMBER! ONLY WORKS IN WSL!! ###
 
-set -o errexit -o pipefail -o noclobber -o nounset
+set -o errexit -o pipefail -o nounset
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
@@ -26,10 +26,8 @@ if [[ ! -d $SCRIPT_DIR/../oldships/ ]]; then
     mkdir $SCRIPT_DIR/../oldships/
 fi
 
-# TODO: use getopts or something to get the options without using a stupid string
 ! getopt --test > /dev/null
 
-# so this checks to see if getopt is at the correct version?
 if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     echo '`getopt --test` failed in this environment.'
 
@@ -42,19 +40,20 @@ OPTIONS=s:t:r:vh
 
 ! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
 
-# and this checks if it fails to parse?
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
     exit 2
 fi
 
 eval set -- "$PARSED"
 
-t=0 r=10 VERBOSE=false
+t=0 r=10 VERBOSE=0 NO_T=1 NO_R=1
 
 while true; do
     case "$1" in
         -s|--ships)
             t="$2"
+
+            NO_T=0
 
             shift 2
             
@@ -62,11 +61,15 @@ while true; do
         -t|--teams)
             t="$2"
 
+            NO_T=0
+
             shift 2
             
             ;;
         -r|--rounds)
             r="$2"
+
+            NO_R=0
 
             shift 2
             
@@ -95,6 +98,7 @@ while true; do
             exit 0
             ;;
         --)
+
             shift
 
             break
@@ -109,11 +113,19 @@ while true; do
     esac
 done
 
-if [[ $t -lt 6 ]]; then
+if [[ $t -lt 6 && $NO_T -eq 0 ]]; then
     echo -e "${RED}ERROR:${NOCOLOR} $t is lesser than minimum number of ships (6)."
 
     echo "Stop."
 
+    exit 1
+fi
+
+if [[ $NO_T -eq 1 && $NO_R -eq 0 ]]; then
+    echo -e "${RED}ERROR:${NOCOLOR} Rounds are set, but ship count is not set."
+
+    echo "Stop."
+    
     exit 1
 fi
 
@@ -223,7 +235,7 @@ if [[ -f rawSchedule.txt ]]; then
     echo "A match schedule already exists!"
 
     while true; do
-        if [[ $# -eq 0 ]]; then
+        if [[ $NO_T -eq 1 ]]; then
             REPLY="n"
         else
             read -p "Generate new schedule? [Y/n]: " -n 1 -r
@@ -231,14 +243,10 @@ if [[ -f rawSchedule.txt ]]; then
 
         case $REPLY in
             [Yy]* ) 
-                echo "Deleting 'rawSchedule.txt' . . ."
-
                 rm "$SCRIPT_DIR/rawSchedule.txt"
 
                 rm "$SCRIPT_DIR/spreadsheetSCH.txt"
 
-                echo "rawSchedule.txt deleted."
-                
                 run_matchmaker 
                 
                 break
@@ -278,15 +286,13 @@ else
     run_matchmaker 
 fi
 
-echo "Creating spreadsheet-suitable schedule 'spreadsheetSCH.txt' . . ."
-
 grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/spreadsheetSCH.txt"
-
-echo "spreadsheetSCH.txt created."
 
 sed 's/\*/ /g' "$SCRIPT_DIR/spreadsheetSCH.txt" > "$SCRIPT_DIR/.no_asterisks"
 
 i=1
+
+echo "Beginning ALLIANCE generation."
 
 while read p; do
     ships="" 
