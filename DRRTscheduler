@@ -6,6 +6,8 @@ set -o errexit -o pipefail -o nounset
 
 VERSION="v1.1.0"
 
+MM_NAME="MatchMaker_1_4_0"
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 DRRT_ROOT="${SCRIPT_DIR}/../.."
@@ -40,7 +42,7 @@ if [[ ! -f $MATCHMAKER ]]; then
     set -x
 
     if [[ ! -f $DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip ]]; then
-        curl "https://idleloop.com/matchmaker/MatchMaker_1_4_0.zip" --output "$DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip"
+        curl "https://idleloop.com/matchmaker/${MM_NAME}.zip" --output "$DRRT_ROOT/Matchmaker/${MM_NAME}.zip"
 
         if [[ ! $? -eq 0 ]]; then
             echo -e "${RED}ERROR:${NOCOLOR} could not get MatchMaker program!"
@@ -51,7 +53,7 @@ if [[ ! -f $MATCHMAKER ]]; then
         fi
     fi
     
-    unzip "$DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip" -d "$DRRT_ROOT/Matchmaker/MatchMaker_output/"
+    unzip "$DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip" -d "$DRRT_ROOT/Matchmaker/MatchMaker_1_4_0/"
 
     MATCHMAKER=$(find "$DRRT_ROOT/Matchmaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
 
