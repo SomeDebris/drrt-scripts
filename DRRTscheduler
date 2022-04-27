@@ -50,7 +50,89 @@ run_matchmaker () {
     cat "$SCRIPT_DIR/../drrt-scripts/rawSchedule.txt"
 }
 
-. "$SCRIPT_DIR/../drrt-scripts/shipIndex.conf"
+assemble () {
+    if [ ! -f "$6" ]; then
+        echo Not Enough Arguments! 
+    
+        echo Stop.
+    
+        exit
+    fi    
+    
+    if [ ! -f "$1" ]; then echo "File '$1' not found!"; echo Stop.; exit; fi
+    
+    if [ ! -f "$2" ]; then echo "File '$2' not found!"; echo Stop.; exit; fi
+    
+    if [ ! -f "$3" ]; then echo "File '$3' not found!"; echo Stop.; exit; fi
+    
+    if [ ! -f "$4" ]; then echo "File '$4' not found!"; echo Stop.; exit; fi
+    
+    if [ ! -f "$5" ]; then echo "File '$5' not found!"; echo Stop.; exit; fi
+    
+    if [ ! -f "$6" ]; then echo "File '$6' not found!"; echo Stop.; exit; fi
+    
+    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+    
+    WHERE="${SCRIPT_DIR}/../.."
+    
+    . shipIndex.conf
+    
+    if [ "$7" ]; then
+        RED_NAME="$7"
+    else
+        RED_NAME="Red Alliance"
+    fi
+    
+    if [ "$8" ]; then 
+        BLUE_NAME="$8"
+    else
+        BLUE_NAME="Blue Alliance"
+    fi
+
+    echo "{
+  color0=0x0aa879,
+  color1=0x222d84,
+  color2=0,
+  name=\"$BLUE_NAME\",
+  faction=8,
+  currentChild=0,
+  blueprint={},
+  children={},
+  blueprints={" > "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+
+    zgrep '{data\| \{5,\}' "$4" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$5" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$6" >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    echo "  playerprint={}}" >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    gzip -f "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    echo "{
+  color0=0xbaa01e,
+  color1=0x681818,
+  color2=0,
+  name=\"$RED_NAME\",
+  faction=9,
+  currentChild=0,
+  blueprint={},
+  children={},
+  blueprints={" > "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+
+    zgrep '{data\| \{5,\}' "$1" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$2" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$3" >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    echo "  playerprint={}}" >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    gzip -f "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    . "$SCRIPT_DIR/../drrt-scripts/shipIndex.conf"
+}
 
 if [[ -f $SCRIPT_DIR/../Qualifications/* ]]; then 
     echo "Deleting contents of 'Qualifications/' . . ."
