@@ -38,7 +38,7 @@ fi
 
 LONGOPTS=ships:,teams:,rounds:,verbose,help
 
-OPTIONS=s:t:r:vh
+OPTIONS=s:t:r:vhfb
 
 ! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
 
@@ -49,6 +49,7 @@ fi
 eval set -- "$PARSED"
 
 t=0 r=10 VERBOSE=0 NO_T=1 NO_R=1
+QUALITY='-f'
 
 while true; do
     case "$1" in
@@ -77,10 +78,23 @@ while true; do
             
             ;;
         -v|--verbose)
-            VERBOSE=true
+            VERBOSE=1
 
             shift
             
+            ;;
+        -f)
+            QUALITY='-f'
+
+            shift
+
+            ;;
+
+        -b)
+            QUALITY='-b' 
+
+            shift
+
             ;;
         -h|--help)
             echo "DRRT ALLIANCE SCHEDULER ${VERSION}"
@@ -142,7 +156,7 @@ run_matchmaker () {
 
     echo "Running MatchMaker.exe . . ."
 
-    "$WHERE/Matchmaker/MatchMaker.exe" -o -t $t -r $r > "$SCRIPT_DIR/rawSchedule.txt"
+    "$WHERE/Matchmaker/MatchMaker.exe" -o -t $t -r $r $QUALITY > "$SCRIPT_DIR/rawSchedule.txt"
 
     echo "rawSchedule.txt generated with MatchMaker.exe output."
  
@@ -277,14 +291,6 @@ if [[ -f rawSchedule.txt ]]; then
 else
     echo "A new rawSchedule.txt will be generated."
 
-    if [[ $# -eq 0 ]]; then
-        echo -e "${RED}ERROR:${NOCOLOR} Please specify number of ships!"
-
-        echo "Stop."
-
-        exit 1
-    fi
-    
     run_matchmaker 
 fi
 
