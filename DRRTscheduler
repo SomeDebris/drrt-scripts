@@ -3,32 +3,23 @@
 ### REMEMBER! ONLY WORKS IN WSL!! ###
 
 echo DRRT Alliance Assembler.
+
 echo "Works only in WSL."
 
-# $SCRIPT_DIR finds the directory the script is in
-# $WHERE is the directory where the root DRRT folder is
-# it follows that $SCRIPT_DIR/../ is the directory behind 
-# the current directory!
-# Makes it easier to reference the working directory.
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 WHERE="${SCRIPT_DIR}/../.."
+
 echo $SCRIPT_DIR/../
 
-# Colors make some things pop out
 RED='\033[0;31m'
+
 NOCOLOR='\033[0m'
 
-#### MAKE SURE DIRECTORIES ARE STRUCTURED CORRECTLY!
-
-# The Qualifications folder needs to exist!
-# The Assembler outputs fleet files there.
 if [ ! -d $SCRIPT_DIR/../Qualifications/ ]; then
     mkdir $SCRIPT_DIR/../Qualifications/
 fi
 
-# These scripts do not touch these folders, but it's a 
-# simple thing that can be automated with a script, so
-# why not?
 if [ ! -d $SCRIPT_DIR/../Playoffs/ ]; then
     mkdir $SCRIPT_DIR/../Playoffs/
 fi
@@ -40,52 +31,39 @@ fi
 # TODO: use getopts or something to get the options without
 #       using a stupid string
 
-#### FUNCTIONS
-
-# Calls the matchmaker with the right parameters and 
-# writes schedule.
-# Made into a function because I use this multiple times.
-# `-o` option for a small ship count.
-# `$1` is the matchmaker options as a string.
 run_matchmaker () {
-    # If the matchmaker isn't there, this script can't be used
     if [ ! -f $WHERE/Matchmaker/MatchMaker.exe ]; then
         echo -e "${RED}ERROR:${NOCOLOR} MatchMaker.exe not at '$WHERE/Matchmaker/'! Get it and put it there to run this script."
+
         echo Stop.
+
         exit
     fi
 
     echo "Running MatchMaker.exe . . ."
+
     "$WHERE/Matchmaker/MatchMaker.exe" -o $1 > "$SCRIPT_DIR/rawSchedule.txt"
 
     echo "rawSchedule.txt generated with MatchMaker.exe output."
  
     echo "Contents of rawSchedule.txt:"
+
     cat "$SCRIPT_DIR/../drrt-scripts/rawSchedule.txt"
 }
-# all ship files are members of the ${participants[@]} array.
-# Needed for the program to find all the ship files!
+
 . "$SCRIPT_DIR/../drrt-scripts/shipIndex.conf"
 
-# Deletes all Qualification fleet files created previously
-# so that the DRRTassembler script doesn't have trouble
-# saving new files in that directory.
-# i.e. deletes contents of the 'Qualifications/' directory
 if [[ -f $SCRIPT_DIR/../Qualifications/* ]]; then 
     echo "Deleting contents of 'Qualifications/' . . ."
+
     rm $SCRIPT_DIR/../Qualifications/*
 fi
 
-# If a match schedule file already exists, this asks the user
-# if they want to use it to assemble alliances.
-# Makes script much more lenient and useful: script can generate
-# alliances from an already-present schedule
 if [ -f rawSchedule.txt ]; then
     echo "A match schedule already exists!"
 
     while true; do
         if [ $# -eq 0 ]; then
-            #echo "No arguments supplied, using current schedule."
             REPLY="n"
         else
             read -p "Generate new schedule? [Y/n]: " -n 1 -r
@@ -94,20 +72,25 @@ if [ -f rawSchedule.txt ]; then
         case $REPLY in
             [Yy]* ) 
                 echo "Deleting 'rawSchedule.txt' . . ."
+
                 rm "$SCRIPT_DIR/rawSchedule.txt"
+
                 rm "$SCRIPT_DIR/spreadsheetSCH.txt"
+
                 echo "rawSchedule.txt deleted."
                 
-                # Remember, this is a function defined above
                 run_matchmaker "$1"
                 
                 break;;
             [NnQq]* )
                 echo 
+
                 echo "Current schedule will be used."
+
                 break;;
             [A-Za-z]*) 
                 echo 
+
                 echo "Please answer [Y/n].";;
             * ) 
                 echo "Please answer [Y/n].";;
@@ -116,87 +99,82 @@ if [ -f rawSchedule.txt ]; then
 else
     echo "A new rawSchedule.txt will be generated."
 
-    # Program won't work if user doesn't send arguments!
-    # Stop here with a more explanatory error message
-    # instead of letting the MatchMaker freak out.
     if [ $# -eq 0 ]; then
         echo -e "${RED}ERROR:${NOCOLOR} Please specify arguments to pass to MatchMaker."
+
         echo "Stop."
+
         exit
     fi
     
-    # Remember, this is a function defined above
     run_matchmaker "$1"
 fi
 
-# Create a spreadsheet-suitable match schedule file.
-# Note that this doesnt allow for match schedules with more
-# than 99 matches.
-# I have to recreate this every time because I never know 
-# if it is different than rawSchedule.txt.
 echo "Creating spreadsheet-suitable schedule 'spreadsheetSCH.txt' . . ."
+
 grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/spreadsheetSCH.txt"
+
 echo "spreadsheetSCH.txt created."
 
-# file '.no_asterisks' is temporary. Used to assemble alliances.
-# The MatchMaker will append '*' to surrogate ships.
-# This command will remove these asterisks in the file called '.no_asterisks'
-# so that the next section doesnt get confused.
 sed 's/\*/ /g' "$SCRIPT_DIR/spreadsheetSCH.txt" > "$SCRIPT_DIR/.no_asterisks"
 
 i=1
 while read p; do
-    # use `$ships` variable because it's easier
-    # to pass as an argument to the DRRTassembler.
     ships="" 
 
-    # 'for' loop grabs the ships from shipIndex.conf 
-    # and adds them to $ships.
     j=0
+
     for k in $p; do
         if [ $j -ge 6 ]; then break; fi
+
         ships+=" ${participants[k]}"
+
         let "j+=1"
     done
     
-    # Prepend zeros to order alliances correctly in Reassembly's import
-    # screen.
     printf -v matchNumber "%03d" $i
     
-    # Runs in background because this takes a while.
     ./DRRTassembler $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" & 
     
     let "i += 1"
 done <"$SCRIPT_DIR/.no_asterisks"
 
-# `.no_asterisks` is a temporary file. Use `rawSchedule.txt` if you want to see
-# the schedule!
 rm "$SCRIPT_DIR/.no_asterisks"
 
 echo "Scheduler done."
 
 echo "Lets get this tournament started!"
+
 echo "Now import spreadsheetSCH.txt into the DRRT Datasheet."
 
 while true; do
     read -p 'Open the drrt-scripts directory in Windows Explorer? [Y/n]: ' -n 1 -r
 
     case $REPLY in
-        [Yy]* ) echo 
+        [Yy]* ) 
+            echo 
+
             echo "Opening directory '$(wslpath -w "$SCRIPT_DIR")'. . ." 
+
             explorer.exe "$(wslpath -w "$SCRIPT_DIR")"
-            break;;
 
-        [NnQq]* ) echo 
+            break;;
+        [NnQq]* ) 
+            echo 
+
             echo "Stop."
-            break;;
 
-        [A-Za-z]* ) echo
+            break;;
+        [A-Za-z]* ) 
+            echo
+
+            echo "Answer [Y/n].";;
+        ""* ) 
             echo "Answer [Y/n].";;
 
-        ""* ) echo "Answer [Y/n].";;
+        * ) 
+            echo
 
-        * ) echo
             echo "Answer [Y/n].";;
     esac
 done
