@@ -10,7 +10,6 @@ echo "Works only in WSL."
 # Makes it easier to reference the working directory.
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 WHERE="${SCRIPT_DIR}/../.."
-echo $WHERE
 
 # Colors make some things pop out
 RED='\033[0;31m'
@@ -65,8 +64,6 @@ run_matchmaker () {
 # all ship files are members of the ${participants[@]} array.
 # Needed for the program to find all the ship files!
 . "$SCRIPT_DIR/../drrt-scripts/shipIndex.conf"
-#echo "shipIndex.conf contents:"
-#cat "$SCRIPT_DIR/../drrt-scripts/shipIndex.conf"
 
 # Deletes all Qualification fleet files created previously
 # so that the DRRTassembler script doesn't have trouble
@@ -79,7 +76,8 @@ fi
 
 # If a match schedule file already exists, this asks the user
 # if they want to use it to assemble alliances.
-# Needed to 
+# Makes script much more lenient and useful: script can generate
+# alliances from an already-present schedule
 if [ -f rawSchedule.txt ]; then
     echo "A match schedule already exists!"
 
@@ -147,7 +145,6 @@ fi
 # This command will remove these asterisks in the file called '.no_asterisks'
 # so that the next section doesnt get confused.
 sed 's/\*/ /g' "$SCRIPT_DIR/../drrt-scripts/spreadsheetSCH.txt" > "$SCRIPT_DIR/../drrt-scripts/.no_asterisks"
-#cat .no_asterisks
 
 i=1
 while read p; do
@@ -168,12 +165,8 @@ while read p; do
     # screen.
     printf -v matchNumber "%03d" $i
     
-    #echo "Assembling match $matchNumber. . ."
-
     # Runs in background because this takes a while.
     ./DRRTassembler $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" & 
-    
-    #echo "Assembler set loose!"
     
     let "i += 1"
 done <"$SCRIPT_DIR/../drrt-scripts/.no_asterisks"
