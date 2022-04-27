@@ -46,28 +46,7 @@ The Scheduler sources the file `shipIndex.conf` so that it can pass the right sh
 If the file `rawSchedule.txt` already exists, the Scheduler will ask if you would like to use it to make ALLIANCES instead of calling the MatchMaker and creating a brand new schedule.
 If the file `rawSchedule.txt` already exists AND you pass no arguments to the Scheduler, the script will use it to generate ALLIANCES without prompting you.
 
-Now that I've mentioned the Assembler:
-
-### DRRTassembler
-
-The **DRRTassembler** script, referred to as simply **"the Assembler"**, takes 6 individual Reassembly Fleet files (`*.lua.gz` extension) and creates a RED ALLIANCE fleet file and a BLUE ALLIANCE fleet file, according to the order of arguments.
-
-It requires 6 arguments:
-```
-./DRRTassembler $RED1 $RED2 $RED3 $BLUE1 $BLUE2 $BLUE3
-```
-
-If you would like to name the generated fleet files, pass two more arguments:
-```
-./DRRTassembler $RED1 $RED2 $RED3 \
-                $BLUE1 $BLUE2 $BLUE3 \
-                $RED_ALLIANCE_FILENAME $BLUE_ALLIANCE_FILENAME
-```
-To save the generated fleet files to a certain directory, just change the `$RED_ALLIANCE_FILENAME` and the `$BLUE_ALLIANCE_FILENAME`. (e.g. the Scheduler passes an absolute path to the Assembler for the filenames)
-
-Note: The Assembler isn't meant to be run by itself. Its only purpose was to be called by the Scheduler repeatedly. I might make it a function in the Scheduler eventually.
-
-When the Assembler is called by the Scheduler, the `$RED_ALLIANCE_FILENAME` and the `$BLUE_ALLIANCE_FILENAME` are formatted like this:
+The output RED and BLUE ALLIANCES' filenames are formatted like this:
 ```
 Match ${MATCH_NUMBER} - ${COLOR} Alliance.lua.gz
 ```
