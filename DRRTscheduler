@@ -144,13 +144,11 @@ echo "spreadsheetSCH.txt created."
 sed 's/\*/ /g' "$SCRIPT_DIR/../drrt-scripts/spreadsheetSCH.txt" > "$SCRIPT_DIR/../drrt-scripts/.no_asterisks"
 
 i=1
-cat $SCRIPT_DIR/../drrt-scripts/.no_asterisks
 while read p; do
     # use `$ships` variable because it's easier
     # to pass as an argument to the DRRTassembler.
     ships="" 
-    echo
-    echo $ships
+
     # 'for' loop grabs the ships from shipIndex.conf 
     # and adds them to $ships.
     j=0
