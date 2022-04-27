@@ -71,12 +71,6 @@ assemble () {
     
     if [ ! -f "$6" ]; then echo "File '$6' not found!"; echo Stop.; exit; fi
     
-    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-    
-    WHERE="${SCRIPT_DIR}/../.."
-    
-    . shipIndex.conf
-    
     if [ "$7" ]; then
         RED_NAME="$7"
     else
@@ -214,7 +208,8 @@ while read p; do
     done
     
     printf -v matchNumber "%03d" $i
-    
+     
+    echo assemble $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" 
     assemble $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" & 
     
     let "i += 1"
@@ -252,7 +247,6 @@ while true; do
             echo "Answer [Y/n].";;
         ""* ) 
             echo "Answer [Y/n].";;
-
         * ) 
             echo
 
