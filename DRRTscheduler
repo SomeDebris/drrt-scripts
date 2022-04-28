@@ -203,11 +203,27 @@ run_matchmaker () {
     cat "$SCRIPT_DIR/rawSchedule.txt"
 }
 
+check_participants () {
+    for k in "${participants[@]}"; do
+        if [[ ! -f "$k" ]]; then
+            echo -e "check_participants: ${RED}ERROR:${NOCOLOR} Ship file '$k' not found!"
+
+            echo "check_participants: Stop."
+
+            echo "Stop."
+
+            exit 1
+        fi
+    done
+
+    echo "check_participants: all ship files found!"
+}
+
 assemble () {
     if [[ ! -f "$6" ]]; then
-        echo "Not Enough Arguments!"
+        echo -e "assemble: ${RED}ERROR:${NOCOLOR} Not Enough Arguments!"
     
-        echo "Stop."
+        echo "assemble: Stop."
     
         exit 1
     fi    
@@ -349,6 +365,8 @@ sed 's/\*/ /g' "$SCRIPT_DIR/spreadsheetSCH.txt" > "$SCRIPT_DIR/.no_asterisks"
 i=1
 
 echo "Beginning ALLIANCE generation."
+
+check_participants
 
 while read p; do
     ships="" 
