@@ -363,7 +363,7 @@ else
     run_matchmaker 
 fi
 
-if [[ $CHECKP ]]; then
+if [[ $CHECKP -eq 1 ]]; then
     check_participants
 fi
 
