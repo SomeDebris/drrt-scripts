@@ -14,6 +14,8 @@ DRRT_ROOT="${SCRIPT_DIR}/../.."
 
 RED='\033[0;31m'
 
+YELLOW='\033[0;33m'
+
 NOCOLOR='\033[0m'
 
 . "$SCRIPT_DIR/shipIndex.conf"
@@ -203,24 +205,24 @@ run_matchmaker () {
 
 assemble () {
     if [[ ! -f "$6" ]]; then
-        echo Not Enough Arguments! 
+        echo "Not Enough Arguments!"
     
-        echo Stop.
+        echo "Stop."
     
         exit 1
     fi    
     
-    if [[ ! -f "$1" ]]; then echo "File '$1' not found!"; echo Stop.; exit 1; fi
+    if [[ ! -f "$1" ]]; then echo "File '$1' not found!"; echo "Stop."; exit 1; fi
     
-    if [[ ! -f "$2" ]]; then echo "File '$2' not found!"; echo Stop.; exit 1; fi
+    if [[ ! -f "$2" ]]; then echo "File '$2' not found!"; echo "Stop."; exit 1; fi
     
-    if [[ ! -f "$3" ]]; then echo "File '$3' not found!"; echo Stop.; exit 1; fi
+    if [[ ! -f "$3" ]]; then echo "File '$3' not found!"; echo "Stop."; exit 1; fi
     
-    if [[ ! -f "$4" ]]; then echo "File '$4' not found!"; echo Stop.; exit 1; fi
+    if [[ ! -f "$4" ]]; then echo "File '$4' not found!"; echo "Stop."; exit 1; fi
     
-    if [[ ! -f "$5" ]]; then echo "File '$5' not found!"; echo Stop.; exit 1; fi
+    if [[ ! -f "$5" ]]; then echo "File '$5' not found!"; echo "Stop."; exit 1; fi
     
-    if [[ ! -f "$6" ]]; then echo "File '$6' not found!"; echo Stop.; exit 1; fi
+    if [[ ! -f "$6" ]]; then echo "File '$6' not found!"; echo "Stop."; exit 1; fi
     
     if [[ "$7" ]]; then
         RED_NAME="$7"
@@ -325,6 +327,16 @@ if [[ -f $SCRIPT_DIR/rawSchedule.txt ]]; then
         esac
     done
 else
+    echo -e "${YELLOW}WARNING:${NOCOLOR} rawSchedule.txt not found!"
+
+    if [[ $NO_T -eq 1 ]]; then
+        echo -e "${RED}ERROR:${NOCOLOR} Ship count not specified! MatchMaker cannot generate a schedule."
+
+        echo "Stop."
+
+        exit 1
+    fi
+
     echo "A new rawSchedule.txt will be generated."
 
     run_matchmaker 
