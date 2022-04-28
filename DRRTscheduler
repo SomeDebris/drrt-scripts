@@ -39,7 +39,7 @@ fi
 if [[ "$(ls -A $SCRIPT_DIR/../Qualifications/)" ]]; then
     echo "Deleting contents of 'Qualifications/' . . ."
     
-    rm "$SCRIPT_DIR/../Qualifications/*"
+    rm ${SCRIPT_DIR}/../Qualifications/*
 fi
 
 MATCHMAKER=$(find "$SCRIPT_DIR/../MatchMaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
