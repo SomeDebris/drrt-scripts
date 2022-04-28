@@ -283,7 +283,7 @@ if [[ "$(ls -A $SCRIPT_DIR/../Qualifications/)" ]]; then
     rm $SCRIPT_DIR/../Qualifications/*
 fi
 
-if [[ -f rawSchedule.txt ]]; then
+if [[ -f $SCRIPT_DIR/rawSchedule.txt ]]; then
     echo "A match schedule already exists!"
 
     while true; do
