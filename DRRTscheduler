@@ -20,10 +20,6 @@ NOCOLOR='\033[0m'
 
 . "$SCRIPT_DIR/shipIndex.conf"
 
-if [[ $CHECKP -eq 1 ]]; then
-    check_participants
-fi
-
 if [[ ! -d "$SCRIPT_DIR/../Qualifications/" ]]; then
     mkdir "$SCRIPT_DIR/../Qualifications/"
 fi
@@ -38,6 +34,12 @@ fi
 
 if [[ ! -d "$SCRIPT_DIR/../MatchMaker/" ]]; then
     mkdir "$SCRIPT_DIR/../MatchMaker/"
+fi
+
+if [[ "$(ls -A $SCRIPT_DIR/../Qualifications/)" ]]; then
+    echo "Deleting contents of 'Qualifications/' . . ."
+    
+    rm "$SCRIPT_DIR/../Qualifications/*"
 fi
 
 MATCHMAKER=$(find "$SCRIPT_DIR/../MatchMaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
@@ -182,25 +184,25 @@ while true; do
     esac
 done
 
-if [[ $t -lt 6 && $NO_T -eq 0 ]]; then
-    echo -e "${RED}ERROR:${NOCOLOR} $t is lesser than minimum number of ships (6)."
+check_participants () {
+    SHIP_NOTFOUND=0
 
-    echo "Stop."
+    for k in "${participants[@]}"; do
+        if [[ ! -f "$k" ]]; then
+            echo -e "${RED}ERROR:${NOCOLOR} check_participants: Ship file '$k' not found!"
 
-    exit 1
-fi
+            SHIP_NOTFOUND=1
+        fi
+    done
 
-if [[ $r -gt 10 ]]; then
-    echo "${YELLOW}WARNING:${NOCOLOR} That's a lot of rounds ($r)! Make sure that all matches were generated!"
-fi
+    if [[ $SHIP_NOTFOUND -eq 1 ]]; then
+        echo "Stop."
 
-if [[ $NO_T -eq 1 && $NO_R -eq 0 ]]; then
-    echo -e "${RED}ERROR:${NOCOLOR} Rounds are set, but ship count is not set."
-
-    echo "Stop."
-    
-    exit 1
-fi
+        exit 1
+    else
+        echo "check_participants: all ship files found!"
+    fi
+}
 
 run_matchmaker () {
     echo "Running MatchMaker.exe . . ."
@@ -290,11 +292,31 @@ assemble () {
     gzip -f "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
 }
 
-if [[ "$(ls -A $SCRIPT_DIR/../Qualifications/)" ]]; then
-    echo "Deleting contents of 'Qualifications/' . . ."
-    
-    rm $SCRIPT_DIR/../Qualifications/*
+
+if [[ $t -lt 6 && $NO_T -eq 0 ]]; then
+    echo -e "${RED}ERROR:${NOCOLOR} $t is lesser than minimum number of ships (6)."
+
+    echo "Stop."
+
+    exit 1
 fi
+
+if [[ $r -gt 10 ]]; then
+    echo "${YELLOW}WARNING:${NOCOLOR} That's a lot of rounds ($r)! Make sure that all matches were generated!"
+fi
+
+if [[ $NO_T -eq 1 && $NO_R -eq 0 ]]; then
+    echo -e "${RED}ERROR:${NOCOLOR} Rounds are set, but ship count is not set."
+
+    echo "Stop."
+    
+    exit 1
+fi
+
+if [[ $CHECKP -eq 1 ]]; then
+    check_participants
+fi
+
 
 if [[ -f $SCRIPT_DIR/rawSchedule.txt ]]; then
     echo "A match schedule already exists!"
