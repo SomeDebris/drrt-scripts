@@ -206,9 +206,7 @@ run_matchmaker () {
 check_participants () {
     for k in "${participants[@]}"; do
         if [[ ! -f "$k" ]]; then
-            echo -e "check_participants: ${RED}ERROR:${NOCOLOR} Ship file '$k' not found!"
-
-            echo "check_participants: Stop."
+            echo -e "${RED}ERROR:${NOCOLOR} check_participants: Ship file '$k' not found!"
 
             echo "Stop."
 
@@ -221,10 +219,10 @@ check_participants () {
 
 assemble () {
     if [[ ! -f "$6" ]]; then
-        echo -e "assemble: ${RED}ERROR:${NOCOLOR} Not Enough Arguments!"
+        echo -e "${RED}ERROR:${NOCOLOR} assemble: Not Enough Arguments!"
     
-        echo "assemble: Stop."
-    
+        echo "Stop."
+        
         exit 1
     fi    
     
