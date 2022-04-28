@@ -4,14 +4,14 @@
 !_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
 !_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
 !_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
-!_TAG_PROC_CWD	/mnt/c/Users/Magnus/Desktop/ShipsNStuff/001_-_Debris_Regional_Tournament/DRRT-6/drrt-scripts/	//
+!_TAG_PROC_CWD	/mnt/c/Users/mags2/Documents/DRRT-ROOT/2022_SUMMER-DRRT/drrt-scripts/	//
 !_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20220417.0/
 DRRT Scripts	README.md	/^# DRRT Scripts$/;"	c
-DRRTassembler	README.md	/^#### DRRTassembler$/;"	t	chapter:DRRT Scripts
-DRRTscheduler	README.md	/^#### DRRTscheduler$/;"	t	chapter:DRRT Scripts
-Usage	README.md	/^#### Usage$/;"	t	chapter:DRRT Scripts
+DRRTscheduler	README.md	/^### DRRTscheduler$/;"	S	chapter:DRRT Scripts
+Usage	README.md	/^### Usage$/;"	S	chapter:DRRT Scripts
 assemble	DRRTscheduler	/^assemble () {$/;"	f
+check_participants	DRRTscheduler	/^check_participants () {$/;"	f
 run_matchmaker	DRRTscheduler	/^run_matchmaker () {$/;"	f
