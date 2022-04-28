@@ -20,29 +20,29 @@ NOCOLOR='\033[0m'
 
 . "$SCRIPT_DIR/shipIndex.conf"
 
-if [[ ! -d $SCRIPT_DIR/../Qualifications/ ]]; then
-    mkdir $SCRIPT_DIR/../Qualifications/
+if [[ ! -d "$SCRIPT_DIR/../Qualifications/" ]]; then
+    mkdir "$SCRIPT_DIR/../Qualifications/"
 fi
 
-if [[ ! -d $SCRIPT_DIR/../Playoffs/ ]]; then
-    mkdir $SCRIPT_DIR/../Playoffs/
+if [[ ! -d "$SCRIPT_DIR/../Playoffs/" ]]; then
+    mkdir "$SCRIPT_DIR/../Playoffs/"
 fi
 
 if [[ ! -d "$SCRIPT_DIR/../Old-Ships/" ]]; then
     mkdir "$SCRIPT_DIR/../Old-Ships/"
 fi
 
-if [[ ! -d $DRRT_ROOT/MatchMaker/ ]]; then
-    mkdir $DRRT_ROOT/MatchMaker/
+if [[ ! -d "$SCRIPT_DIR/../MatchMaker/" ]]; then
+    mkdir "$SCRIPT_DIR/../MatchMaker/"
 fi
 
-MATCHMAKER=$(find "$DRRT_ROOT/MatchMaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
+MATCHMAKER=$(find "$SCRIPT_DIR/../MatchMaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
 
 if [[ ! -f $MATCHMAKER ]]; then
     echo "Attempting to download the MatchMaker (MatchMaker.exe). . ."
    
-    if [[ ! -f $DRRT_ROOT/MatchMaker/${MM_NAME}.zip ]]; then
-        curl "https://idleloop.com/matchmaker/${MM_NAME}.zip" --output "$DRRT_ROOT/MatchMaker/${MM_NAME}.zip"
+    if [[ ! -f "$SCRIPT_DIR/../MatchMaker/${MM_NAME}.zip" ]]; then
+        curl "https://idleloop.com/matchmaker/${MM_NAME}.zip" --output "$SCRIPT_DIR/../MatchMaker/${MM_NAME}.zip"
 
         if [[ ! $? -eq 0 ]]; then
             echo -e "${RED}ERROR:${NOCOLOR} could not get MatchMaker program!"
@@ -53,13 +53,13 @@ if [[ ! -f $MATCHMAKER ]]; then
         fi
     fi
     
-    unzip "$DRRT_ROOT/MatchMaker/${MM_NAME}.zip" -d "$DRRT_ROOT/MatchMaker/${MM_NAME}/"
+    unzip "$SCRIPT_DIR/../MatchMaker/${MM_NAME}.zip" -d "$SCRIPT_DIR/../MatchMaker/${MM_NAME}/"
 
-    MATCHMAKER=$(find "$DRRT_ROOT/MatchMaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
+    MATCHMAKER=$(find "$SCRIPT_DIR/../MatchMaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
 
-    echo $MATCHMAKER
+    echo "$MATCHMAKER"
 
-    if [[ ! -f $MATCHMAKER ]]; then
+    if [[ ! -f "$MATCHMAKER" ]]; then
         echo -e "${RED}ERROR:${NOCOLOR} could not find MatchMaker.exe!"
 
         echo "Stop."
