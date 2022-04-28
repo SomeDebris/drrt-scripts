@@ -20,6 +20,10 @@ NOCOLOR='\033[0m'
 
 . "$SCRIPT_DIR/shipIndex.conf"
 
+if [[ $CHECKP -eq 1 ]]; then
+    check_participants
+fi
+
 if [[ ! -d "$SCRIPT_DIR/../Qualifications/" ]]; then
     mkdir "$SCRIPT_DIR/../Qualifications/"
 fi
@@ -210,26 +214,6 @@ run_matchmaker () {
     cat "$SCRIPT_DIR/rawSchedule.txt"
 }
 
-check_participants () {
-    SHIP_NOTFOUND=0
-
-    for k in "${participants[@]}"; do
-        if [[ ! -f "$k" ]]; then
-            echo -e "${RED}ERROR:${NOCOLOR} check_participants: Ship file '$k' not found!"
-
-            SHIP_NOTFOUND=1
-        fi
-    done
-
-    if [[ $SHIP_NOTFOUND -eq 1 ]]; then
-        echo "Stop."
-
-        exit 1
-    else
-        echo "check_participants: all ship files found!"
-    fi
-}
-
 assemble () {
     if [[ ! -f "$6" ]]; then
         echo -e "${RED}ERROR:${NOCOLOR} assemble: Not Enough Arguments!"
@@ -369,9 +353,6 @@ else
     run_matchmaker 
 fi
 
-if [[ $CHECKP -eq 1 ]]; then
-    check_participants
-fi
 
 grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/spreadsheetSCH.txt"
 
