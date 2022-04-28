@@ -30,17 +30,17 @@ if [[ ! -d "$SCRIPT_DIR/../Old-Ships/" ]]; then
     mkdir "$SCRIPT_DIR/../Old-Ships/"
 fi
 
-if [[ ! -d $DRRT_ROOT/Matchmaker/ ]]; then
-    mkdir $DRRT_ROOT/Matchmaker/
+if [[ ! -d $DRRT_ROOT/MatchMaker/ ]]; then
+    mkdir $DRRT_ROOT/MatchMaker/
 fi
 
-MATCHMAKER=$(find "$DRRT_ROOT/Matchmaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
+MATCHMAKER=$(find "$DRRT_ROOT/MatchMaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
 
 if [[ ! -f $MATCHMAKER ]]; then
     echo "Attempting to download the MatchMaker (MatchMaker.exe). . ."
    
-    if [[ ! -f $DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip ]]; then
-        curl "https://idleloop.com/matchmaker/${MM_NAME}.zip" --output "$DRRT_ROOT/Matchmaker/${MM_NAME}.zip"
+    if [[ ! -f $DRRT_ROOT/MatchMaker/MatchMaker_1_4_0.zip ]]; then
+        curl "https://idleloop.com/matchmaker/${MM_NAME}.zip" --output "$DRRT_ROOT/MatchMaker/${MM_NAME}.zip"
 
         if [[ ! $? -eq 0 ]]; then
             echo -e "${RED}ERROR:${NOCOLOR} could not get MatchMaker program!"
@@ -51,9 +51,9 @@ if [[ ! -f $MATCHMAKER ]]; then
         fi
     fi
     
-    unzip "$DRRT_ROOT/Matchmaker/MatchMaker_1_4_0.zip" -d "$DRRT_ROOT/Matchmaker/MatchMaker_1_4_0/"
+    unzip "$DRRT_ROOT/MatchMaker/MatchMaker_1_4_0.zip" -d "$DRRT_ROOT/MatchMaker/MatchMaker_1_4_0/"
 
-    MATCHMAKER=$(find "$DRRT_ROOT/Matchmaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
+    MATCHMAKER=$(find "$DRRT_ROOT/MatchMaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
 
     echo $MATCHMAKER
 
