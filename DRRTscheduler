@@ -92,6 +92,7 @@ eval set -- "$PARSED"
 
 t=0 r=10 VERBOSE=0 NO_T=1 NO_R=1
 QUALITY='-f'
+CHECKP=1
 
 while true; do
     case "$1" in
@@ -134,6 +135,12 @@ while true; do
 
         -b)
             QUALITY='-b' 
+
+            shift
+
+            ;;
+        --no-check)
+            CHECKP=0
 
             shift
 
@@ -364,7 +371,9 @@ i=1
 
 echo "Beginning ALLIANCE generation."
 
-check_participants
+if [[ $CHECKP ]]; then
+    check_participants
+fi
 
 while read p; do
     ships="" 
