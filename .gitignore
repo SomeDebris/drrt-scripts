@@ -2,3 +2,4 @@
 *.bak
 *.swp
 *.no_asterisks
+*clean.sh
