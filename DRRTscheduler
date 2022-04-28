@@ -41,7 +41,7 @@ MATCHMAKER=$(find "$DRRT_ROOT/MatchMaker/" -type f -regex '.*MatchMaker.exe$' -p
 if [[ ! -f $MATCHMAKER ]]; then
     echo "Attempting to download the MatchMaker (MatchMaker.exe). . ."
    
-    if [[ ! -f $DRRT_ROOT/MatchMaker/MatchMaker_1_4_0.zip ]]; then
+    if [[ ! -f $DRRT_ROOT/MatchMaker/${MM_NAME}.zip ]]; then
         curl "https://idleloop.com/matchmaker/${MM_NAME}.zip" --output "$DRRT_ROOT/MatchMaker/${MM_NAME}.zip"
 
         if [[ ! $? -eq 0 ]]; then
@@ -53,7 +53,7 @@ if [[ ! -f $MATCHMAKER ]]; then
         fi
     fi
     
-    unzip "$DRRT_ROOT/MatchMaker/MatchMaker_1_4_0.zip" -d "$DRRT_ROOT/MatchMaker/MatchMaker_1_4_0/"
+    unzip "$DRRT_ROOT/MatchMaker/${MM_NAME}.zip" -d "$DRRT_ROOT/MatchMaker/${MM_NAME}/"
 
     MATCHMAKER=$(find "$DRRT_ROOT/MatchMaker/" -type f -regex '.*MatchMaker.exe$' -print -quit)
 
@@ -180,7 +180,7 @@ if [[ $t -lt 6 && $NO_T -eq 0 ]]; then
 fi
 
 if [[ $r -gt 10 ]]; then
-    echo "That's a lot of rounds ($r)! Make sure that all matches were generated!"
+    echo "${YELLOW}WARNING:${NOCOLOR} That's a lot of rounds ($r)! Make sure that all matches were generated!"
 fi
 
 if [[ $NO_T -eq 1 && $NO_R -eq 0 ]]; then
