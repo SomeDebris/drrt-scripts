@@ -78,7 +78,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     exit 1
 fi
 
-LONGOPTS=ships:,teams:,rounds:,verbose,help
+LONGOPTS=ships:,teams:,rounds:,verbose,help,no-check
 
 OPTIONS=s:t:r:vhfb
 
