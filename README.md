@@ -35,7 +35,9 @@ The **DRRTscheduler** script, referred to as simply **"the Scheduler"**, runs th
 
 Basic usage 
 ```
-./DRRTscheduler [-r|--rounds NUMBER_OF_ROUNDS] [-t|-s|--ships|--teams NUMBER_OF_SHIPS] [-v] [-h] [-b] [-f]
+./DRRTscheduler -t|-s|--ships|--teams NUMBER_OF_SHIPS [-r|--rounds NUMBER_OF_ROUNDS]  
+                [-v | --verbose] [-h | --help] [-b] [-f]
+                [--no-check]
 ```
 Run the MatchMaker and check out the options and what they mean. This will show you what arguments you need to pass to the Scheduler.
 
