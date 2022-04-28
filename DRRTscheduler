@@ -159,13 +159,19 @@ while true; do
             echo 
             echo "Usage:"
             echo
-            echo -e '-v,\t--verbose\t\tEnables verbose output.'
+            echo '-v      | --verbose           Enables verbose output.'
             echo 
-            echo -e '-s, -t\t--ships, --teams\tSets number of participating ships.'
+            echo '-s | -t | --ships | --teams   Sets number of participating ships.'
             echo 
-            echo -e '-r,\t --rounds\t\tSets minimum number of rounds each ship plays. Defaults to 10.'
+            echo '-r | --rounds                 Sets minimum number of rounds each ship plays. Defaults to 10.'
             echo 
-            echo -e '-h,\t--help\t\t\tShow this help and exit.'
+            echo '-h | --help                   Show this help and exit.'
+            echo
+            echo '-b                            Set schedule generation to Best Quality.'
+            echo 
+            echo '-f                            Set schedule generation to Fast Quality.'
+            echo 
+            echo '--no-check                    Prevent participant checking.'
             exit 0
             ;;
         --)
