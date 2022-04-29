@@ -326,17 +326,8 @@ if [[ $NO_T -eq 1 && $NO_R -eq 0 ]]; then
     exit 1
 fi
 
-if [[ $GEN_SCHEDULE -eq 1 ]]; then
-    echo "Generating a schedule with the given parameters."
 
-    run_matchmaker
-
-    echo "Done."
-
-    exit 0
-fi
-
-if [[ $CHECKP -eq 1 ]]; then
+if [[ $GEN_SCHEDULE -eq 0 && $CHECKP -eq 1 ]]; then
     check_participants
 fi
 
@@ -347,6 +338,8 @@ if [[ -f $SCRIPT_DIR/rawSchedule.txt ]]; then
     while true; do
         if [[ $NO_T -eq 1 ]]; then
             REPLY="n"
+        elif [[ $GEN_SCHEDULE -eq 1 ]]; then
+            REPLY="y"
         else
             read -p "Generate new schedule? [Y/n]: " -n 1 -r
         fi
@@ -382,6 +375,12 @@ if [[ -f $SCRIPT_DIR/rawSchedule.txt ]]; then
                 ;;
         esac
     done
+    
+    if [[ $GEN_SCHEDULE -eq 1 ]]; then
+        echo "Done."
+
+        exit 0
+    fi
 else
     echo -e "${YELLOW}WARNING:${NOCOLOR} rawSchedule.txt not found!"
 
