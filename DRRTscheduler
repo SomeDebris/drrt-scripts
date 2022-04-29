@@ -4,7 +4,7 @@
 
 set -o errexit -o pipefail -o nounset
 
-VERSION="v1.1.0"
+VERSION="v1.2.2"
 
 MM_NAME="MatchMaker_1_4_0"
 
@@ -255,7 +255,7 @@ assemble () {
         BLUE_NAME="Blue Alliance"
     fi
 
-    echo "{
+    echo "{     -- Created with DRRTscheduler ${VERSION}
   color0=0x0aa879,
   color1=0x222d84,
   color2=0,
@@ -276,7 +276,7 @@ assemble () {
     
     gzip -f "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
     
-    echo "{
+    echo "{     -- Created with DRRTscheduler ${VERSION}
   color0=0xbaa01e,
   color1=0x681818,
   color2=0,
