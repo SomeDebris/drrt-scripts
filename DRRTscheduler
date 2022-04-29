@@ -351,6 +351,12 @@ if [[ -f $SCRIPT_DIR/rawSchedule.txt ]]; then
                 rm "$SCRIPT_DIR/spreadsheetSCH.txt"
 
                 run_matchmaker 
+
+                if [[ $GEN_SCHEDULE -eq 1 ]]; then
+                    echo "Done."
+
+                    exit 0
+                fi
                 
                 break
                 
@@ -375,12 +381,6 @@ if [[ -f $SCRIPT_DIR/rawSchedule.txt ]]; then
                 ;;
         esac
     done
-    
-    if [[ $GEN_SCHEDULE -eq 1 ]]; then
-        echo "Done."
-
-        exit 0
-    fi
 else
     echo -e "${YELLOW}WARNING:${NOCOLOR} rawSchedule.txt not found!"
 
