@@ -227,6 +227,12 @@ run_matchmaker () {
     echo "Contents of rawSchedule.txt:"
 
     cat "$SCRIPT_DIR/rawSchedule.txt"
+    
+    if [[ $GEN_SCHEDULE -eq 1 ]]; then
+        echo "Done."
+        
+        exit 0
+    fi
 }
 
 assemble () {
@@ -349,12 +355,6 @@ if [[ -f $SCRIPT_DIR/rawSchedule.txt ]]; then
                 rm "$SCRIPT_DIR/spreadsheetSCH.txt"
 
                 run_matchmaker 
-
-                if [[ $GEN_SCHEDULE -eq 1 ]]; then
-                    echo "Done."
-
-                    exit 0
-                fi
                 
                 break
                 
