@@ -84,7 +84,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     exit 1
 fi
 
-LONGOPTS=ships:,teams:,rounds:,verbose,help,no-check
+LONGOPTS=ships:,teams:,rounds:,verbose,help,no-check,gen-schedule
 
 OPTIONS=s:t:r:vhfb
 
@@ -99,6 +99,7 @@ eval set -- "$PARSED"
 t=0 r=10 VERBOSE=0 NO_T=1 NO_R=1
 QUALITY='-f'
 CHECKP=1
+GEN_SCHEDULE=0
 
 while true; do
     case "$1" in
@@ -147,6 +148,12 @@ while true; do
             ;;
         --no-check)
             CHECKP=0
+
+            shift
+
+            ;;
+        --gen-schedule)
+            GEN_SCHEDULE=1
 
             shift
 
