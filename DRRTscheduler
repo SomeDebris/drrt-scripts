@@ -218,7 +218,7 @@ check_participants () {
 }
 
 run_matchmaker () {
-    echo "Running MatchMaker.exe . . ."
+    echo "Creating a schedule with $t ships each playing in $r Rounds."
 
     "$MATCHMAKER" -o -t $t -r $r $QUALITY > "$SCRIPT_DIR/rawSchedule.txt"
 
@@ -324,6 +324,16 @@ if [[ $NO_T -eq 1 && $NO_R -eq 0 ]]; then
     echo "Stop."
     
     exit 1
+fi
+
+if [[ $GEN_SCHEDULE -eq 1 ]]; then
+    echo "Generating a schedule with the given parameters."
+
+    run_matchmaker
+
+    echo "Done."
+
+    exit 0
 fi
 
 if [[ $CHECKP -eq 1 ]]; then
