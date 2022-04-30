@@ -228,13 +228,13 @@ run_matchmaker () {
 
     cat "$SCRIPT_DIR/rawSchedule.txt"
     
+    grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/spreadsheetSCH.txt"
+
     if [[ $GEN_SCHEDULE -eq 1 ]]; then
         echo "Done."
         
         exit 0
     fi
-
-    grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/spreadsheetSCH.txt"
 }
 
 assemble () {
