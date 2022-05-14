@@ -4,7 +4,7 @@
 
 set -o errexit -o pipefail -o nounset
 
-VERSION="v1.1.0"
+VERSION="v1.3.0"
 
 MM_NAME="MatchMaker_1_4_0"
 
@@ -227,6 +227,14 @@ run_matchmaker () {
     echo "Contents of rawSchedule.txt:"
 
     cat "$SCRIPT_DIR/rawSchedule.txt"
+    
+    grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/spreadsheetSCH.txt"
+
+    if [[ $GEN_SCHEDULE -eq 1 ]]; then
+        echo "Done."
+        
+        exit 0
+    fi
 }
 
 assemble () {
@@ -262,7 +270,7 @@ assemble () {
         BLUE_NAME="Blue Alliance"
     fi
 
-    echo "{
+    echo "{     -- Created with DRRTscheduler ${VERSION}
   color0=0x0aa879,
   color1=0x222d84,
   color2=0,
@@ -283,7 +291,7 @@ assemble () {
     
     gzip -f "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
     
-    echo "{
+    echo "{     -- Created with DRRTscheduler ${VERSION}
   color0=0xbaa01e,
   color1=0x681818,
   color2=0,
@@ -304,7 +312,6 @@ assemble () {
     
     gzip -f "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
 }
-
 
 if [[ $t -lt 6 && $NO_T -eq 0 ]]; then
     echo -e "${RED}ERROR:${NOCOLOR} $t is lesser than minimum number of ships (6)."
@@ -330,7 +337,6 @@ fi
 if [[ $GEN_SCHEDULE -eq 0 && $CHECKP -eq 1 ]]; then
     check_participants
 fi
-
 
 if [[ -f $SCRIPT_DIR/rawSchedule.txt ]]; then
     echo "A match schedule already exists!"
@@ -396,9 +402,6 @@ else
 
     run_matchmaker 
 fi
-
-
-grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/spreadsheetSCH.txt"
 
 sed 's/\*/ /g' "$SCRIPT_DIR/spreadsheetSCH.txt" > "$SCRIPT_DIR/.no_asterisks"
 

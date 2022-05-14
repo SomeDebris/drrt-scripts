@@ -12,20 +12,16 @@ My DRRT directory looks like this before running the scripts, where `#` represen
 ```
 DRRT/
 | DRRT_#/
-| | oldships/
 | | drrt-scripts/
-| | | DRRTassembler*
 | | | DRRTscheduler*
 | | | shipIndex.conf
 | | Reassembly_${SUBMISSION_NAME}_[by_${AUTHOR_NAME}]_DRRT_#_${REV}.lua.gz
-| Matchmaker/
-| | MatchMaker.exe*
 ```
 The `drrt-scripts/` directory is this repository.
 
-The `oldships/` directory is for submission files that participants wanted to switch out for a different ship or a newer version. If the participant switches out an old submission with a new submission with the same name, I increment the `$REV` value. `$REV` starts at `A`, then goes through the alphabet (`B`, `C`, etc.).
+The `Old-Ships/` directory is for submission files that participants wanted to switch out for a different ship or a newer version. If the participant switches out an old submission with a new submission with the same name, I increment the `$REV` value. `$REV` starts at `A`, then goes through the alphabet (`B`, `C`, etc.).
 
-The `Reassembly_${SUBMISSION_NAME}_[by_${AUTHOR_NAME}]_DRRT_#_${REV}.lua.gz` file shows the location of all submission files. They are named according to this format. `${SUBMISSION_NAME}` is the submission name given to me by the participant. `${AUTHOR_NAME}` is the author name given to me by the participant. The `${REV}` value is the version of the submission, explained under the description of the `oldships/` directory.
+The `Reassembly_${SUBMISSION_NAME}_[by_${AUTHOR_NAME}]_DRRT_#_${REV}.lua.gz` file shows the location of all submission files. They are named according to this format. `${SUBMISSION_NAME}` is the submission name given to me by the participant. `${AUTHOR_NAME}` is the author name given to me by the participant. The `${REV}` value is the version of the submission, explained under the description of the `Old-Ships/` directory.
 
 The `Matchmaker/` directory is where the MatchMaker program is stored. The MatchMaker's functionality is explained [here.](https://idleloop.com/matchmaker/) The version of the MatchMaker program doesn't seem to matter. I am currently using Version 1.4 for Windows. DRRT 6, the most recent DRRT as of writing this, used this version.
 
