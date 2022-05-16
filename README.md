@@ -5,7 +5,7 @@ These scripts were made to work on my machine only, so don't expect them to work
 
 ### Usage
 
-These scripts were meant to run **only on Windows in WSL2.** The [MatchMaker](https://idleloop.com/matchmaker/) program, used by the scripts to generate a MATCH SCHEDULE, does have a MacOS and some linux versions, but I haven't tested it whatsoever. Neither the `DRRTassembler` nor the `DRRTscheduler` have been run on any machine other than my own.
+These scripts were meant to run **only on Windows in WSL2.** The [MatchMaker](https://idleloop.com/matchmaker/) program, used by the scripts to generate a MATCH SCHEDULE, does have a MacOS and some linux versions, but I haven't tested it whatsoever. The `DRRTassembler` has never been run on any machine other than my own.
 
 My DRRT directory looks like this before running the scripts, where `#` represents the number of the DRRT being held.
 
@@ -14,6 +14,7 @@ DRRT/
 | DRRT_#/
 | | drrt-scripts/
 | | | DRRTscheduler*
+| | | participant_block_checker*
 | | | shipIndex.conf
 | | Reassembly_${SUBMISSION_NAME}_[by_${AUTHOR_NAME}]_DRRT_#_${REV}.lua.gz
 ```
@@ -23,7 +24,7 @@ The `Old-Ships/` directory is for submission files that participants wanted to s
 
 The `Reassembly_${SUBMISSION_NAME}_[by_${AUTHOR_NAME}]_DRRT_#_${REV}.lua.gz` file shows the location of all submission files. They are named according to this format. `${SUBMISSION_NAME}` is the submission name given to me by the participant. `${AUTHOR_NAME}` is the author name given to me by the participant. The `${REV}` value is the version of the submission, explained under the description of the `Old-Ships/` directory.
 
-The `Matchmaker/` directory is where the MatchMaker program is stored. The MatchMaker's functionality is explained [here.](https://idleloop.com/matchmaker/) The version of the MatchMaker program doesn't seem to matter. I am currently using Version 1.4 for Windows. DRRT 6, the most recent DRRT as of writing this, used this version.
+The `Matchmaker/` directory is where the MatchMaker program is stored. The MatchMaker's functionality is explained [here.](https://idleloop.com/matchmaker/) The version of the MatchMaker program doesn't seem to matter. I am currently using Version 1.4 for Windows. DRRT 6, the most recent DRRT as of writing this, used this version. As of 2022-05-15, the DRRTscheduler script attempts to download MatchMaker v1.4.
 
 ### DRRTscheduler
 
@@ -39,7 +40,7 @@ Run the MatchMaker and check out the options and what they mean. This will show 
 
 The Scheduler ends by adding the files `rawSchedule.txt` and `spreadsheetSCH.txt` to the `drrt-scripts/` directory. It also creates all fleet files for the Red ALLIANCE and Blue ALLIANCE, named according to the match number. It creates those files with the Assembler.
 
-The Scheduler sources the file `shipIndex.conf` so that it can pass the right ship filenames to the Assembler.
+The Scheduler uses the file `shipIndex.conf` so that it can pass the right ship filenames to the Assembler.
 
 If the file `rawSchedule.txt` already exists, the Scheduler will ask if you would like to use it to make ALLIANCES instead of calling the MatchMaker and creating a brand new schedule.
 If the file `rawSchedule.txt` already exists AND you pass no arguments to the Scheduler, the script will use it to generate ALLIANCES without prompting you.
@@ -50,3 +51,7 @@ Match ${MATCH_NUMBER} - ${COLOR} Alliance.lua.gz
 ```
 where `${MATCH_NUMBER}` is the MATCH number that the ALLIANCE plays in and ${COLOR} is either "Red" or "Blue", depending on the intended color of the ALLIANCE.
 This assures that the ALLIANCES are ordered correctly in Reassembly's fleet import screen while keeping the names simple and easy to understand.
+
+### participant_block_checker
+
+the **participant_block_checker** script looks through all ship files specified in `shipIndex.conf` and checks for ILLEGAL BLOCKS using a regular expression. It will show all located instances of ILLEGAL BLOCKS.

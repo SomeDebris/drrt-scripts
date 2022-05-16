@@ -22,9 +22,11 @@ for i in ${participants[@]}; do
     gunzip "$SCRIPT_DIR/.checking.lua.gz" 
 
     if [[ $(grep "$REGEX" "$SCRIPT_DIR/.checking.lua") ]]; then
-        echo "Ship '$i' contains ILLEGAL BLOCKS:"
+        printf "Ship '$i' contains ILLEGAL BLOCKS:"
 
         grep "$REGEX" "$SCRIPT_DIR/.checking.lua" --color=auto
+    else
+        printf "Ship '$i' is good!"
     fi
 
     rm "$SCRIPT_DIR/.checking.lua"
