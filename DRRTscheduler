@@ -350,8 +350,8 @@ assemble_4v4 () {
         RED_NAME="Red Alliance"
     fi
     
-    if [[ "$10" ]]; then 
-        BLUE_NAME="$9"
+    if [[ "${10}" ]]; then 
+        BLUE_NAME="${10}"
     else
         BLUE_NAME="Blue Alliance"
     fi
