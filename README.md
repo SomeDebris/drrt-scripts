@@ -24,7 +24,7 @@ The `Old-Ships/` directory is for submission files that participants wanted to s
 
 The `Reassembly_${SUBMISSION_NAME}_[by_${AUTHOR_NAME}]_DRRT_#_${REV}.lua.gz` file shows the location of all submission files. They are named according to this format. `${SUBMISSION_NAME}` is the submission name given to me by the participant. `${AUTHOR_NAME}` is the author name given to me by the participant. The `${REV}` value is the version of the submission, explained under the description of the `Old-Ships/` directory.
 
-The `Matchmaker/` directory is where the MatchMaker program is stored. The MatchMaker's functionality is explained [here.](https://idleloop.com/matchmaker/) The version of the MatchMaker program doesn't seem to matter. I am currently using Version 1.4 for Windows. DRRT 6, the most recent DRRT as of writing this, used this version. As of 2022-05-15, the DRRTscheduler script attempts to download MatchMaker v1.4.
+The `Matchmaker/` directory is where the MatchMaker program is stored. The MatchMaker's functionality is explained [here.](https://idleloop.com/matchmaker/) The version of the MatchMaker program doesn't seem to matter. I am currently using Version 1.5b1 for Windows. DRRT 6, the most recent DRRT as of writing this, used this version. As of 2022-05-15, the DRRTscheduler script attempts to download MatchMaker v1.5b1.
 
 ### DRRTscheduler
 

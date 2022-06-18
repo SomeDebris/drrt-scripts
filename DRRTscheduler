@@ -6,7 +6,7 @@ set -o errexit -o pipefail -o nounset
 
 VERSION="v1.3.0"
 
-MM_NAME="MatchMaker_1_4_0"
+MM_NAME="MatchMaker_1_5_0_b1"
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
@@ -84,9 +84,9 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     exit 1
 fi
 
-LONGOPTS=ships:,teams:,rounds:,verbose,help,no-check,gen-schedule
+LONGOPTS=ships:,teams:,rounds:,verbose,help,no-check,gen-schedule,alliances:
 
-OPTIONS=s:t:r:vhfb
+OPTIONS=s:t:r:vhfba:
 
 ! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
 
@@ -100,6 +100,7 @@ t=0 r=10 VERBOSE=0 NO_T=1 NO_R=1
 QUALITY='-f'
 CHECKP=1
 GEN_SCHEDULE=0
+ALLIANCES=3
 
 while true; do
     case "$1" in
@@ -139,11 +140,16 @@ while true; do
             shift
 
             ;;
-
         -b)
             QUALITY='-b' 
 
             shift
+
+            ;;
+        -a|--alliances)
+            ALLIANCES="$2"
+
+            shift 2
 
             ;;
         --no-check)
@@ -220,7 +226,7 @@ check_participants () {
 run_matchmaker () {
     echo "Creating a schedule with $t ships each playing in $r Rounds."
 
-    "$MATCHMAKER" -o -t $t -r $r $QUALITY > "$SCRIPT_DIR/rawSchedule.txt"
+    "$MATCHMAKER" -a $ALLIANCES -o -t $t -r $r $QUALITY > "$SCRIPT_DIR/rawSchedule.txt"
 
     echo "rawSchedule.txt generated with MatchMaker.exe output."
  
@@ -313,8 +319,170 @@ assemble () {
     gzip -f "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
 }
 
-if [[ $t -lt 6 && $NO_T -eq 0 ]]; then
-    echo -e "${RED}ERROR:${NOCOLOR} $t is lesser than minimum number of ships (6)."
+assemble_4v4 () {
+    if [[ ! -f "$8" ]]; then
+        echo -e "${RED}ERROR:${NOCOLOR} assemble: Not Enough Arguments!"
+    
+        echo "Stop."
+        
+        exit 1
+    fi    
+    
+    if [[ ! -f "$1" ]]; then echo "File '$1' not found!"; echo "Stop."; exit 1; fi
+    
+    if [[ ! -f "$2" ]]; then echo "File '$2' not found!"; echo "Stop."; exit 1; fi
+    
+    if [[ ! -f "$3" ]]; then echo "File '$3' not found!"; echo "Stop."; exit 1; fi
+    
+    if [[ ! -f "$4" ]]; then echo "File '$4' not found!"; echo "Stop."; exit 1; fi
+    
+    if [[ ! -f "$5" ]]; then echo "File '$5' not found!"; echo "Stop."; exit 1; fi
+    
+    if [[ ! -f "$6" ]]; then echo "File '$6' not found!"; echo "Stop."; exit 1; fi
+
+    if [[ ! -f "$7" ]]; then echo "File '$7' not found!"; echo "Stop."; exit 1; fi
+
+    if [[ ! -f "$8" ]]; then echo "File '$8' not found!"; echo "Stop."; exit 1; fi
+    
+    if [[ "$9" ]]; then
+        RED_NAME="$9"
+    else
+        RED_NAME="Red Alliance"
+    fi
+    
+    if [[ "${10}" ]]; then 
+        BLUE_NAME="${10}"
+    else
+        BLUE_NAME="Blue Alliance"
+    fi
+
+    echo "{     -- Created with DRRTscheduler ${VERSION}
+  color0=0x0aa879,
+  color1=0x222d84,
+  color2=0,
+  name=\"$BLUE_NAME\",
+  faction=8,
+  currentChild=0,
+  blueprint={},
+  children={},
+  blueprints={" > "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+
+    zgrep '{data\| \{5,\}' "$5" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$6" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+
+    zgrep '{data\| \{5,\}' "$7" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$8" >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    echo "  playerprint={}}" >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    gzip -f "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    echo "{     -- Created with DRRTscheduler ${VERSION}
+  color0=0xbaa01e,
+  color1=0x681818,
+  color2=0,
+  name=\"$RED_NAME\",
+  faction=9,
+  currentChild=0,
+  blueprint={},
+  children={},
+  blueprints={" > "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+
+    zgrep '{data\| \{5,\}' "$1" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$2" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+
+    zgrep '{data\| \{5,\}' "$3" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$4" >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    echo "  playerprint={}}" >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    gzip -f "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+}
+
+versitile_assemble () {
+    if [[ ! -f $(($ALLIANCES * 2)) ]]; then
+        echo -e "${RED}ERROR:${NOCOLOR} assemble: Not Enough Arguments!"
+    
+        echo "Stop."
+        
+        exit 1
+    fi    
+    
+    for ship in "$@"; do
+    done
+    # if [[ ! -f "$1" ]]; then echo "File '$1' not found!"; echo "Stop."; exit 1; fi
+    
+    # if [[ ! -f "$2" ]]; then echo "File '$2' not found!"; echo "Stop."; exit 1; fi
+    
+    # if [[ ! -f "$3" ]]; then echo "File '$3' not found!"; echo "Stop."; exit 1; fi
+    
+    # if [[ ! -f "$4" ]]; then echo "File '$4' not found!"; echo "Stop."; exit 1; fi
+    
+    # if [[ ! -f "$5" ]]; then echo "File '$5' not found!"; echo "Stop."; exit 1; fi
+    
+    # if [[ ! -f "$6" ]]; then echo "File '$6' not found!"; echo "Stop."; exit 1; fi
+    
+    if [[ "$7" ]]; then
+        RED_NAME="$7"
+    else
+        RED_NAME="Red Alliance"
+    fi
+    
+    if [[ "$8" ]]; then 
+        BLUE_NAME="$8"
+    else
+        BLUE_NAME="Blue Alliance"
+    fi
+
+    echo "{     -- Created with DRRTscheduler ${VERSION}
+  color0=0x0aa879,
+  color1=0x222d84,
+  color2=0,
+  name=\"$BLUE_NAME\",
+  faction=8,
+  currentChild=0,
+  blueprint={},
+  children={},
+  blueprints={" > "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+
+    zgrep '{data\| \{5,\}' "$4" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$5" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$6" >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    echo "  playerprint={}}" >> "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    gzip -f "$SCRIPT_DIR/../Qualifications/$BLUE_NAME.lua"
+    
+    echo "{     -- Created with DRRTscheduler ${VERSION}
+  color0=0xbaa01e,
+  color1=0x681818,
+  color2=0,
+  name=\"$RED_NAME\",
+  faction=9,
+  currentChild=0,
+  blueprint={},
+  children={},
+  blueprints={" > "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+
+    zgrep '{data\| \{5,\}' "$1" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$2" | sed 's/}}}},/}}},/g' >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    zgrep '{data\| \{5,\}' "$3" >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    echo "  playerprint={}}" >> "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+    
+    gzip -f "$SCRIPT_DIR/../Qualifications/$RED_NAME.lua"
+}
+
+if [[ $t -lt $(($ALLIANCES * 2)) && $NO_T -eq 0 ]]; then
+    echo -e "${RED}ERROR:${NOCOLOR} $t is lesser than minimum number of ships \($(($ALLIANCES * 2))\)."
 
     echo "Stop."
 
@@ -415,7 +583,7 @@ while read p; do
     j=0
 
     for k in $p; do
-        if [[ $j -ge 6 ]]; then break; fi
+        if [[ $j -ge $(($ALLIANCES * 2)) ]]; then break; fi
 
         ships+=" ${participants[k]}"
 
@@ -423,8 +591,12 @@ while read p; do
     done
     
     printf -v matchNumber "%03d" $i
-     
-    assemble $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" & 
+    
+    if [[ $ALLIANCES -eq 4 ]]; then 
+        assemble_4v4 $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" & 
+    else
+        assemble $ships "Match ${matchNumber} - ^1The Red Alliance^7" "Match ${matchNumber} - ^4The Blue Alliance^7" & 
+    fi
     
     let "i += 1"
 done <"$SCRIPT_DIR/.no_asterisks"
