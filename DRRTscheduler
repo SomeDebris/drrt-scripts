@@ -412,8 +412,8 @@ versitile_assemble () {
         exit 1
     fi    
     
-    for ship in "$@"; do
-    done
+    # for ship in "$@"; do
+    # done
     # if [[ ! -f "$1" ]]; then echo "File '$1' not found!"; echo "Stop."; exit 1; fi
     
     # if [[ ! -f "$2" ]]; then echo "File '$2' not found!"; echo "Stop."; exit 1; fi
