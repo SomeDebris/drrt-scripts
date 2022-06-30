@@ -583,10 +583,13 @@ while read p; do
     j=0
 
     for k in $p; do
-        if [[ $j -ge $(($ALLIANCES * 2)) ]]; then break; fi
+        #if [[ $j -ge $(($ALLIANCES * 2)) ]]; then break; fi
+
         echo ${participants[k]}
         echo $k
-        echo $(($ALLIANCES * 2))
+
+        if [[ $j -ge 8 ]]; then break; fi
+
         ships+=" ${participants[k]}"
 
         let "j += 1"
