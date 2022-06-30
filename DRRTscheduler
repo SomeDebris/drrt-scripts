@@ -585,8 +585,11 @@ while read p; do
     for k in $p; do
         #if [[ $j -ge $(($ALLIANCES * 2)) ]]; then break; fi
 
+        echo $k
         echo ${participants[k]}
         echo $k
+        echo ---------------
+
 
         if [[ $j -ge 8 ]]; then break; fi
 
