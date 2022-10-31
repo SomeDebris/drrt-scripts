@@ -147,7 +147,7 @@ def get_participants(check):
 
 
 def run_matchmaker(num_ships, num_rounds):
-    """TODO fill out this description"""
+    """Runs the MatchMaker, generating a MATCH SCHEDULE."""
     print(f'Creating a schedule with {num_ships} ships each playing in {num_rounds} Rounds.')
     #TODO do system call to matchmaker executable
     #"$MATCHMAKER" -a $ALLIANCES -o -t $t -r $r $QUALITY > "$SCRIPT_DIR/rawSchedule.txt"
@@ -166,7 +166,7 @@ def run_matchmaker(num_ships, num_rounds):
 
 
 def assemble(ships, ships_per_alliance, red_name='Red Alliance', blue_name='Blue Alliance'):
-    """TODO fill out this description"""
+    """Creates a RED ALLIANCE fleet file and a BLUE ALLIANCE fleet file for a specific match."""
     # Check that the correct number of ship files were passed
     if len(ships) != (2 * ships_per_alliance):
         print(f'{RED}ERROR:{NOCOLOR} assemble: Not Enough Arguments!')
