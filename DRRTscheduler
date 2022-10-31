@@ -412,7 +412,14 @@ versitile_assemble () {
         exit 1
     fi    
     
-    # Count the arguments. If 6: go with 2v2.
+    # you know: 
+    # number of ships per alliance ($ALLIANCES)
+    # therefore:
+    #   arguments up to $ALLIANCES will be RED
+    #   arguments from $ALLIANCES + 1 to $ALLIANCES * 2 will be BLUE
+    #   anything else is 
+    #
+    # how to 
 
     # for ship in "$@"; do
     for ship in "$@"; do
