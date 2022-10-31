@@ -412,7 +412,7 @@ versitile_assemble () {
         exit 1
     fi    
     
-    # Count the 
+    # Count the arguments. If 6: go with 2v2.
 
     # for ship in "$@"; do
     for ship in "$@"; do
