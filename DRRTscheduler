@@ -412,7 +412,18 @@ versitile_assemble () {
         exit 1
     fi    
     
+    # Count the 
+
     # for ship in "$@"; do
+    for ship in "$@"; do
+        if [[ ! -f "$ship" ]]; then 
+            echo "File '$ship' not found!"
+
+            echo "Stop."
+
+            exit 1
+        elif 
+    done
     # done
     # if [[ ! -f "$1" ]]; then echo "File '$1' not found!"; echo "Stop."; exit 1; fi
     
