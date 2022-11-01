@@ -43,11 +43,16 @@ def main(args):
             os.makedirs(path, exist_ok=True)
 
     #TODO make this work cross-platform - DL comes with dmg for mac and exec file for linux + diff arches
-    # Find matchmaker executable location if exists
-    matchmaker = find_file('.*MatchMaker.exe', os.path.join(DATA_DIR, 'MatchMaker'))
+    # Find matchmaker executable location if exists (this is messy but it works)
+    mm_dir = os.path.join(DATA_DIR, 'MatchMaker')
+    mm_exec = '.*MatchMaker.exe' if sys.platform == 'win32' else \
+        ('.*MatchMaker.app' if sys.platform == 'darwin' else \
+        ('.*/IntelUbuntu/MatchMaker' if platform.machine() in ('AMD64', 'x86_64','x86') 
+        else '.*/RaspianArm64/MatchMaker'))
+    matchmaker = _find_file(mm_exec, mm_dir)
     # Download matchmaker executable if not
     if not matchmaker:
-        print('Attempting to download the MatchMaker (MatchMaker.exe). . .')
+        print('Attempting to download the MatchMaker (MatchMaker executable). . .')
         mm_zip_path = os.path.join(DATA_DIR, 'MatchMaker', f'{MM_NAME}.zip')
         if not os.path.exists(mm_zip_path):
             urllib.request.urlretrieve(f'https://idleloop.com/matchmaker/{MM_NAME}.zip', mm_zip_path)
@@ -55,22 +60,47 @@ def main(args):
             # this may do error handling for us?
         with zipfile.ZipFile(mm_zip_path, 'r') as zip_handle:
             zip_handle.extractall(os.path.join(DATA_DIR, 'MatchMaker', MM_NAME))
-        matchmaker = find_file('.*MatchMaker.exe', os.path.join(DATA_DIR, 'MatchMaker'))
+        
+        # Find matchmaker executable, by platform
+        if sys.platform == 'win32':
+            matchmaker = _find_file('.*MatchMaker.exe', mm_dir)
+        elif sys.platform == 'darwin':
+            #TODO test to make sure this works
+            mm_dmg = _find_file('.*MatchMaker.dmg', mm_dir)
+            mm_dmg_mount = os.path.join(mm_dir, 'mount')
+            # Mount dmg file to data_dir/MatchMaker/mount/<dmg>
+            # make mount folder if it doesn't exist
+            os.makedirs(mm_dmg_mount, exist_ok=True)
+            subprocess.Popen(['hdiutil', 'attach', '-mountpoint', DATA_DIR, mm_dmg_mount]).wait()
+            # Find .app file in mounted dmg
+            mm_app_dmg = _find_file('.*MatchMaker.app', mm_dir)
+            # Copy app to outside of mount directory
+            shutil.copy(mm_app_dmg, mm_dir)
+            # Detach mounted dmg and delete mount dir
+            subprocess.Popen(['hdiutil', 'detach', mm_dmg_mount]).wait()
+            os.removedirs(mm_dmg_mount)
+            matchmaker = _find_file('.*MatchMaker.app', mm_dir)
+        else:
+            # Linx (/UNIX-like other)
+            # MM zip include Raspbian, RaspbianArm64, and IntelUbuntu
+            # which probably means: x86, ARM64, x64_86
+            # TODO test if this works
+            matchmaker = _find_file('.*/IntelUbuntu/MatchMaker', mm_dir) \
+                if platform.machine() in ('AMD64', 'x86_64','x86') \
+                else _find_file('.*/RaspianArm64/MatchMaker', mm_dir)
+        
         if not matchmaker:
-            print(f'{RED}ERROR:{NOCOLOR} could not find MatchMaker.exe!')
-            print('Stop.')
-            sys.exit(1)
+            _print_err('Could not find MatchMaker executable!')
     else:
-        print('MatchMaker.exe found.')
+        print('MatchMaker executable found.')
 
     # getopt replaced by argparse, see associated method
 
     if args.ships < (args.alliances * 2):
-        print(f'{RED}ERROR:{NOCOLOR} {args.ships} is lesser than minimum number of ships ({args.alliances * 2}).')
-
+        _print_err(f'{args.ships} is lesser than minimum number of ships ({args.alliances * 2}).')
 
     if args.rounds > WARN_ROUNDS:
-        print(f'{YELLOW}WARNING:{NOCOLOR} That\'s a lot of rounds ({args.rounds})! Make sure that all matches were generated!')
+        _print_err(f'That\'s a lot of rounds ({args.rounds})! Make sure that all matches were generated!', True)
 
     ships = get_participants(not args.no_check)
     # Required flag for rounds removes need for error check when rounds set but not ships
@@ -80,18 +110,19 @@ def main(args):
     if os.path.exists(raw_schedule):
         print('A match schedule already exists!')
         # Wait for user to input Y to generate new schedule or n to use current
-        regen_resp = wait_yn('Generate new schedule?')
+        regen_resp = _wait_yn('Generate new schedule?')
         if regen_resp:
             os.remove(raw_schedule)
             os.remove(os.path.join(SCRIPT_DIR, 'spreadsheetSCH.txt'))
-            run_matchmaker(args.ships, args.rounds)
+            run_matchmaker(matchmaker, args.ships, args.rounds, args.alliances)
         else:
             print('Current schedule will be used.')
     else:
-        print(f'{YELLOW}WARNING:{NOCOLOR} rawSchedule.txt not found!')
+        _print_err('rawSchedule.txt not found!', True)
+        print(f'{YELLOW}WARNING:{NOCOLOR} ')
         # Do not need to check for ship count here, done in argparse
         print('A new rawSchedule.txt will be generated.')
-        run_matchmaker(args.ships, args.rounds)
+        run_matchmaker(matchmaker, args.ships, args.rounds, args.alliances)
 
     #TODO what does this do?
     # sed 's/\*/ /g' "$SCRIPT_DIR/spreadsheetSCH.txt" > "$SCRIPT_DIR/.no_asterisks"
@@ -111,14 +142,16 @@ def main(args):
 
     # Open the directory containing spreadsheetSCH.txt in the file browser
     # (only if the user requests that it is opened) - cross-platform
-    explorer_resp = wait_yn('Open the drrt-scripts directory in the file browser?')
+    explorer_resp = _wait_yn('Open the drrt-scripts directory in the file browser?')
     if explorer_resp:
-        if sys.platform=='win32':
-            subprocess.Popen(['start', SCRIPT_DIR], shell=True)
-        elif sys.platform=='darwin':
-            subprocess.Popen(['open', SCRIPT_DIR])
+        if sys.platform == 'win32':
+            retval = subprocess.Popen(['start', SCRIPT_DIR], shell=True).wait()
+        elif sys.platform == 'darwin':
+            retval = subprocess.Popen(['open', SCRIPT_DIR]).wait()
         else:
-            subprocess.Popen(['xdg-open', SCRIPT_DIR])
+            retval = subprocess.Popen(['xdg-open', SCRIPT_DIR]).wait()
+        if retval:
+            print
     else:
         print('Stop.')
 
@@ -129,30 +162,31 @@ def get_participants(check):
     with open('ship_index.json', 'r') as ship_fh:
         participants = json.load(ship_fh)
         if check:
-            # if validation, check to make sure each listing is a file that exists
+            # If validation, check to make sure each listing is a file that exists
             abs_paths = []
             for ship in participants:
                 ship_path = os.path.join(DATA_DIR, ship)
                 if not os.path.exists(ship_path):
-                    print(f'{RED}ERROR:{NOCOLOR} check_participants: Ship file \'{ship}\' not found!')
-                    print('Stop.')
-                    sys.exit(1)
+                    _print_err(f'check_participants: Ship file \'{ship}\' not found!')
                 else:
                     abs_paths.append(ship_path)
             print('check_participants: all ship files found!')
             return abs_paths
         else:
-            # if no validation, find the absolute path for all given files
+            # If no validation, find the absolute path for all given files
             return [os.path.join(DATA_DIR, ship) for ship in participants]
 
 
-def run_matchmaker(num_ships, num_rounds):
+def run_matchmaker(mm_path, num_ships, num_rounds, num_alliances, quality):
     """Runs the MatchMaker, generating a MATCH SCHEDULE."""
     print(f'Creating a schedule with {num_ships} ships each playing in {num_rounds} Rounds.')
-    #TODO do system call to matchmaker executable
-    #"$MATCHMAKER" -a $ALLIANCES -o -t $t -r $r $QUALITY > "$SCRIPT_DIR/rawSchedule.txt"
+    # Set quality to best if passed else fast (should be fast by default)
+    quality = '-b' if quality == 'best' else '-f'
+    # System call to MatchMaker executable
+    subprocess.Popen([mm_path, '-a', num_alliances, '-o', '-t', num_ships, '-r', num_rounds, quality, 
+        '>', os.path.join(SCRIPT_DIR, 'rawSchedule.txt')])
 
-    print('rawSchedule.txt generated with MatchMaker.exe output.')
+    print('rawSchedule.txt generated with MatchMaker executable output.')
     print('Contents of rawSchedule.txt:')
     with open(os.path.join(SCRIPT_DIR, 'rawSchedule.txt'), 'r') as raw_schedule:
         print('\n'.join(raw_schedule.readlines()))
@@ -160,30 +194,36 @@ def run_matchmaker(num_ships, num_rounds):
     #TODO what does this do?
     # grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/spreadsheetSCH.txt"
 
-    #TODO not sure if this is what is supposed to be here?
-    print('Done.')
-    sys.exit(0)
+    #TODO not sure if this is what is supposed to be here? - I think no
+    # print('Done.')
+    # sys.exit(0)
 
 
 def assemble(ships, ships_per_alliance, red_name='Red Alliance', blue_name='Blue Alliance'):
     """Creates a RED ALLIANCE fleet file and a BLUE ALLIANCE fleet file for a specific match."""
     # Check that the correct number of ship files were passed
     if len(ships) != (2 * ships_per_alliance):
-        print(f'{RED}ERROR:{NOCOLOR} assemble: Not Enough Arguments!')
-        print('Stop.')
-        sys.exit(1)
+        print('assemble: Not Enough Arguments!')
     
+    # Check that each ship file exists
     for ship in ships:
         if not os.path.exists(ship):
-            print(f'File {ship} not found!')
-            print('Stop.')
-            sys.exit(1)
+            _print_err(f'File {ship} not found!')
 
 
     #TODO what does this method actually do???
 
 
-def wait_yn(prompt):
+def _print_err(message, is_warning=False):
+    if is_warning:
+        print(f'{YELLOW}WARNING:{NOCOLOR} {message}')
+    else:
+        print(f'{RED}ERROR:{NOCOLOR} {message}')
+        print('Stop.')
+        sys.exit(1)
+
+
+def _wait_yn(prompt):
     while True:
         resp = input(f'{prompt} [Y/n]: ')
         if resp == 'n':
@@ -194,7 +234,7 @@ def wait_yn(prompt):
             print('Please answer [Y/n].')
 
 
-def find_file(pattern, path):
+def _find_file(pattern, path):
     """Recursively find a file within a path matching a regex pattern."""
     for root, _, files in os.walk(path):
         for name in files:
@@ -214,12 +254,11 @@ def parse_args():
     parser.add_argument('-r', '--rounds', 
             default=10, 
             help='Sets minimum number of rounds each ship plays. Defaults to 10.')
-    parser.add_argument('-b', 
-            action='store_true', 
-            help='Set schedule generation to Best Quality.')
-    parser.add_argument('-f', 
-            action='store_true', 
-            help='Set schedule generation to Fast Quality.')
+    parser.add_argument('-q', 
+            nargs='?',
+            choices=['fast', 'best'],
+            default='fast',
+            help='Set schedule generation quality.')
     parser.add_argument('--no-check', 
             action='store_true', 
             help='Prevent participant checking.')
