@@ -2,6 +2,7 @@ schedules/raw
 ships/*.lua.gz
 *.bak
 *.swp
+spreadsheetSCH.txt
 *.no_asterisks
 *clean.sh
 **/__pycache__

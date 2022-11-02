@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-#TODO help
+DRRT COMMON FUNCTIONS
+General functions which are useful for multiple script files.
 """
 
 import fnmatch
@@ -21,7 +22,7 @@ NOCOLOR = '\033[0m'
 
 
 def print_err(message, is_warning=False):
-    #TODO fill out description
+    """Print an error message and exit OR print a warning."""
     if is_warning:
         print(f'{YELLOW}WARNING:{NOCOLOR} {message}')
     else:
@@ -31,7 +32,7 @@ def print_err(message, is_warning=False):
 
 
 def wait_yn(prompt):
-    #TODO fill out description
+    """Wait for the user to enter Y or n to a given prompt."""
     while True:
         resp = input(f'{prompt} [Y/n]: ')
         if resp == 'n':

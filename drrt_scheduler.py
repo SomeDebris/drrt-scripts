@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 DRRT ALLIANCE SCHEDULER
-Generates MATCH SCHEDULE and _assembles all QUALIFICATION MATCH ALLIANCES.
+Generates MATCH SCHEDULE and assembles all QUALIFICATION MATCH ALLIANCES.
 """
 
 import argparse
@@ -14,6 +14,7 @@ import subprocess
 import sys
 
 from drrt_common import VERSION, DATA_DIR, SCRIPT_DIR, print_err, wait_yn
+
 
 MATCH_TEMPLATE = """{{     -- Created with DRRTscheduler {0}
   color0=0x0aa879,
@@ -45,11 +46,16 @@ def main(args):
         if not os.path.exists(path):
             os.makedirs(path, exist_ok=True)
 
+    # Get list of ship/participant filepaths from ship_index.json
+    # Also may check if those files exist
     ships = _get_participants(not args.no_check)
+    print(f'Found {len(ships)} ships in ship_index.json.')
 
+    # Checks if there are enough ships to fill both alliances at least once
     if len(ships) < (args.alliances * 2):
         print_err(f'{len(ships)} is lesser than minimum number of ships ({args.alliances * 2}).')
 
+    # Gets paths to input schedule CSV, output schedule file, and output schedule file without asterisks
     sch_in_filename = f'{len(ships)}_{args.alliances}v{args.alliances}.csv'
     sch_in_filepath = _get_script_path(os.path.join('schedules', 'out', sch_in_filename))
     sch_out_filepath = _get_script_path('spreadsheetSCH.txt', False)
@@ -58,24 +64,32 @@ def main(args):
     with open(sch_in_filepath, 'r') as schedule_in, \
             open(sch_out_filepath, 'w') as schedule_out, \
             open(sch_noasterisk_filepath, 'w') as sch_out_noasterisk:
+        # Read all lines of input schedule
         sch_in_lines = schedule_in.readlines()
+        # Seek back to beginning of file
         schedule_in.seek(0)
+        # Re-read input schedule with CSV reader (to get indexed rows)
         schedule = [row for row in csv.reader(schedule_in)]
+        # Number of matches (not rounds) = number of lines in the schedule
         num_matches = len(sch_in_lines)
-        #TODO these may require some modification to line terminators
+        # Copy input schedule lines to output schedule file
         schedule_out.writelines(sch_in_lines)
+        # Write input schedule lines to output noasterisk file, 
+        #   but replace all asterisks with nothing
         sch_out_noasterisk.writelines([line.replace('*', '') for line in sch_in_lines])
+    print(f'Schedule has {num_matches} matches.')
 
     print('Beginning ALLIANCE generation.')
     match_num = 1
     while match_num <= num_matches:
         # Add ship files found in the current match schedule
         # Ship numbers in schedule are 1-indexed, match no here is 1-indexed too
-        assemble_ships = [ships[int(idx)-1] for idx in schedule[match_num-1]]
+        assemble_ships = [ships[int(idx.replace('*', ''))-1] for idx in schedule[match_num-1]]
         # Check that the correct number of ship files were passed
         if len(assemble_ships) != (2 * args.alliances):
             print('assemble: Not Enough Arguments!')
 
+        # Assemble the red and blue alliance match files
         _assemble(assemble_ships, 
             f'Match {str(match_num).zfill(3)} - ^1The Red Alliance^7',
             f'Match {str(match_num).zfill(3)} - ^4The Blue Alliance^7')
@@ -128,11 +142,13 @@ def _get_participants(check):
 def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
     """Creates a RED ALLIANCE fleet file and a BLUE ALLIANCE fleet file for a specific match."""
     
-    # Check that each ship file exists
     ship_data = []
     for ship in ships:
+        # Check that each ship file exists
         if not os.path.exists(ship):
             print_err(f'File {ship} not found!')
+        # Open gzipped lua ship file (.lua.gz)
+        # Read file and 
         with gzip.open(ship, 'r') as ship_file:
             raw_ship_data = ''.join([b.decode('utf-8') for b in ship_file.readlines()])
         ship_data.append(_parse_ship_data(raw_ship_data))
@@ -144,14 +160,27 @@ def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
 
 
 def _assemble_alliance(ship_data, name):
+    """Creates a match file for one ALLIANCE."""
+    # Create output file data/Qualifications/<name>.lua
     with open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.lua'), 'w') as match_file:
+        # Write match template to file filled out with version, name, and ship data
+        # Ship data has escaped \\n in it, replace with \n for newlines
+        #   Also join each ship (data field) in the match together with a comma and newline
         match_file.writelines(MATCH_TEMPLATE.format(VERSION, name, ',\n  '.join(ship_data).replace('\\n', '\n')))
 
 
 def _parse_ship_data(raw_data):
+    """Parse and return a ship .lua file for its data field."""
+    # raw_data is a string of the ship's data
     data_sense = 0
     start_idx = None
+    # Loop through all characters in the ship's data and search for "data="
     for idx, char in enumerate(raw_data):
+        # This checks for the characters 'd', 'a', 't', 'a' sequentially
+        # Works because data_sense is incremented each letter
+        # If a character not in the sequence is found, data_sense is reset to 0
+        # So the sequence needs to be found and *then* an '=' character,
+        #   which denotes the start of the data block
         if (char == 'd' and data_sense == 0) or \
                 (char == 'a' and data_sense == 1) or \
                 (char == 't' and data_sense == 2) or \
@@ -163,11 +192,17 @@ def _parse_ship_data(raw_data):
             break
         else:
             data_sense = 0
+    # If "data=" is not found, error
     if start_idx is None:
         print_err('Invalid lua ship data file! Cannot find where data starts.')
 
     end_idx = None
+    # If "data=" is found, start at the found index and search for the closing } delimeter
     for idx, char in enumerate(raw_data[start_idx:]):
+        # If a { is found, add one to the count
+        # If a } is found, subtract one
+        # When the count reaches 0, we've closed the data block
+        #  (this is because we start at 1 opening brace)
         if char == '{':
             delim_ctr += 1
         elif char == '}':
@@ -175,13 +210,16 @@ def _parse_ship_data(raw_data):
             if delim_ctr == 0:
                 end_idx = idx + start_idx
                 break
+    # If the delimeter counter never reaches 0, the file is invalid - error
     if end_idx is None:
         print_err('Invalid lua ship data file! Cannot find where data ends.')
 
-    return raw_data[start_idx-5:end_idx+1]
+    # Return the data found between the two delimiter indices found
+    return raw_data[start_idx-len('data='):end_idx+1]
     
 
 def _get_script_path(filename, check=True):
+    """Get an OS filepath within the script directory from a filename."""
     filepath = os.path.join(SCRIPT_DIR, filename)
     if check and not os.path.exists(filepath):
         print_err(f'{filepath} is not a file that exists!')
@@ -189,6 +227,7 @@ def _get_script_path(filename, check=True):
 
 
 def parse_args():
+    #TODO verbose mode
     parser = argparse.ArgumentParser(description=__doc__, 
             formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-v', '--verbose', 
@@ -198,9 +237,10 @@ def parse_args():
             action='store_true', 
             help='Prevent participant checking.')
     parser.add_argument('-a', '--alliances',
+            type=int,
+            choices=range(2, 5),
             default=3,
-            help='') #TODO help for this argument
-    #TODO gen-schedule option
+            help='Sets number of ships per alliance.')
     return parser.parse_args()
 
 
