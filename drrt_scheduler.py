@@ -248,17 +248,6 @@ def parse_args():
     parser.add_argument('-v', '--verbose', 
             action='store_true', 
             help='Enables verbose output.')
-    parser.add_argument('-s', '-t', '--ships', '--teams',
-            required=True,
-            help='Sets number of participating ships/teams.')
-    parser.add_argument('-r', '--rounds', 
-            default=10, 
-            help='Sets minimum number of rounds each ship plays. Defaults to 10.')
-    parser.add_argument('-q', 
-            nargs='?',
-            choices=['fast', 'best'],
-            default='fast',
-            help='Set schedule generation quality.')
     parser.add_argument('--no-check', 
             action='store_true', 
             help='Prevent participant checking.')
