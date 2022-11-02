@@ -9,6 +9,7 @@ import csv
 import gzip
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -16,6 +17,7 @@ import sys
 from drrt_common import VERSION, DATA_DIR, SCRIPT_DIR, print_err, wait_yn
 
 
+ILLEGAL_SHIP_REGEX = '({854,|{863,|{838,|{833,|{273,|{927,|{928,|{929,|{930,|{931,|{932,|{933,|{934,|{935,|{936,|{937,|{938,|{939,|{940,|{941,|{942,|{943,|{953,|{954,|{955,|{956,|{320,|{11104,|{12130,|{15010,|{15142,|{15144,|{15146,)'
 MATCH_TEMPLATE = """{{     -- Created with DRRTscheduler {0}
   color0=0x0aa879,
   color1=0x222d84,
@@ -148,9 +150,12 @@ def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
         if not os.path.exists(ship):
             print_err(f'File {ship} not found!')
         # Open gzipped lua ship file (.lua.gz)
-        # Read file and 
+        # Read file and decode to single string
         with gzip.open(ship, 'r') as ship_file:
             raw_ship_data = ''.join([b.decode('utf-8') for b in ship_file.readlines()])
+            if re.match(ILLEGAL_SHIP_REGEX, raw_ship_data):
+                print_err(f'Ship {ship} contains ILLEGAL BLOCKS')
+        # Parse ship data out of file content and append to list
         ship_data.append(_parse_ship_data(raw_ship_data))
     
     # Red is the first half of the schedule, blue is the second half
