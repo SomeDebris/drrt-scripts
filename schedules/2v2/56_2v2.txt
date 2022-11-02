@@ -1,191 +1,0 @@
-Create schedule for 56 teams playing 6 rounds in 84 matches
-with a minimum match separation of 10.
-
-   0:00    0.81% complete (99 updates), less than a minute to go      0:00    1.50% complete (99 updates), less than a minute to go      0:00    2.26% complete (99 updates), less than a minute to go      0:01    2.96% complete (99 updates), less than a minute to go      0:01    3.64% complete (99 updates), less than a minute to go      0:01    4.42% complete (99 updates), less than a minute to go      0:01    5.13% complete (99 updates), less than a minute to go      0:02    5.94% complete (99 updates), less than a minute to go      0:02    6.71% complete (99 updates), less than a minute to go      0:02    7.52% complete (99 updates), less than a minute to go      0:02    8.25% complete (99 updates), less than a minute to go      0:03    8.93% complete (99 updates), less than a minute to go      0:03    9.74% complete (99 updates), less than a minute to go      0:03   10.46% complete (99 updates), less than a minute to go      0:03   11.27% complete (99 updates), less than a minute to go      0:04   12.06% complete (99 updates), less than a minute to go      0:04   12.82% complete (99 updates), less than a minute to go      0:04   13.65% complete (99 updates), less than a minute to go      0:04   14.47% complete (99 updates), less than a minute to go      0:05   15.29% complete (99 updates), less than a minute to go      0:05   16.10% complete (99 updates), less than a minute to go      0:05   16.89% complete (99 updates), less than a minute to go      0:05   17.70% complete (99 updates), less than a minute to go      0:06   18.52% complete (99 updates), less than a minute to go      0:06   19.29% complete (99 updates), less than a minute to go      0:06   20.09% complete (99 updates), less than a minute to go      0:06   20.87% complete (99 updates), less than a minute to go      0:07   21.69% complete (99 updates), less than a minute to go      0:07   22.44% complete (99 updates), less than a minute to go      0:07   23.22% complete (99 updates), less than a minute to go      0:07   23.98% complete (99 updates), less than a minute to go      0:08   24.76% complete (99 updates), less than a minute to go      0:08   25.54% complete (99 updates), less than a minute to go      0:08   26.34% complete (99 updates), less than a minute to go      0:08   27.15% complete (99 updates), less than a minute to go      0:09   27.93% complete (99 updates), less than a minute to go      0:09   28.72% complete (99 updates), less than a minute to go      0:09   29.47% complete (99 updates), less than a minute to go      0:09   30.30% complete (99 updates), less than a minute to go      0:10   31.10% complete (99 updates), less than a minute to go      0:10   31.92% complete (99 updates), less than a minute to go      0:10   32.75% complete (99 updates), less than a minute to go      0:10   33.53% complete (99 updates), less than a minute to go      0:11   34.30% complete (99 updates), less than a minute to go      0:11   35.07% complete (99 updates), less than a minute to go      0:11   35.86% complete (99 updates), less than a minute to go      0:11   36.67% complete (99 updates), less than a minute to go      0:12   37.46% complete (99 updates), less than a minute to go      0:12   38.24% complete (99 updates), less than a minute to go      0:12   39.06% complete (99 updates), less than a minute to go      0:12   39.89% complete (99 updates), less than a minute to go      0:13   40.72% complete (99 updates), less than a minute to go      0:13   41.52% complete (99 updates), less than a minute to go      0:13   42.31% complete (99 updates), less than a minute to go      0:13   43.12% complete (99 updates), less than a minute to go      0:14   43.92% complete (99 updates), less than a minute to go      0:14   44.73% complete (99 updates), less than a minute to go      0:14   45.55% complete (99 updates), less than a minute to go      0:14   46.36% complete (99 updates), less than a minute to go      0:15   47.16% complete (99 updates), less than a minute to go      0:15   48.00% complete (99 updates), less than a minute to go      0:15   48.82% complete (99 updates), less than a minute to go      0:15   49.64% complete (99 updates), less than a minute to go      0:16   50.42% complete (99 updates), less than a minute to go      0:16   51.24% complete (99 updates), less than a minute to go      0:16   52.04% complete (99 updates), less than a minute to go      0:16   52.82% complete (99 updates), less than a minute to go      0:17   53.62% complete (99 updates), less than a minute to go      0:17   54.43% complete (99 updates), less than a minute to go      0:17   55.22% complete (99 updates), less than a minute to go      0:17   56.05% complete (99 updates), less than a minute to go      0:18   56.87% complete (99 updates), less than a minute to go      0:18   57.67% complete (99 updates), less than a minute to go      0:18   58.51% complete (99 updates), less than a minute to go      0:18   59.33% complete (99 updates), less than a minute to go      0:19   60.00% complete (99 updates), less than a minute to go      0:19   60.82% complete (99 updates), less than a minute to go      0:19   61.65% complete (99 updates), less than a minute to go      0:19   62.47% complete (99 updates), less than a minute to go      0:20   63.30% complete (99 updates), less than a minute to go      0:20   64.13% complete (99 updates), less than a minute to go      0:20   64.96% complete (99 updates), less than a minute to go      0:20   65.79% complete (99 updates), less than a minute to go      0:21   66.61% complete (99 updates), less than a minute to go      0:21   67.42% complete (99 updates), less than a minute to go      0:21   68.23% complete (99 updates), less than a minute to go      0:21   69.06% complete (99 updates), less than a minute to go      0:22   69.88% complete (99 updates), less than a minute to go      0:22   70.71% complete (99 updates), less than a minute to go      0:22   71.48% complete (99 updates), less than a minute to go      0:22   72.31% complete (99 updates), less than a minute to go      0:23   73.14% complete (99 updates), less than a minute to go      0:23   73.97% complete (99 updates), less than a minute to go      0:23   74.78% complete (99 updates), less than a minute to go      0:23   75.60% complete (99 updates), less than a minute to go      0:24   76.43% complete (99 updates), less than a minute to go      0:24   77.21% complete (99 updates), less than a minute to go      0:24   78.04% complete (99 updates), less than a minute to go      0:24   78.87% complete (99 updates), less than a minute to go      0:25   79.67% complete (99 updates), less than a minute to go      0:25   80.50% complete (99 updates), less than a minute to go      0:25   81.29% complete (99 updates), less than a minute to go      0:25   82.10% complete (99 updates), less than a minute to go      0:26   82.90% complete (99 updates), less than a minute to go      0:26   83.62% complete (99 updates), less than a minute to go      0:26   84.45% complete (99 updates), less than a minute to go      0:26   85.23% complete (99 updates), less than a minute to go      0:27   86.05% complete (99 updates), less than a minute to go      0:27   86.88% complete (99 updates), less than a minute to go      0:27   87.71% complete (99 updates), less than a minute to go      0:27   88.53% complete (99 updates), less than a minute to go      0:28   89.33% complete (99 updates), less than a minute to go      0:28   90.14% complete (99 updates), less than a minute to go      0:28   90.95% complete (99 updates), less than a minute to go      0:28   91.75% complete (99 updates), less than a minute to go      0:29   92.57% complete (99 updates), less than a minute to go      0:29   93.39% complete (99 updates), less than a minute to go      0:29   94.17% complete (99 updates), less than a minute to go      0:29   94.99% complete (99 updates), less than a minute to go      0:30   95.80% complete (99 updates), less than a minute to go      0:30   96.62% complete (99 updates), less than a minute to go      0:30   97.43% complete (99 updates), less than a minute to go      0:30   98.27% complete (99 updates), less than a minute to go      0:31   99.09% complete (99 updates), less than a minute to go      0:31   99.90% complete (99 updates), less than a minute to go      0:31   100.00% complete (99 updates), operation complete         
-Results for 56 teams playing 6 rounds in 84 matches
-with a minimum match separation of 10.
-
-Match Schedule
---------------
-  1:   13    16    50    35 
-  2:   10    47    51    14 
-  3:   56    46    48    18 
-  4:    9    44    52    19 
-  5:   34     7    15    54 
-  6:   11    32    26    43 
-  7:   31    23    53    21 
-  8:   24    39     8     3 
-  9:   38     4    41    12 
- 10:   55    42    33    45 
- 11:   40     6    25    29 
- 12:   49     2    17    30 
- 13:    5    36    28    27 
- 14:   20     1    37    22 
- 15:   18     9    14    16 
- 16:   52    43     7    35 
- 17:   19    51    53    32 
- 18:   26    50    10    31 
- 19:   12    21    48    34 
- 20:   54    33    23    38 
- 21:   44    39    11    25 
- 22:    6    15    45    49 
- 23:   42    56     8    17 
- 24:   22     3    36    46 
- 25:   41    29     1    28 
- 26:   30    55    20     5 
- 27:    2    40    47    37 
- 28:    4    27    13    24 
- 29:   12    31    51    52 
- 30:   35    26    34    53 
- 31:   32    48    16    38 
- 32:   25    49    50    18 
- 33:   42    54    19     6 
- 34:   14    45    56    11 
- 35:   29    46     9    39 
- 36:    3     5    23    41 
- 37:   44    15    30    47 
- 38:   20    28     4     2 
- 39:   55    10    36    13 
- 40:   24    37    17    43 
- 41:   22    27    40     7 
- 42:    1     8    33    21 
- 43:   48    19    49    31 
- 44:   11    34     6    52 
- 45:   16    25    46    54 
- 46:    5    45    32    12 
- 47:   41    50    47    56 
- 48:   29    30     4    26 
- 49:   15    20    42    51 
- 50:   17     9    36    23 
- 51:   27    44    14     3 
- 52:   35     1    18    24 
- 53:    8    37    55     7 
- 54:   38    53    39    40 
- 55:   21    13    43    28 
- 56:    2    33    10    22 
- 57:   31    47    46    34 
- 58:   16    30    12    11 
- 59:    5    50    19    15 
- 60:   51     4    54    17 
- 61:   52    41    27    20 
- 62:   25     1     3     9 
- 63:   23     6    44     8 
- 64:   45    40    26    48 
- 65:   38    14     7    13 
- 66:   28    33    37    49 
- 67:   53    10    56    24 
- 68:   39    36    35     2 
- 69:   22    18    43    42 
- 70:   21    55    32    29 
- 71:   50    12    54    20 
- 72:    3    11    31     4 
- 73:   47    52     1     5 
- 74:   34     8    30    25 
- 75:   15    23    27    16 
- 76:   13    17    45    41 
- 77:   28    56     9    51 
- 78:   40    14    33    35 
- 79:   49    26    24    22 
- 80:    7    53    18    44 
- 81:   46    32     2    42 
- 82:   21    36     6    38 
- 83:   43    48    39    55 
- 84:   37    19    29    10 
-
-Schedule Statistics
--------------------
-
-          #: number of matches played, a '+' after the number
-               indicates one additional round as a surrogate
-          d: minimum delta between matches (e.g. '1' means back-to-back)
-       part: number of distinct partners followed by most frequent repeat count
-        opp: number of distinct opponents followed by most frequent repeat count
-       both: number of distinct teams seen as partner or opponent
-               followed by most frequent combined repeat count
-        r/b: balance between red and blue alliance appearances
-               eg, 3b means team appeared as blue 3 times more than as red
-        <->: number of swaps between alliances (ie, bumper color changes)
-      s1...: number of appearances at station 1, etc.
- 4+ repeats: any teams seen four or more times as partners or opponents
-
- team   #   d    part    opp    both    r/b <->   s1 s2 4+ repeats
- ----  --  --   -----   -----   -----   --- ---   -- -- ------------
-    1:  6  10 |  6  1 | 12  1 | 18  1 |  2r   3 |  3  3
-    2:  6  11 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-    3:  6  10 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-    4:  6  10 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-    5:  6  10 |  6  1 | 12  1 | 18  1 |  2r   3 |  3  3
-    6:  6  11 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-    7:  6  11 |  6  1 | 12  1 | 18  1 |  2b   2 |  3  3
-    8:  6  10 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-    9:  6  11 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   10:  6  11 |  6  1 | 12  1 | 18  1 |  0    5 |  3  3
-   11:  6  10 |  6  1 | 12  1 | 18  1 |  0    4 |  3  3
-   12:  6  10 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   13:  6  10 |  6  1 | 12  1 | 18  1 |  0    4 |  3  3
-   14:  6  13 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   15:  6  10 |  6  1 | 12  1 | 18  1 |  2r   3 |  3  3
-   16:  6  13 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   17:  6  10 |  6  1 | 12  1 | 18  1 |  2b   3 |  3  3
-   18:  6  11 |  6  1 | 12  1 | 18  1 |  2b   4 |  3  3
-   19:  6  10 |  6  1 | 12  1 | 18  1 |  0    5 |  3  3
-   20:  6  10 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   21:  6  12 |  6  1 | 12  1 | 18  1 |  2r   3 |  3  3
-   22:  6  10 |  6  1 | 12  1 | 18  1 |  0    4 |  3  3
-   23:  6  12 |  6  1 | 12  1 | 18  1 |  0    2 |  3  3
-   24:  6  12 |  6  1 | 12  1 | 18  1 |  2b   3 |  3  3
-   25:  6  10 |  6  1 | 12  1 | 18  1 |  0    2 |  3  3
-   26:  6  12 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   27:  6  10 |  6  1 | 12  1 | 18  1 |  0    2 |  3  3
-   28:  6  11 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   29:  6  10 |  6  1 | 12  1 | 18  1 |  0    2 |  3  3
-   30:  6  10 |  6  1 | 12  1 | 18  1 |  0    4 |  3  3
-   31:  6  11 |  6  1 | 12  1 | 18  1 |  0    5 |  3  3
-   32:  6  11 |  6  1 | 12  1 | 18  1 |  0    4 |  3  3
-   33:  6  10 |  6  1 | 12  1 | 18  1 |  0    4 |  3  3
-   34:  6  11 |  6  1 | 12  1 | 18  1 |  0    4 |  3  3
-   35:  6  10 |  6  1 | 12  1 | 18  1 |  2b   2 |  3  3
-   36:  6  11 |  6  1 | 12  1 | 18  1 |  0    2 |  3  3
-   37:  6  13 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   38:  6  11 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   39:  6  13 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   40:  6  10 |  6  1 | 12  1 | 18  1 |  2r   2 |  3  3
-   41:  6  11 |  6  1 | 12  1 | 18  1 |  0    4 |  3  3
-   42:  6  10 |  6  1 | 12  1 | 18  1 |  0    1 |  3  3
-   43:  6  10 |  6  1 | 12  1 | 18  1 |  2b   3 |  3  3
-   44:  6  12 |  6  1 | 12  1 | 18  1 |  2r   1 |  3  3
-   45:  6  12 |  6  1 | 12  1 | 18  1 |  0    2 |  3  3
-   46:  6  10 |  6  1 | 12  1 | 18  1 |  0    4 |  3  3
-   47:  6  10 |  6  1 | 12  1 | 18  1 |  0    2 |  3  3
-   48:  6  12 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   49:  6  10 |  6  1 | 12  1 | 18  1 |  0    4 |  3  3
-   50:  6  12 |  6  1 | 12  1 | 18  1 |  2r   3 |  3  3
-   51:  6  11 |  6  1 | 12  1 | 18  1 |  2b   4 |  3  3
-   52:  6  12 |  6  1 | 12  1 | 18  1 |  0    3 |  3  3
-   53:  6  10 |  6  1 | 12  1 | 18  1 |  0    1 |  3  3
-   54:  6  11 |  6  1 | 12  1 | 18  1 |  2b   2 |  3  3
-   55:  6  13 |  6  1 | 12  1 | 18  1 |  2r   3 |  3  3
-   56:  6  10 |  6  1 | 12  1 | 18  1 |  0    2 |  3  3
-------------------------------------------------------------
- best:  6  13 |  6  1 | 12  1 | 18  1 |  0    1 |  3  3
-worst:  6  10 |  6  1 | 12  1 | 18  1 |  2    5 |  3  3
-------------------------------------------------------------
-station appearance count histogram:
-0: 0
-1: 0
-2: 0
-3: 112
-4: 0
-5: 0
-6: 0
-------------------------------------------------------------
-alliance swap count histogram:
-5: 3
-4: 12
-3: 26
-2: 12
-1: 3
-0: 0
-
-elapsed time: 31.28 seconds
-

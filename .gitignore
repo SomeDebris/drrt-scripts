@@ -1,5 +1,7 @@
-#*.txt
+schedules/raw
+ships/*.lua.gz
 *.bak
 *.swp
 *.no_asterisks
 *clean.sh
+**/__pycache__
