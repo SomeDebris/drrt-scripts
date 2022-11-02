@@ -124,8 +124,6 @@ def main(args):
         print('A new rawSchedule.txt will be generated.')
         run_matchmaker(matchmaker, args.ships, args.rounds, args.alliances)
 
-    #TODO what does this do?
-    # sed 's/\*/ /g' "$SCRIPT_DIR/spreadsheetSCH.txt" > "$SCRIPT_DIR/.no_asterisks"
 
     print('Beginning ALLIANCE generation.')
     #TODO not sure what this condition should be. $p in original?
@@ -190,13 +188,6 @@ def run_matchmaker(mm_path, num_ships, num_rounds, num_alliances, quality):
     print('Contents of rawSchedule.txt:')
     with open(os.path.join(SCRIPT_DIR, 'rawSchedule.txt'), 'r') as raw_schedule:
         print('\n'.join(raw_schedule.readlines()))
-
-    #TODO what does this do?
-    # grep '^ [0-9 ][0-9]:' "$SCRIPT_DIR/rawSchedule.txt" | sed 's/^ [0-9 ][0-9]: *//' > "$SCRIPT_DIR/spreadsheetSCH.txt"
-
-    #TODO not sure if this is what is supposed to be here? - I think no
-    # print('Done.')
-    # sys.exit(0)
 
 
 def assemble(ships, ships_per_alliance, red_name='Red Alliance', blue_name='Blue Alliance'):
