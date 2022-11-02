@@ -126,7 +126,7 @@ def main(args):
 
 
     print('Beginning ALLIANCE generation.')
-    #TODO not sure what this condition should be. $p in original?
+    #TODO Make this loop through each row of the Match Schedule.
     match_num = 1
     while match_num < 1000:
         assemble(ships, args.alliances, 
