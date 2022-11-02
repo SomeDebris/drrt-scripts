@@ -1,4 +1,4 @@
-*.txt
+#*.txt
 *.bak
 *.swp
 *.no_asterisks
