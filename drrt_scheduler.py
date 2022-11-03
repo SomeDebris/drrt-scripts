@@ -62,7 +62,7 @@ def main(args):
     # Gets paths to input schedule CSV, output schedule file, and output schedule file without asterisks
     sch_in_filename = f'{len(ships)}_{args.alliances}v{args.alliances}.csv'
     sch_in_filepath = _get_script_path(os.path.join('schedules', 'out', sch_in_filename))
-    sch_out_filepath = _get_script_path('spreadsheetSCH.txt', False)
+    sch_out_filepath = _get_script_path('selected_schedule.csv', False)
     sch_noasterisk_filepath = _get_script_path('.no_asterisks', False)
 
     with open(sch_in_filepath, 'r') as schedule_in, \
@@ -101,9 +101,9 @@ def main(args):
 
     print('Scheduler done.')
     print('Lets get this tournament started!')
-    print('Now import spreadsheetSCH.txt into the DRRT Datasheet.')
+    print('Now import selected_schedule.csv into the DRRT Datasheet.')
 
-    # Open the directory containing spreadsheetSCH.txt in the file browser
+    # Open the directory containing selected_schedule.csv in the file browser
     # (only if the user requests that it is opened) - cross-platform
     if wait_yn('Open the drrt-scripts directory in the file browser?'):
         if sys.platform == 'win32':
