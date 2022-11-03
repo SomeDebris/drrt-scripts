@@ -130,14 +130,21 @@ def _get_participants(check):
 
             # If validation, check to make sure each listing is a file that exists
             abs_paths = []
+            ships_notfound = False
             for ship in participants:
                 ship_path = os.path.join(SCRIPT_DIR, 'ships', ship)
                 if not os.path.exists(ship_path):
-                    print_err(f'check_participants: Ship file \'{ship}\' not found!')
+                    print_err(f'check_participants: Ship file \'{ship}\' not found!', True)
+                    ships_notfound = True
                 else:
                     abs_paths.append(ship_path)
-            print('check_participants: all ship files found!')
-            return abs_paths
+
+            # Allows printing of all not found ship files
+            if ships_notfound:
+                print_err("Some ship files could not be found. Locate them and put them in the `ships/` directory.")
+            else:
+                print('check_participants: all ship files found!')
+                return abs_paths
         else:
             # If no validation, find the absolute path for all given files
             return [os.path.join(DATA_DIR, ship) for ship in participants]
