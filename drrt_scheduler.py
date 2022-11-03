@@ -19,9 +19,9 @@ from drrt_common import VERSION, DATA_DIR, SCRIPT_DIR, print_err, wait_yn
 
 ILLEGAL_SHIP_REGEX = '({854,|{863,|{838,|{833,|{273,|{927,|{928,|{929,|{930,|{931,|{932,|{933,|{934,|{935,|{936,|{937,|{938,|{939,|{940,|{941,|{942,|{943,|{953,|{954,|{955,|{956,|{320,|{11104,|{12130,|{15010,|{15142,|{15144,|{15146,)'
 MATCH_TEMPLATE = """{{     -- Created with DRRTscheduler {0}
-  color0=0x0aa879,
-  color1=0x222d84,
-  color2=0,
+  color0={3},
+  color1={4},
+  color2={5},
   name=\"{1}\",
   faction=8,
   currentChild=0,
@@ -33,6 +33,8 @@ MATCH_TEMPLATE = """{{     -- Created with DRRTscheduler {0}
   playerprint={{}}
 }}
 """
+RED_ALLIANCE_COLORS = [0xbaa01e, 0x681818, 0x000000]
+BLUE_ALLIANCE_COLORS = [0x0aa879, 0x222d84, 0x000000]
 
 
 def main(args):
@@ -143,7 +145,6 @@ def _get_participants(check):
 
 def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
     """Creates a RED ALLIANCE fleet file and a BLUE ALLIANCE fleet file for a specific match."""
-    
     ship_data = []
     for ship in ships:
         # Check that each ship file exists
@@ -160,18 +161,18 @@ def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
     
     # Red is the first half of the schedule, blue is the second half
     half_idx = len(ship_data) // 2
-    _assemble_alliance(ship_data[:half_idx], red_name)
-    _assemble_alliance(ship_data[half_idx:], blue_name)
+    _assemble_alliance(ship_data[:half_idx], red_name, RED_ALLIANCE_COLORS)
+    _assemble_alliance(ship_data[half_idx:], blue_name, BLUE_ALLIANCE_COLORS)
 
 
-def _assemble_alliance(ship_data, name):
+def _assemble_alliance(ship_data, name, colors):
     """Creates a match file for one ALLIANCE."""
     # Create output file data/Qualifications/<name>.lua
     with open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.lua'), 'w') as match_file:
         # Write match template to file filled out with version, name, and ship data
         # Ship data has escaped \\n in it, replace with \n for newlines
         #   Also join each ship (data field) in the match together with a comma and newline
-        match_file.writelines(MATCH_TEMPLATE.format(VERSION, name, ',\n  '.join(ship_data).replace('\\n', '\n')))
+        match_file.writelines(MATCH_TEMPLATE.format(VERSION, name, ',\n  '.join(ship_data).replace('\\n', '\n'), colors[0], colors[1], colors[2]))
 
 
 def _parse_ship_data(raw_data):
