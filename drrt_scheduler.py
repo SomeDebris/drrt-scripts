@@ -168,11 +168,11 @@ def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
 def _assemble_alliance(ship_data, name, colors):
     """Creates a match file for one ALLIANCE."""
     # Create output file data/Qualifications/<name>.lua
-    with open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.lua'), 'w') as match_file:
+    with gzip.open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.lua.gz'), 'wb') as match_file:
         # Write match template to file filled out with version, name, and ship data
         # Ship data has escaped \\n in it, replace with \n for newlines
         #   Also join each ship (data field) in the match together with a comma and newline
-        match_file.writelines(MATCH_TEMPLATE.format(VERSION, name, ',\n  '.join(ship_data).replace('\\n', '\n'), colors[0], colors[1], colors[2]))
+        match_file.write(MATCH_TEMPLATE.format(VERSION, name, ',\n  '.join(ship_data).replace('\\n', '\n'), colors[0], colors[1], colors[2]).encode("utf-8"))
 
 
 def _parse_ship_data(raw_data):
