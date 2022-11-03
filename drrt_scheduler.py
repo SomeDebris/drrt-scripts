@@ -145,7 +145,6 @@ def _get_participants(check):
 
 def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
     """Creates a RED ALLIANCE fleet file and a BLUE ALLIANCE fleet file for a specific match."""
-    
     ship_data = []
     for ship in ships:
         # Check that each ship file exists
@@ -162,18 +161,18 @@ def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
     
     # Red is the first half of the schedule, blue is the second half
     half_idx = len(ship_data) // 2
-    _assemble_alliance(ship_data[:half_idx], red_name)
-    _assemble_alliance(ship_data[half_idx:], blue_name)
+    _assemble_alliance(ship_data[:half_idx], red_name, RED_ALLIANCE_COLORS)
+    _assemble_alliance(ship_data[half_idx:], blue_name, BLUE_ALLIANCE_COLORS)
 
 
-def _assemble_alliance(ship_data, name):
+def _assemble_alliance(ship_data, name, colors):
     """Creates a match file for one ALLIANCE."""
     # Create output file data/Qualifications/<name>.lua
     with open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.lua'), 'w') as match_file:
         # Write match template to file filled out with version, name, and ship data
         # Ship data has escaped \\n in it, replace with \n for newlines
         #   Also join each ship (data field) in the match together with a comma and newline
-        match_file.writelines(MATCH_TEMPLATE.format(VERSION, name, ',\n  '.join(ship_data).replace('\\n', '\n')))
+        match_file.writelines(MATCH_TEMPLATE.format(VERSION, name, ',\n  '.join(ship_data).replace('\\n', '\n'), colors[0], colors[1], colors[2]))
 
 
 def _parse_ship_data(raw_data):
