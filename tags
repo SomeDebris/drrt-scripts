@@ -43,6 +43,7 @@
 7	ship_index.json	/^        "Reassembly_Close_n'_Personal_[by_Bluefish1818]_2022-SUMMER-DRRT_A_.lua.gz",$/;"	s	array:participants
 8	ship_index.json	/^        "Reassembly_Hinderance_[by_Bluefish1818]_2022-SUMMER-DRRT_B_.lua.gz",$/;"	s	array:participants
 9	ship_index.json	/^        "Reassembly_Combat_Freighter_[by_XDERP7]_2022-SUMMER-DRRT_A_.lua.gz",$/;"	s	array:participants
+BLUE_ALLIANCE_COLORS	drrt_scheduler.py	/^BLUE_ALLIANCE_COLORS = [0x0aa879, 0x222d84, 0x000000]$/;"	v
 DATA_DIR	drrt_common.py	/^DATA_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))$/;"	v
 DRRT Scripts	README.md	/^# DRRT Scripts$/;"	c
 DRRT_ROOT	drrt_common.py	/^DRRT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir, os.pardir))$/;"	v
@@ -52,12 +53,13 @@ MATCH_TEMPLATE	drrt_scheduler.py	/^MATCH_TEMPLATE = """{{     -- Created with DR
 MM_NAME	drrt_common.py	/^MM_NAME = 'MatchMaker_1_5_0_b1'$/;"	v
 NOCOLOR	drrt_common.py	/^NOCOLOR = '\\033[0m'$/;"	v
 RED	drrt_common.py	/^RED = '\\033[0;31m'$/;"	v
+RED_ALLIANCE_COLORS	drrt_scheduler.py	/^RED_ALLIANCE_COLORS = [0xbaa01e, 0x681818, 0x000000]$/;"	v
 SCRIPT_DIR	drrt_common.py	/^SCRIPT_DIR = os.path.dirname(__file__)$/;"	v
 Usage	README.md	/^### Usage$/;"	S	chapter:DRRT Scripts
 VERSION	drrt_common.py	/^VERSION = 'v1.3.0'$/;"	v
 YELLOW	drrt_common.py	/^YELLOW = '\\033[0;33m'$/;"	v
 _assemble	drrt_scheduler.py	/^def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):$/;"	f
-_assemble_alliance	drrt_scheduler.py	/^def _assemble_alliance(ship_data, name):$/;"	f
+_assemble_alliance	drrt_scheduler.py	/^def _assemble_alliance(ship_data, name, colors):$/;"	f
 _get_participants	drrt_scheduler.py	/^def _get_participants(check):$/;"	f
 _get_script_path	drrt_scheduler.py	/^def _get_script_path(filename, check=True):$/;"	f
 _parse_ship_data	drrt_scheduler.py	/^def _parse_ship_data(raw_data):$/;"	f
