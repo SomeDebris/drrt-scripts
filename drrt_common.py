@@ -37,7 +37,11 @@ def wait_yn(prompt):
         resp = input(f'{prompt} [Y/n]: ')
         if resp == 'n':
             return False
+        elif resp == 'N':
+            return False
         elif resp == 'Y':
+            return True
+        elif resp == 'y':
             return True
         else:
             print('Please answer [Y/n].')
