@@ -5,133 +5,96 @@ Generates MATCH SCHEDULE and assembles all QUALIFICATION MATCH ALLIANCES.
 """
 
 import argparse
-import fnmatch
+import csv
+import gzip
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
-import urllib.request
-import zipfile
+
+from drrt_common import VERSION, DATA_DIR, SCRIPT_DIR, print_err, wait_yn
 
 
-VERSION = 'v1.3.0'
-MM_NAME = 'MatchMaker_1_5_0_b1'
-
-SCRIPT_DIR = os.getcwd()
-DATA_DIR = os.path.join(SCRIPT_DIR, '..')
-DRRT_ROOT = os.path.join(SCRIPT_DIR, '..', '..')
-
-RED = '\033[0;31m'
-YELLOW = '\033[0;33m'
-NOCOLOR = '\033[0m'
-
-WARN_ROUNDS = 10
+ILLEGAL_SHIP_REGEX = '({854,|{863,|{838,|{833,|{273,|{927,|{928,|{929,|{930,|{931,|{932,|{933,|{934,|{935,|{936,|{937,|{938,|{939,|{940,|{941,|{942,|{943,|{953,|{954,|{955,|{956,|{320,|{11104,|{12130,|{15010,|{15142,|{15144,|{15146,)'
+MATCH_TEMPLATE = """{{     -- Created with DRRTscheduler {0}
+  color0=0x0aa879,
+  color1=0x222d84,
+  color2=0,
+  name=\"{1}\",
+  faction=8,
+  currentChild=0,
+  blueprint={{}},
+  children={{}},
+  blueprints={{
+    {2}
+  }},
+  playerprint={{}}
+}}
+"""
 
 
 def main(args):
     # Delete files in quals folder if there are any
     quals_path = os.path.join(DATA_DIR, 'Qualifications')
-    if len(os.listdir(quals_path)) > 0:
+    if os.path.exists(quals_path) and len(os.listdir(quals_path)) > 0:
         print('Deleting contents of \'Qualifications/\' . . .')
-    shutil.rmtree(quals_path)
+        shutil.rmtree(quals_path)
 
     # Create directory structure
-    for folder in ('Qualifications', 'Playoffs', 'Old-Ships', 'MatchMaker'):
+    for folder in ('Qualifications', 'Playoffs', 'Old-Ships'):
         path = os.path.join(DATA_DIR, folder)
-        if os.path.exists():
+        if not os.path.exists(path):
             os.makedirs(path, exist_ok=True)
 
-    #TODO make this work cross-platform - DL comes with dmg for mac and exec file for linux + diff arches
-    # Find matchmaker executable location if exists (this is messy but it works)
-    mm_dir = os.path.join(DATA_DIR, 'MatchMaker')
-    mm_exec = '.*MatchMaker.exe' if sys.platform == 'win32' else \
-        ('.*MatchMaker.app' if sys.platform == 'darwin' else \
-        ('.*/IntelUbuntu/MatchMaker' if platform.machine() in ('AMD64', 'x86_64','x86') 
-        else '.*/RaspianArm64/MatchMaker'))
-    matchmaker = _find_file(mm_exec, mm_dir)
-    # Download matchmaker executable if not
-    if not matchmaker:
-        print('Attempting to download the MatchMaker (MatchMaker executable). . .')
-        mm_zip_path = os.path.join(DATA_DIR, 'MatchMaker', f'{MM_NAME}.zip')
-        if not os.path.exists(mm_zip_path):
-            urllib.request.urlretrieve(f'https://idleloop.com/matchmaker/{MM_NAME}.zip', mm_zip_path)
-            #TODO error handling, L53-58
-            # this may do error handling for us?
-        with zipfile.ZipFile(mm_zip_path, 'r') as zip_handle:
-            zip_handle.extractall(os.path.join(DATA_DIR, 'MatchMaker', MM_NAME))
-        
-        # Find matchmaker executable, by platform
-        if sys.platform == 'win32':
-            matchmaker = _find_file('.*MatchMaker.exe', mm_dir)
-        elif sys.platform == 'darwin':
-            #TODO test to make sure this works
-            mm_dmg = _find_file('.*MatchMaker.dmg', mm_dir)
-            mm_dmg_mount = os.path.join(mm_dir, 'mount')
-            # Mount dmg file to data_dir/MatchMaker/mount/<dmg>
-            # make mount folder if it doesn't exist
-            os.makedirs(mm_dmg_mount, exist_ok=True)
-            subprocess.Popen(['hdiutil', 'attach', '-mountpoint', DATA_DIR, mm_dmg_mount]).wait()
-            # Find .app file in mounted dmg
-            mm_app_dmg = _find_file('.*MatchMaker.app', mm_dir)
-            # Copy app to outside of mount directory
-            shutil.copy(mm_app_dmg, mm_dir)
-            # Detach mounted dmg and delete mount dir
-            subprocess.Popen(['hdiutil', 'detach', mm_dmg_mount]).wait()
-            os.removedirs(mm_dmg_mount)
-            matchmaker = _find_file('.*MatchMaker.app', mm_dir)
-        else:
-            # Linx (/UNIX-like other)
-            # MM zip include Raspbian, RaspbianArm64, and IntelUbuntu
-            # which probably means: x86, ARM64, x64_86
-            # TODO test if this works
-            matchmaker = _find_file('.*/IntelUbuntu/MatchMaker', mm_dir) \
-                if platform.machine() in ('AMD64', 'x86_64','x86') \
-                else _find_file('.*/RaspianArm64/MatchMaker', mm_dir)
-        
-        if not matchmaker:
-            _print_err('Could not find MatchMaker executable!')
-    else:
-        print('MatchMaker executable found.')
+    # Get list of ship/participant filepaths from ship_index.json
+    # Also may check if those files exist
+    ships = _get_participants(not args.no_check)
+    print(f'Found {len(ships)} ships in ship_index.json.')
 
-    # getopt replaced by argparse, see associated method
+    # Checks if there are enough ships to fill both alliances at least once
+    if len(ships) < (args.alliances * 2):
+        print_err(f'{len(ships)} is lesser than minimum number of ships ({args.alliances * 2}).')
 
-    if args.ships < (args.alliances * 2):
-        _print_err(f'{args.ships} is lesser than minimum number of ships ({args.alliances * 2}).')
+    # Gets paths to input schedule CSV, output schedule file, and output schedule file without asterisks
+    sch_in_filename = f'{len(ships)}_{args.alliances}v{args.alliances}.csv'
+    sch_in_filepath = _get_script_path(os.path.join('schedules', 'out', sch_in_filename))
+    sch_out_filepath = _get_script_path('spreadsheetSCH.txt', False)
+    sch_noasterisk_filepath = _get_script_path('.no_asterisks', False)
 
-    if args.rounds > WARN_ROUNDS:
-        _print_err(f'That\'s a lot of rounds ({args.rounds})! Make sure that all matches were generated!', True)
-
-    ships = get_participants(not args.no_check)
-    # Required flag for rounds removes need for error check when rounds set but not ships
-
-    raw_schedule = os.path.join(SCRIPT_DIR, 'rawSchedule.txt')
-    # Previous raw schedule file detected
-    if os.path.exists(raw_schedule):
-        print('A match schedule already exists!')
-        # Wait for user to input Y to generate new schedule or n to use current
-        regen_resp = _wait_yn('Generate new schedule?')
-        if regen_resp:
-            os.remove(raw_schedule)
-            os.remove(os.path.join(SCRIPT_DIR, 'spreadsheetSCH.txt'))
-            run_matchmaker(matchmaker, args.ships, args.rounds, args.alliances)
-        else:
-            print('Current schedule will be used.')
-    else:
-        _print_err('rawSchedule.txt not found!', True)
-        print(f'{YELLOW}WARNING:{NOCOLOR} ')
-        # Do not need to check for ship count here, done in argparse
-        print('A new rawSchedule.txt will be generated.')
-        run_matchmaker(matchmaker, args.ships, args.rounds, args.alliances)
-
+    with open(sch_in_filepath, 'r') as schedule_in, \
+            open(sch_out_filepath, 'w') as schedule_out, \
+            open(sch_noasterisk_filepath, 'w') as sch_out_noasterisk:
+        # Read all lines of input schedule
+        sch_in_lines = schedule_in.readlines()
+        # Seek back to beginning of file
+        schedule_in.seek(0)
+        # Re-read input schedule with CSV reader (to get indexed rows)
+        schedule = [row for row in csv.reader(schedule_in)]
+        # Number of matches (not rounds) = number of lines in the schedule
+        num_matches = len(sch_in_lines)
+        # Copy input schedule lines to output schedule file
+        schedule_out.writelines(sch_in_lines)
+        # Write input schedule lines to output noasterisk file, 
+        #   but replace all asterisks with nothing
+        sch_out_noasterisk.writelines([line.replace('*', '') for line in sch_in_lines])
+    print(f'Schedule has {num_matches} matches.')
 
     print('Beginning ALLIANCE generation.')
-    #TODO Make this loop through each row of the Match Schedule.
     match_num = 1
-    while match_num < 1000:
-        assemble(ships, args.alliances, 
-            f'Match {match_num} - ^1The Red Alliance^7',
-            f'Match {match_num} - ^4The Blue Alliance^7')
+    while match_num <= num_matches:
+        # Add ship files found in the current match schedule
+        # Ship numbers in schedule are 1-indexed, match no here is 1-indexed too
+        assemble_ships = [ships[int(idx.replace('*', ''))-1] for idx in schedule[match_num-1]]
+        # Check that the correct number of ship files were passed
+        if len(assemble_ships) != (2 * args.alliances):
+            print('assemble: Not Enough Arguments!')
+
+        # Assemble the red and blue alliance match files
+        _assemble(assemble_ships, 
+            f'Match {str(match_num).zfill(3)} - ^1The Red Alliance^7',
+            f'Match {str(match_num).zfill(3)} - ^4The Blue Alliance^7')
         match_num += 1
 
     print('Scheduler done.')
@@ -140,8 +103,7 @@ def main(args):
 
     # Open the directory containing spreadsheetSCH.txt in the file browser
     # (only if the user requests that it is opened) - cross-platform
-    explorer_resp = _wait_yn('Open the drrt-scripts directory in the file browser?')
-    if explorer_resp:
+    if wait_yn('Open the drrt-scripts directory in the file browser?'):
         if sys.platform == 'win32':
             retval = subprocess.Popen(['start', SCRIPT_DIR], shell=True).wait()
         elif sys.platform == 'darwin':
@@ -154,18 +116,22 @@ def main(args):
         print('Stop.')
 
 
-def get_participants(check):
+def _get_participants(check):
     """Read list of all absolute file paths of all participant/ships."""
     # Load json file listing of all ships
     with open('ship_index.json', 'r') as ship_fh:
-        participants = json.load(ship_fh)
+        participants = json.load(ship_fh)['participants']
         if check:
+            # Check that there are one or more ships in the config json
+            if len(participants) <= 0:
+                print_err(f'check_participants: No ship files found!')
+
             # If validation, check to make sure each listing is a file that exists
             abs_paths = []
             for ship in participants:
-                ship_path = os.path.join(DATA_DIR, ship)
+                ship_path = os.path.join(SCRIPT_DIR, 'ships', ship)
                 if not os.path.exists(ship_path):
-                    _print_err(f'check_participants: Ship file \'{ship}\' not found!')
+                    print_err(f'check_participants: Ship file \'{ship}\' not found!')
                 else:
                     abs_paths.append(ship_path)
             print('check_participants: all ship files found!')
@@ -175,88 +141,111 @@ def get_participants(check):
             return [os.path.join(DATA_DIR, ship) for ship in participants]
 
 
-def run_matchmaker(mm_path, num_ships, num_rounds, num_alliances, quality):
-    """Runs the MatchMaker, generating a MATCH SCHEDULE."""
-    print(f'Creating a schedule with {num_ships} ships each playing in {num_rounds} Rounds.')
-    # Set quality to best if passed else fast (should be fast by default)
-    quality = '-b' if quality == 'best' else '-f'
-    # System call to MatchMaker executable
-    subprocess.Popen([mm_path, '-a', num_alliances, '-o', '-t', num_ships, '-r', num_rounds, quality, 
-        '>', os.path.join(SCRIPT_DIR, 'rawSchedule.txt')])
-
-    print('rawSchedule.txt generated with MatchMaker executable output.')
-    print('Contents of rawSchedule.txt:')
-    with open(os.path.join(SCRIPT_DIR, 'rawSchedule.txt'), 'r') as raw_schedule:
-        print('\n'.join(raw_schedule.readlines()))
-
-
-def assemble(ships, ships_per_alliance, red_name='Red Alliance', blue_name='Blue Alliance'):
+def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
     """Creates a RED ALLIANCE fleet file and a BLUE ALLIANCE fleet file for a specific match."""
-    # Check that the correct number of ship files were passed
-    if len(ships) != (2 * ships_per_alliance):
-        print('assemble: Not Enough Arguments!')
     
-    # Check that each ship file exists
+    ship_data = []
     for ship in ships:
+        # Check that each ship file exists
         if not os.path.exists(ship):
-            _print_err(f'File {ship} not found!')
+            print_err(f'File {ship} not found!')
+        # Open gzipped lua ship file (.lua.gz)
+        # Read file and decode to single string
+        with gzip.open(ship, 'r') as ship_file:
+            raw_ship_data = ''.join([b.decode('utf-8') for b in ship_file.readlines()])
+            if re.match(ILLEGAL_SHIP_REGEX, raw_ship_data):
+                print_err(f'Ship {ship} contains ILLEGAL BLOCKS')
+        # Parse ship data out of file content and append to list
+        ship_data.append(_parse_ship_data(raw_ship_data))
+    
+    # Red is the first half of the schedule, blue is the second half
+    half_idx = len(ship_data) // 2
+    _assemble_alliance(ship_data[:half_idx], red_name)
+    _assemble_alliance(ship_data[half_idx:], blue_name)
 
 
-    #TODO what does this method actually do???
+def _assemble_alliance(ship_data, name):
+    """Creates a match file for one ALLIANCE."""
+    # Create output file data/Qualifications/<name>.lua
+    with open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.lua'), 'w') as match_file:
+        # Write match template to file filled out with version, name, and ship data
+        # Ship data has escaped \\n in it, replace with \n for newlines
+        #   Also join each ship (data field) in the match together with a comma and newline
+        match_file.writelines(MATCH_TEMPLATE.format(VERSION, name, ',\n  '.join(ship_data).replace('\\n', '\n')))
 
 
-def _print_err(message, is_warning=False):
-    if is_warning:
-        print(f'{YELLOW}WARNING:{NOCOLOR} {message}')
-    else:
-        print(f'{RED}ERROR:{NOCOLOR} {message}')
-        print('Stop.')
-        sys.exit(1)
-
-
-def _wait_yn(prompt):
-    while True:
-        resp = input(f'{prompt} [Y/n]: ')
-        if resp == 'n':
-            return False
-        elif resp == 'Y':
-            return True
+def _parse_ship_data(raw_data):
+    """Parse and return a ship .lua file for its data field."""
+    # raw_data is a string of the ship's data
+    data_sense = 0
+    start_idx = None
+    # Loop through all characters in the ship's data and search for "data="
+    for idx, char in enumerate(raw_data):
+        # This checks for the characters 'd', 'a', 't', 'a' sequentially
+        # Works because data_sense is incremented each letter
+        # If a character not in the sequence is found, data_sense is reset to 0
+        # So the sequence needs to be found and *then* an '=' character,
+        #   which denotes the start of the data block
+        if (char == 'd' and data_sense == 0) or \
+                (char == 'a' and data_sense == 1) or \
+                (char == 't' and data_sense == 2) or \
+                (char == 'a' and data_sense == 3):
+            data_sense += 1
+        elif char == '=' and data_sense == 4:
+            delim_ctr = 1
+            start_idx = idx
+            break
         else:
-            print('Please answer [Y/n].')
+            data_sense = 0
+    # If "data=" is not found, error
+    if start_idx is None:
+        print_err('Invalid lua ship data file! Cannot find where data starts.')
 
+    end_idx = None
+    # If "data=" is found, start at the found index and search for the closing } delimeter
+    for idx, char in enumerate(raw_data[start_idx:]):
+        # If a { is found, add one to the count
+        # If a } is found, subtract one
+        # When the count reaches 0, we've closed the data block
+        #  (this is because we start at 1 opening brace)
+        if char == '{':
+            delim_ctr += 1
+        elif char == '}':
+            delim_ctr -= 1
+            if delim_ctr == 0:
+                end_idx = idx + start_idx
+                break
+    # If the delimeter counter never reaches 0, the file is invalid - error
+    if end_idx is None:
+        print_err('Invalid lua ship data file! Cannot find where data ends.')
 
-def _find_file(pattern, path):
-    """Recursively find a file within a path matching a regex pattern."""
-    for root, _, files in os.walk(path):
-        for name in files:
-            if fnmatch.fnmatch(name, pattern):
-                return os.path.join(root, name)
+    # Return the data found between the two delimiter indices found
+    return raw_data[start_idx-len('data='):end_idx+1]
+    
+
+def _get_script_path(filename, check=True):
+    """Get an OS filepath within the script directory from a filename."""
+    filepath = os.path.join(SCRIPT_DIR, filename)
+    if check and not os.path.exists(filepath):
+        print_err(f'{filepath} is not a file that exists!')
+    return filepath
 
 
 def parse_args():
+    #TODO verbose mode
     parser = argparse.ArgumentParser(description=__doc__, 
             formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-v', '--verbose', 
             action='store_true', 
             help='Enables verbose output.')
-    parser.add_argument('-s', '-t', '--ships', '--teams',
-            required=True,
-            help='Sets number of participating ships/teams.')
-    parser.add_argument('-r', '--rounds', 
-            default=10, 
-            help='Sets minimum number of rounds each ship plays. Defaults to 10.')
-    parser.add_argument('-q', 
-            nargs='?',
-            choices=['fast', 'best'],
-            default='fast',
-            help='Set schedule generation quality.')
     parser.add_argument('--no-check', 
             action='store_true', 
             help='Prevent participant checking.')
     parser.add_argument('-a', '--alliances',
+            type=int,
+            choices=range(2, 5),
             default=3,
-            help='') #TODO help for this argument
-    #TODO gen-schedule option
+            help='Sets number of ships per alliance.')
     return parser.parse_args()
 
 
