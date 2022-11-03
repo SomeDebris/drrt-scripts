@@ -1,5 +1,6 @@
 schedules/raw
 ships/*.lua.gz
+ships/*.lua
 *.bak
 *.swp
 spreadsheetSCH.txt
