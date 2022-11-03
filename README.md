@@ -29,7 +29,7 @@ The `drrt-scripts/` directory is this repository.
 
 The `old-ships/` directory is for submission files that participants wanted to switch out for a different ship or a newer version. If the participant switches out an old submission with a new submission with the same name, I increment the `$REV` value. `$REV` starts at `A`, then goes through the alphabet (`B`, `C`, etc.).
 
-The `ships/` directory is the location the participating ships will be stored.
+The `ships/` directory is the location in which the participating ships must be stored.
 
 The `Reassembly_${SUBMISSION_NAME}_[by_${AUTHOR_NAME}]_DRRT_#_${REV}.lua.gz` file shows the location of all submission files. I name them according to this format. `${SUBMISSION_NAME}` is the submission name given to me by the participant. `${AUTHOR_NAME}` is the author name given to me by the participant. The `${REV}` value is the version of the submission, explained under the description of the `Old-Ships/` directory.
 
