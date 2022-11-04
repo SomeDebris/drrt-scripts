@@ -48,7 +48,7 @@ The `-a` option sets the number of ships per ALLIANCE. The default ALLIANCE leng
 
 The Scheduler uses the file `ship_index.json` so that it can pass the right ship filenames to the Assembler.
 
-The Scheduler ends by adding the file `spreadsheetSCH.txt` to the `drrt-scripts/` directory. It also creates all fleet files for the Red ALLIANCE and Blue ALLIANCE, named according to the match number.
+The Scheduler ends by adding the file `selected_schedule.csv` to the `drrt-scripts/` directory. It also creates all fleet files for the Red ALLIANCE and Blue ALLIANCE, named according to the match number.
 
 The output RED and BLUE ALLIANCES' filenames are formatted like this:
 ```
@@ -58,6 +58,6 @@ where `${MATCH_NUMBER}` is the MATCH number that the ALLIANCE plays in and ${COL
 This assures that the ALLIANCES are ordered correctly in Reassembly's fleet import screen while keeping the names simple and easy to understand.
 The filename uses Reassembly's color escape characters to color the RED ALLIANCE's name red and the BLUE ALLIANCE's name blue. The `^7` changes the color back to white.
 
-To tell the DRRT DATASHEET (google sheets file that keeps track of score) the match schedule, use the file `spreadsheetSCH.txt`. Place the data in the correct spot in the **calc** tab, change the "Change Me" cell's value, and the sheet should recalculate.
+To tell the DRRT DATASHEET (google sheets file that keeps track of score) the match schedule, use the file `selected_schedule.csv`. Place the data in the correct spot in the **calc** tab, change the "Change Me" cell's value, and the sheet should recalculate.
 
 The Scheduler will check the block IDs of all ships it reads. If any block IDs match the IDs of ILLEGAL BLOCKS, the script will let you know.

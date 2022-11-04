@@ -3,7 +3,7 @@ ships/*.lua.gz
 ships/*.lua
 *.bak
 *.swp
-spreadsheetSCH.txt
+selected_schedule.csv
 *.no_asterisks
 *clean.sh
 **/__pycache__
