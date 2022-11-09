@@ -254,6 +254,8 @@ def parse_args():
             choices=range(2, 5),
             default=3,
             help='Sets number of ships per alliance.')
+    parser.add_argument('--raw-schedule',
+            help='Specify schedule text file. Overrides alliance count.')
     return parser.parse_args()
 
 
