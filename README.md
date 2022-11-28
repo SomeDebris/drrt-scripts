@@ -37,7 +37,7 @@ The `schedules/` directory is where all pregenerated match schedules are stored,
 
 ### drrt_scheduler.py
 
-The **drrt_scheduler.py** script, referred to as simply **"the Scheduler"**, runs the MatchMaker and generates ALLIANCES according to its output.
+The **drrt_scheduler.py** script, referred to simply as **"the Scheduler"**, selects a schedule based on the given ALLIANCE length and creates all ALLIANCE fleet files required for the QUALIFICATIONS.
 
 Basic usage 
 ```
