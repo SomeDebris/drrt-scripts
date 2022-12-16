@@ -7,3 +7,4 @@ selected_schedule.csv
 *.no_asterisks
 *clean.sh
 **/__pycache__
+**\~undo-tree\~
