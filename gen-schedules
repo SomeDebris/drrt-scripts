@@ -10,6 +10,8 @@ function awk_it {
     mv "${1}/"*.csv "${1}_csv/"
 }
 
+cd schedules
+
 for i in 2 3 4; do
 
     DIRNAME="${i}v${i}"
