@@ -7,7 +7,7 @@ function awk_it {
 
     awk -f ./stripper.awk "${1}/"*.txt
 
-    mv "${1}/"*.csv "${1}_csv/"
+    mv "${1}/"*.csv "out/"
 }
 
 cd schedules
