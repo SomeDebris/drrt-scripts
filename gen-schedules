@@ -12,6 +12,8 @@ function awk_it {
 
 cd schedules
 
+rm out/*
+
 for i in 2 3 4; do
 
     DIRNAME="${i}v${i}"
