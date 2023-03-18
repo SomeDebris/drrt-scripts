@@ -5,7 +5,7 @@ jobs=0
 function awk_it {
     rm $( grep -Ri '^ERROR:.*silly' | awk -F: '{ print $1 }' )
 
-    awk -f ./stripper.awk "${1}/"*.txt
+    awk -f ../stripper.awk "${1}/"*.txt
 
     mv "${1}/"*.csv "out/"
 }
