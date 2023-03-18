@@ -22,12 +22,6 @@ for i in 2 3 4; do
         rm "${DIRNAME}"/*
     fi
 
-    if [ ! -d "${DIRNAME}_csv" ]; then
-        mkdir "${DIRNAME}_csv"
-    else
-        rm "${DIRNAME}_csv"/*
-    fi
-
     cd "./${DIRNAME}"
 
     for j in $(seq 4 $2); do
