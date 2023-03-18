@@ -1,0 +1,56 @@
+#!/bin/bash
+
+jobs=0
+
+function awk_it {
+    rm $( grep -Ri '^ERROR:.*silly' | awk -F: '{ print $1 }' )
+
+    awk -f ./stripper.awk "${1}/"*.txt
+
+    mv "${1}/"*.csv "${1}_csv/"
+}
+
+for i in 2 3 4; do
+
+    DIRNAME="${i}v${i}"
+    
+    if [ ! -d "${DIRNAME}" ]; then
+        mkdir "${DIRNAME}"
+    else
+        rm "${DIRNAME}"/*
+    fi
+
+    if [ ! -d "${DIRNAME}_csv" ]; then
+        mkdir "${DIRNAME}_csv"
+    else
+        rm "${DIRNAME}_csv"/*
+    fi
+
+    cd "./${DIRNAME}"
+
+    for j in $(seq 4 $2); do
+
+        if [ $jobs -ge 14 ]; then
+            wait -n
+
+            let 'jobs -= 1'
+        fi
+
+        echo "making schedule '${j}_${DIRNAME}.txt'..."
+
+        MatchMaker -a "$i" -r "$1" -t "$j" -f > "${j}_${DIRNAME}.txt" &
+        let 'jobs += 1'
+    done
+    
+    cd ..
+
+    wait
+    jobs=0;
+
+    echo "converting ${DIRNAME} schedules from raw format to csv..."
+
+    awk_it "${DIRNAME}" &
+    let 'jobs += 1'
+done
+
+
