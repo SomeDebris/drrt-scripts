@@ -51,4 +51,4 @@ for i in 2 3 4; do
     let 'jobs += 1'
 done
 
-
+wait
