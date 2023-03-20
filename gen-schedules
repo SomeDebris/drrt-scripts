@@ -26,7 +26,7 @@ if [ ! -d out ]; then
     mkdir out
 fi
 
-if [ -f out/* ]; then
+if [ $(ls -A out/) ]; then
     rm out/*
 fi
 
