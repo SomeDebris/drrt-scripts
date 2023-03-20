@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 jobs=0
 
 function awk_it {
@@ -10,9 +12,23 @@ function awk_it {
     mv "${1}/"*.csv "out/"
 }
 
+if [ ! -d schedules ]; then
+    echo "creating 'schedules' directory"
+
+    mkdir schedules
+fi
+
 cd schedules
 
-rm out/*
+if [ ! -d out ]; then
+    echo "creating 'schedules/out' directory"
+
+    mkdir out
+fi
+
+if [ -f out/* ]; then
+    rm out/*
+fi
 
 for i in 2 3 4; do
 
@@ -21,7 +37,9 @@ for i in 2 3 4; do
     if [ ! -d "${DIRNAME}" ]; then
         mkdir "${DIRNAME}"
     else
-        rm "${DIRNAME}"/*
+        if [ -f "${DIRNAME}"/* ]; then
+            rm "${DIRNAME}"/*
+        fi
     fi
 
     cd "./${DIRNAME}"
