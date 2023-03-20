@@ -60,7 +60,7 @@ for i in 2 3 4; do
 
         echo "making schedule '${j}_${DIRNAME}.txt'..."
 
-        MatchMaker -a "$i" -r "$1" -t "$j" -f > "${j}_${DIRNAME}.txt" &
+        MatchMaker -a "$i" -r "$1" -t "$j" -b > "${j}_${DIRNAME}.txt" &
         let 'jobs += 1'
     done
     
