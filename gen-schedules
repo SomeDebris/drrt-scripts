@@ -26,7 +26,7 @@ if [ ! -d out ]; then
     mkdir out
 fi
 
-if [ ! "$(ls -A out/)" ]; then
+if [ "$(ls -A out/)" ]; then
     rm out/*
 fi
 
@@ -37,7 +37,7 @@ for i in 2 3 4; do
     if [ ! -d "${DIRNAME}" ]; then
         mkdir "${DIRNAME}"
     else
-        if [ ! "$(ls -A out/)" ]; then
+        if [ "$(ls -A out/)" ]; then
             rm "${DIRNAME}"/*
         fi
     fi
