@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -x
+set -e
 
 jobs=0
 
@@ -60,7 +60,7 @@ for i in 2 3 4; do
 
         echo "making schedule '${j}_${DIRNAME}.txt'..."
 
-        MatchMaker -a "$i" -r "$1" -t "$j" -f > "${j}_${DIRNAME}.txt" &
+        MatchMaker -a "$i" -r "$1" -t "$j" -f > "${j}_${DIRNAME}.txt" 2> /dev/null &
         let 'jobs += 1'
     done
     
@@ -68,6 +68,8 @@ for i in 2 3 4; do
 
     wait
     jobs=0
+
+    echo preawk
 
     awk_it "${DIRNAME}" &
     let 'jobs += 1'
