@@ -9,5 +9,5 @@ selected_schedule.csv
 **/__pycache__
 **\~undo-tree\~
 
-!schedules/out/
-schedules/*
+# !schedules/out/
+# schedules/*
