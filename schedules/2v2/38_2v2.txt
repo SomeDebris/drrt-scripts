@@ -1,0 +1,191 @@
+Create schedule for 38 teams playing 10 rounds in 95 matches
+with a minimum match separation of 6.
+
+   0:00    0.45% complete (157 updates), less than a minute to go      0:00    0.91% complete (164 updates), less than a minute to go      0:00    1.37% complete (167 updates), less than a minute to go      0:01    1.83% complete (170 updates), less than a minute to go      0:01    2.29% complete (173 updates), less than a minute to go      0:01    2.76% complete (178 updates), less than a minute to go      0:01    3.22% complete (180 updates), less than a minute to go      0:02    3.68% complete (180 updates), less than a minute to go      0:02    4.15% complete (181 updates), less than a minute to go      0:02    4.61% complete (182 updates), less than a minute to go      0:02    5.08% complete (182 updates), less than a minute to go      0:03    5.55% complete (182 updates), less than a minute to go      0:03    6.01% complete (182 updates), less than a minute to go      0:03    6.48% complete (182 updates), less than a minute to go      0:03    6.94% complete (182 updates), less than a minute to go      0:04    7.41% complete (182 updates), less than a minute to go      0:04    7.88% complete (182 updates), less than a minute to go      0:04    8.34% complete (182 updates), less than a minute to go      0:04    8.81% complete (182 updates), less than a minute to go      0:05    9.28% complete (182 updates), less than a minute to go      0:05    9.74% complete (182 updates), less than a minute to go      0:05   10.21% complete (182 updates), less than a minute to go      0:05   10.67% complete (182 updates), less than a minute to go      0:06   11.14% complete (182 updates), less than a minute to go      0:06   11.61% complete (182 updates), less than a minute to go      0:06   12.07% complete (182 updates), less than a minute to go      0:06   12.54% complete (182 updates), less than a minute to go      0:07   13.01% complete (182 updates), less than a minute to go      0:07   13.47% complete (182 updates), less than a minute to go      0:07   13.94% complete (182 updates), less than a minute to go      0:07   14.41% complete (182 updates), less than a minute to go      0:08   14.87% complete (182 updates), less than a minute to go      0:08   15.34% complete (182 updates), less than a minute to go      0:08   15.81% complete (183 updates), less than a minute to go      0:08   16.27% complete (185 updates), less than a minute to go      0:09   16.74% complete (185 updates), less than a minute to go      0:09   17.21% complete (185 updates), less than a minute to go      0:09   17.68% complete (185 updates), less than a minute to go      0:09   18.15% complete (185 updates), less than a minute to go      0:10   18.61% complete (185 updates), less than a minute to go      0:10   19.08% complete (185 updates), less than a minute to go      0:10   19.55% complete (185 updates), less than a minute to go      0:10   20.01% complete (185 updates), less than a minute to go      0:11   20.48% complete (185 updates), less than a minute to go      0:11   20.95% complete (185 updates), less than a minute to go      0:11   21.41% complete (185 updates), less than a minute to go      0:11   21.88% complete (185 updates), less than a minute to go      0:12   22.35% complete (185 updates), less than a minute to go      0:12   22.82% complete (185 updates), less than a minute to go      0:12   23.28% complete (185 updates), less than a minute to go      0:12   23.76% complete (185 updates), less than a minute to go      0:13   24.23% complete (185 updates), less than a minute to go      0:13   24.70% complete (185 updates), less than a minute to go      0:13   25.18% complete (185 updates), less than a minute to go      0:13   25.66% complete (185 updates), less than a minute to go      0:14   26.13% complete (185 updates), less than a minute to go      0:14   26.60% complete (185 updates), less than a minute to go      0:14   27.08% complete (185 updates), less than a minute to go      0:14   27.55% complete (185 updates), less than a minute to go      0:15   28.03% complete (185 updates), less than a minute to go      0:15   28.51% complete (185 updates), less than a minute to go      0:15   28.98% complete (185 updates), less than a minute to go      0:15   29.45% complete (185 updates), less than a minute to go      0:16   29.93% complete (185 updates), less than a minute to go      0:16   30.40% complete (185 updates), less than a minute to go      0:16   30.87% complete (185 updates), less than a minute to go      0:16   31.35% complete (185 updates), less than a minute to go      0:17   31.82% complete (185 updates), less than a minute to go      0:17   32.30% complete (185 updates), less than a minute to go      0:17   32.78% complete (185 updates), less than a minute to go      0:17   33.25% complete (185 updates), less than a minute to go      0:18   33.73% complete (185 updates), less than a minute to go      0:18   34.20% complete (185 updates), less than a minute to go      0:18   34.67% complete (185 updates), less than a minute to go      0:18   35.15% complete (185 updates), less than a minute to go      0:19   35.62% complete (185 updates), less than a minute to go      0:19   36.10% complete (185 updates), less than a minute to go      0:19   36.57% complete (185 updates), less than a minute to go      0:19   37.05% complete (185 updates), less than a minute to go      0:20   37.52% complete (185 updates), less than a minute to go      0:20   38.00% complete (185 updates), less than a minute to go      0:20   38.47% complete (185 updates), less than a minute to go      0:20   38.95% complete (185 updates), less than a minute to go      0:21   39.42% complete (185 updates), less than a minute to go      0:21   39.89% complete (185 updates), less than a minute to go      0:21   40.37% complete (185 updates), less than a minute to go      0:21   40.84% complete (185 updates), less than a minute to go      0:22   41.32% complete (185 updates), less than a minute to go      0:22   41.79% complete (185 updates), less than a minute to go      0:22   42.27% complete (185 updates), less than a minute to go      0:22   42.74% complete (185 updates), less than a minute to go      0:23   43.22% complete (185 updates), less than a minute to go      0:23   43.69% complete (185 updates), less than a minute to go      0:23   44.16% complete (185 updates), less than a minute to go      0:23   44.63% complete (185 updates), less than a minute to go      0:24   45.11% complete (185 updates), less than a minute to go      0:24   45.58% complete (185 updates), less than a minute to go      0:24   46.06% complete (185 updates), less than a minute to go      0:24   46.53% complete (185 updates), less than a minute to go      0:25   47.00% complete (185 updates), less than a minute to go      0:25   47.48% complete (185 updates), less than a minute to go      0:25   47.95% complete (185 updates), less than a minute to go      0:25   48.42% complete (185 updates), less than a minute to go      0:26   48.90% complete (185 updates), less than a minute to go      0:26   49.37% complete (185 updates), less than a minute to go      0:26   49.85% complete (185 updates), less than a minute to go      0:26   50.32% complete (185 updates), less than a minute to go      0:27   50.79% complete (185 updates), less than a minute to go      0:27   51.27% complete (185 updates), less than a minute to go      0:27   51.74% complete (185 updates), less than a minute to go      0:27   52.21% complete (185 updates), less than a minute to go      0:28   52.68% complete (185 updates), less than a minute to go      0:28   53.16% complete (185 updates), less than a minute to go      0:28   53.63% complete (185 updates), less than a minute to go      0:28   54.10% complete (185 updates), less than a minute to go      0:29   54.57% complete (185 updates), less than a minute to go      0:29   55.04% complete (185 updates), less than a minute to go      0:29   55.52% complete (185 updates), less than a minute to go      0:29   55.99% complete (185 updates), less than a minute to go      0:30   56.46% complete (185 updates), less than a minute to go      0:30   56.93% complete (185 updates), less than a minute to go      0:30   57.40% complete (185 updates), less than a minute to go      0:30   57.87% complete (185 updates), less than a minute to go      0:31   58.34% complete (185 updates), less than a minute to go      0:31   58.82% complete (185 updates), less than a minute to go      0:31   59.29% complete (185 updates), less than a minute to go      0:31   59.76% complete (185 updates), less than a minute to go      0:32   60.23% complete (185 updates), less than a minute to go      0:32   60.70% complete (185 updates), less than a minute to go      0:32   61.17% complete (185 updates), less than a minute to go      0:32   61.65% complete (185 updates), less than a minute to go      0:33   62.12% complete (185 updates), less than a minute to go      0:33   62.59% complete (185 updates), less than a minute to go      0:33   63.06% complete (185 updates), less than a minute to go      0:33   63.53% complete (185 updates), less than a minute to go      0:34   64.00% complete (185 updates), less than a minute to go      0:34   64.48% complete (185 updates), less than a minute to go      0:34   64.95% complete (185 updates), less than a minute to go      0:34   65.42% complete (185 updates), less than a minute to go      0:35   65.89% complete (185 updates), less than a minute to go      0:35   66.36% complete (185 updates), less than a minute to go      0:35   66.83% complete (185 updates), less than a minute to go      0:35   67.31% complete (185 updates), less than a minute to go      0:36   67.78% complete (185 updates), less than a minute to go      0:36   68.25% complete (185 updates), less than a minute to go      0:36   68.72% complete (185 updates), less than a minute to go      0:36   69.19% complete (185 updates), less than a minute to go      0:37   69.66% complete (185 updates), less than a minute to go      0:37   70.13% complete (185 updates), less than a minute to go      0:37   70.60% complete (185 updates), less than a minute to go      0:37   71.08% complete (185 updates), less than a minute to go      0:38   71.55% complete (185 updates), less than a minute to go      0:38   72.02% complete (185 updates), less than a minute to go      0:38   72.49% complete (185 updates), less than a minute to go      0:38   72.96% complete (185 updates), less than a minute to go      0:39   73.43% complete (185 updates), less than a minute to go      0:39   73.91% complete (185 updates), less than a minute to go      0:39   74.38% complete (185 updates), less than a minute to go      0:39   74.86% complete (185 updates), less than a minute to go      0:40   75.33% complete (185 updates), less than a minute to go      0:40   75.80% complete (185 updates), less than a minute to go      0:40   76.27% complete (185 updates), less than a minute to go      0:40   76.73% complete (185 updates), less than a minute to go      0:41   77.20% complete (185 updates), less than a minute to go      0:41   77.67% complete (185 updates), less than a minute to go      0:41   78.13% complete (185 updates), less than a minute to go      0:41   78.61% complete (185 updates), less than a minute to go      0:42   79.08% complete (185 updates), less than a minute to go      0:42   79.55% complete (185 updates), less than a minute to go      0:42   80.02% complete (185 updates), less than a minute to go      0:42   80.50% complete (185 updates), less than a minute to go      0:43   80.97% complete (185 updates), less than a minute to go      0:43   81.44% complete (185 updates), less than a minute to go      0:43   81.91% complete (185 updates), less than a minute to go      0:43   82.38% complete (185 updates), less than a minute to go      0:44   82.85% complete (185 updates), less than a minute to go      0:44   83.32% complete (185 updates), less than a minute to go      0:44   83.79% complete (185 updates), less than a minute to go      0:44   84.26% complete (185 updates), less than a minute to go      0:45   84.74% complete (185 updates), less than a minute to go      0:45   85.21% complete (185 updates), less than a minute to go      0:45   85.68% complete (185 updates), less than a minute to go      0:45   86.15% complete (185 updates), less than a minute to go      0:46   86.62% complete (185 updates), less than a minute to go      0:46   87.09% complete (185 updates), less than a minute to go      0:46   87.57% complete (185 updates), less than a minute to go      0:46   88.04% complete (185 updates), less than a minute to go      0:47   88.51% complete (185 updates), less than a minute to go      0:47   88.98% complete (185 updates), less than a minute to go      0:47   89.45% complete (185 updates), less than a minute to go      0:47   89.92% complete (185 updates), less than a minute to go      0:48   90.39% complete (185 updates), less than a minute to go      0:48   90.87% complete (185 updates), less than a minute to go      0:48   91.33% complete (185 updates), less than a minute to go      0:48   91.80% complete (185 updates), less than a minute to go      0:49   92.27% complete (185 updates), less than a minute to go      0:49   92.74% complete (185 updates), less than a minute to go      0:49   93.22% complete (185 updates), less than a minute to go      0:49   93.69% complete (185 updates), less than a minute to go      0:50   94.15% complete (185 updates), less than a minute to go      0:50   94.63% complete (185 updates), less than a minute to go      0:50   95.10% complete (185 updates), less than a minute to go      0:50   95.57% complete (185 updates), less than a minute to go      0:51   96.04% complete (185 updates), less than a minute to go      0:51   96.51% complete (185 updates), less than a minute to go      0:51   96.98% complete (185 updates), less than a minute to go      0:51   97.45% complete (185 updates), less than a minute to go      0:52   97.92% complete (185 updates), less than a minute to go      0:52   98.39% complete (185 updates), less than a minute to go      0:52   98.87% complete (185 updates), less than a minute to go      0:52   99.34% complete (185 updates), less than a minute to go      0:53   99.81% complete (185 updates), less than a minute to go      0:53   100.00% complete (185 updates), operation complete         
+Results for 38 teams playing 10 rounds in 95 matches
+with a minimum match separation of 6.
+
+Match Schedule
+--------------
+  1:   20    31    37    12 
+  2:    2    23     5    19 
+  3:    8    28     6    13 
+  4:   26    18    38     9 
+  5:   16     7    11    10 
+  6:   14    22    33    24 
+  7:   21     1    17    25 
+  8:   34    27    32    36 
+  9:   29     3    15    35 
+ 10:    4     9     8    30 
+ 11:   23     6    18    11 
+ 12:   28    16    31    24 
+ 13:   14    17    26    19 
+ 14:   38    32    37    22 
+ 15:   13    33    29     2 
+ 16:    3    10    21     4 
+ 17:   25    34     7    20 
+ 18:   27     1    12    35 
+ 19:   15    30    36     5 
+ 20:   14    37     9    23 
+ 21:   18    28     2    22 
+ 22:   19    29    21    16 
+ 23:   24    17    25     6 
+ 24:    7    31    38     3 
+ 25:    5     8    20    33 
+ 26:   10    30    13    34 
+ 27:   11     4    15    27 
+ 28:   26    32    36     1 
+ 29:   35    19    12    28 
+ 30:   21    29    24     9 
+ 31:   37     8    17     7 
+ 32:   25    31    22     5 
+ 33:   23    38    27    10 
+ 34:    2    11    34    14 
+ 35:   13    12     3    36 
+ 36:   30    33    15    26 
+ 37:   32     4    35     6 
+ 38:   18    16     1    20 
+ 39:   31    21    23     8 
+ 40:   17    34    38    28 
+ 41:   37    13    19    24 
+ 42:   27    26     3    22 
+ 43:   35    25    30     2 
+ 44:   36    10    29    18 
+ 45:   32    20     9    11 
+ 46:    1    15    14     6 
+ 47:    4     7    33    12 
+ 48:    5    38    16    13 
+ 49:   30    27    28    21 
+ 50:   25     2    37    26 
+ 51:   35    11    31     8 
+ 52:   23    24     3    32 
+ 53:   19    33     1    18 
+ 54:   22    16     4    14 
+ 55:   17    20    10    15 
+ 56:    9    36     6     7 
+ 57:   29     5    12    34 
+ 58:   24    37    11    30 
+ 59:    3     2     1     8 
+ 60:   25    13     4    23 
+ 61:   18    31    27    17 
+ 62:   28    14    32     7 
+ 63:    6    26    29    20 
+ 64:    5     9    10    35 
+ 65:   19    15    22    34 
+ 66:   33    21    36    38 
+ 67:   12    23    16    17 
+ 68:   18    32     7    30 
+ 69:    8    29    27    25 
+ 70:   24    26     5     4 
+ 71:   22    11    13     1 
+ 72:   28    36    20    14 
+ 73:   35    21    16    37 
+ 74:   34     3     9    33 
+ 75:    2    38    15    12 
+ 76:    6    10    19    31 
+ 77:   30     1    23    29 
+ 78:    7    27    26    13 
+ 79:   14     5    21    18 
+ 80:   34    37    16     3 
+ 81:   20    38    24    35 
+ 82:   22    12     9     6 
+ 83:   33    28    10    25 
+ 84:   32    15     8    19 
+ 85:    4    36    31     2 
+ 86:   11     3    17     5 
+ 87:   30    29    38    14 
+ 88:    7    22    20    21 
+ 89:    6    16    33    27 
+ 90:   12    24     8    18 
+ 91:   31     9    13    15 
+ 92:   34    35    26    23 
+ 93:   10    17     2    32 
+ 94:   36    19    11    25 
+ 95:    1    37    28     4 
+
+Schedule Statistics
+-------------------
+
+          #: number of matches played, a '+' after the number
+               indicates one additional round as a surrogate
+          d: minimum delta between matches (e.g. '1' means back-to-back)
+       part: number of distinct partners followed by most frequent repeat count
+        opp: number of distinct opponents followed by most frequent repeat count
+       both: number of distinct teams seen as partner or opponent
+               followed by most frequent combined repeat count
+        r/b: balance between red and blue alliance appearances
+               eg, 3b means team appeared as blue 3 times more than as red
+        <->: number of swaps between alliances (ie, bumper color changes)
+      s1...: number of appearances at station 1, etc.
+ 4+ repeats: any teams seen four or more times as partners or opponents
+
+ team   #   d    part    opp    both    r/b <->   s1 s2 4+ repeats
+ ----  --  --   -----   -----   -----   --- ---   -- -- ------------
+    1: 10   6 | 10  1 | 20  1 | 29  2 |  0    4 |  5  5
+    2: 10   6 | 10  1 | 20  1 | 29  2 |  0    5 |  5  5
+    3: 10   6 | 10  1 | 20  1 | 29  2 |  0    4 |  5  5
+    4: 10   6 | 10  1 | 20  1 | 30  1 |  0    5 |  5  5
+    5: 10   6 | 10  1 | 20  1 | 30  1 |  0    6 |  5  5
+    6: 10   6 | 10  1 | 20  1 | 29  2 |  2b   5 |  5  5
+    7: 10   6 | 10  1 | 20  1 | 28  2 |  0    6 |  5  5
+    8: 10   6 | 10  1 | 20  1 | 29  2 |  2b   5 |  5  5
+    9: 10   6 | 10  1 | 20  1 | 29  2 |  2b   5 |  5  5
+   10: 10   7 | 10  1 | 20  1 | 29  2 |  0    7 |  5  5
+   11: 10   6 | 10  1 | 20  1 | 30  1 |  0    6 |  5  5
+   12: 10   6 | 10  1 | 20  1 | 29  2 |  2b   5 |  5  5
+   13: 10   6 | 10  1 | 20  1 | 30  1 |  2b   6 |  5  5
+   14: 10   7 | 10  1 | 20  1 | 28  2 |  0    5 |  5  5
+   15: 10   7 | 10  1 | 20  1 | 28  2 |  2b   8 |  5  5
+   16: 10   6 | 10  1 | 20  1 | 28  2 |  0    6 |  5  5
+   17: 10   6 | 10  1 | 20  1 | 28  2 |  0    5 |  5  5
+   18: 10   6 | 10  1 | 20  1 | 29  2 |  0    5 |  5  5
+   19: 10   7 | 10  1 | 20  1 | 29  2 |  0    5 |  5  5
+   20: 10   7 | 10  1 | 20  1 | 29  2 |  2b   5 |  5  5
+   21: 10   6 | 10  1 | 20  1 | 28  2 |  0    5 |  5  5
+   22: 10   6 | 10  1 | 20  1 | 29  2 |  0    4 |  5  5
+   23: 10   6 | 10  1 | 20  1 | 30  1 |  0    7 |  5  5
+   24: 10   6 | 10  1 | 20  1 | 29  2 |  0    5 |  5  5
+   25: 10   6 | 10  1 | 20  1 | 28  2 |  0    4 |  5  5
+   26: 10   6 | 10  1 | 20  1 | 29  2 |  0    7 |  5  5
+   27: 10   6 | 10  1 | 20  1 | 29  2 |  0    5 |  5  5
+   28: 10   8 | 10  1 | 20  1 | 29  2 |  2r   3 |  5  5
+   29: 10   6 | 10  1 | 20  1 | 28  2 |  2r   8 |  5  5
+   30: 10   6 | 10  1 | 20  1 | 28  2 |  2r   5 |  5  5
+   31: 10   6 | 10  1 | 20  1 | 29  2 |  2r   6 |  5  5
+   32: 10   6 | 10  1 | 20  1 | 28  2 |  2r   4 |  5  5
+   33: 10   6 | 10  1 | 20  1 | 30  1 |  0    8 |  5  5
+   34: 10   6 | 10  1 | 20  1 | 29  2 |  2r   4 |  5  5
+   35: 10   6 | 10  1 | 20  1 | 29  2 |  0    7 |  5  5
+   36: 10   6 | 10  1 | 20  1 | 29  2 |  0    3 |  5  5
+   37: 10   6 | 10  1 | 20  1 | 28  2 |  2r   5 |  5  5
+   38: 10   6 | 10  1 | 20  1 | 30  1 |  0    8 |  5  5
+------------------------------------------------------------
+ best: 10   8 | 10  1 | 20  1 | 30  1 |  0    3 |  5  5
+worst: 10   6 | 10  1 | 20  1 | 28  2 |  2    8 |  5  5
+------------------------------------------------------------
+station appearance count histogram:
+0: 0
+1: 0
+2: 0
+3: 0
+4: 0
+5: 76
+6: 0
+7: 0
+8: 0
+9: 0
+10: 0
+------------------------------------------------------------
+alliance swap count histogram:
+8: 4
+7: 4
+6: 6
+5: 16
+4: 6
+3: 2
+2: 0
+1: 0
+0: 0
+
+elapsed time: 53.1023 seconds
+

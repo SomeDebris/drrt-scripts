@@ -1,0 +1,97 @@
+Create schedule for 11 teams playing 10 rounds in 28 matches
+with a minimum match separation of 1.
+
+   0:00    1.61% complete (35 updates), less than a minute to go      0:00    3.22% complete (35 updates), less than a minute to go      0:00    4.81% complete (40 updates), less than a minute to go      0:01    6.41% complete (40 updates), less than a minute to go      0:01    8.03% complete (40 updates), less than a minute to go      0:01    9.65% complete (40 updates), less than a minute to go      0:01   11.28% complete (40 updates), less than a minute to go      0:02   12.90% complete (40 updates), less than a minute to go      0:02   14.52% complete (40 updates), less than a minute to go      0:02   16.14% complete (40 updates), less than a minute to go      0:02   17.77% complete (40 updates), less than a minute to go      0:03   19.39% complete (40 updates), less than a minute to go      0:03   21.01% complete (40 updates), less than a minute to go      0:03   22.63% complete (40 updates), less than a minute to go      0:03   24.25% complete (40 updates), less than a minute to go      0:04   25.88% complete (40 updates), less than a minute to go      0:04   27.50% complete (40 updates), less than a minute to go      0:04   29.13% complete (40 updates), less than a minute to go      0:04   30.75% complete (40 updates), less than a minute to go      0:05   32.37% complete (40 updates), less than a minute to go      0:05   34.00% complete (40 updates), less than a minute to go      0:05   35.62% complete (40 updates), less than a minute to go      0:05   37.24% complete (40 updates), less than a minute to go      0:06   38.86% complete (40 updates), less than a minute to go      0:06   40.48% complete (40 updates), less than a minute to go      0:06   42.11% complete (40 updates), less than a minute to go      0:06   43.73% complete (40 updates), less than a minute to go      0:07   45.36% complete (40 updates), less than a minute to go      0:07   46.98% complete (40 updates), less than a minute to go      0:07   48.61% complete (40 updates), less than a minute to go      0:07   50.23% complete (40 updates), less than a minute to go      0:08   51.86% complete (40 updates), less than a minute to go      0:08   53.49% complete (40 updates), less than a minute to go      0:08   55.12% complete (40 updates), less than a minute to go      0:08   56.75% complete (40 updates), less than a minute to go      0:09   58.37% complete (40 updates), less than a minute to go      0:09   60.00% complete (40 updates), less than a minute to go      0:09   61.62% complete (40 updates), less than a minute to go      0:09   63.24% complete (40 updates), less than a minute to go      0:10   64.86% complete (40 updates), less than a minute to go      0:10   66.48% complete (40 updates), less than a minute to go      0:10   68.11% complete (40 updates), less than a minute to go      0:10   69.74% complete (40 updates), less than a minute to go      0:11   71.36% complete (40 updates), less than a minute to go      0:11   72.99% complete (40 updates), less than a minute to go      0:11   74.61% complete (40 updates), less than a minute to go      0:11   76.24% complete (40 updates), less than a minute to go      0:12   77.86% complete (40 updates), less than a minute to go      0:12   79.49% complete (40 updates), less than a minute to go      0:12   81.11% complete (40 updates), less than a minute to go      0:12   82.73% complete (40 updates), less than a minute to go      0:13   84.34% complete (40 updates), less than a minute to go      0:13   85.97% complete (40 updates), less than a minute to go      0:13   87.58% complete (40 updates), less than a minute to go      0:13   89.20% complete (40 updates), less than a minute to go      0:14   90.82% complete (40 updates), less than a minute to go      0:14   92.44% complete (40 updates), less than a minute to go      0:14   94.06% complete (40 updates), less than a minute to go      0:14   95.68% complete (42 updates), less than a minute to go      0:15   97.30% complete (42 updates), less than a minute to go      0:15   98.93% complete (42 updates), less than a minute to go      0:15   100.00% complete (42 updates), operation complete         
+Results for 11 teams playing 10 rounds in 28 matches
+with a minimum match separation of 1.
+
+Match Schedule
+--------------
+  1:    5     8     6     9 
+  2:    7     3     2    10 
+  3:   11     3     4     1 
+  4:    7     4     5     6 
+  5:    8     2     1    10 
+  6:    9     7    11     4 
+  7:   10    11     9     5 
+  8:    1     6     8     3 
+  9:    2     5    11     6 
+ 10:    8     1     7    10 
+ 11:    4     2     3     9 
+ 12:   10     3     5     7 
+ 13:    9     4     6     2 
+ 14:   11     1     7     8 
+ 15:    4     6    10     8 
+ 16:    5    11     1     2 
+ 17:    3     1     9    10 
+ 18:    8     9     4     5 
+ 19:   11     7     6     3 
+ 20:    2     9     7     1 
+ 21:    6     8     3     5 
+ 22:   10     4     2    11 
+ 23:    4     8     2     7 
+ 24:   10     6     9    11 
+ 25:    1     5     3     4 
+ 26:    6     7     1     9 
+ 27:    3     2     8    11 
+ 28:    7*   10     5     1*
+
+
+Schedule Statistics
+-------------------
+
+          #: number of matches played, a '+' after the number
+               indicates one additional round as a surrogate
+          d: minimum delta between matches (e.g. '1' means back-to-back)
+       part: number of distinct partners followed by most frequent repeat count
+        opp: number of distinct opponents followed by most frequent repeat count
+       both: number of distinct teams seen as partner or opponent
+               followed by most frequent combined repeat count
+        r/b: balance between red and blue alliance appearances
+               eg, 3b means team appeared as blue 3 times more than as red
+        <->: number of swaps between alliances (ie, bumper color changes)
+      s1...: number of appearances at station 1, etc.
+ 4+ repeats: any teams seen four or more times as partners or opponents
+
+ team   #   d    part    opp    both    r/b <->   s1 s2 4+ repeats
+ ----  --  --   -----   -----   -----   --- ---   -- -- ------------
+    1: 10+  1 | 10  1 | 10  3 | 10  4 |  0    6 |  5  5 | 3 7 8
+    2: 10   1 | 10  1 | 10  3 | 10  4 |  0    5 |  5  5 | 4 11
+    3: 10   1 | 10  1 | 10  3 | 10  4 |  0    4 |  5  5 | 1
+    4: 10   1 | 10  1 | 10  3 | 10  4 |  2r   6 |  5  5 | 2 9
+    5: 10   2 |  9  2 | 10  3 | 10  4 |  2b   7 |  5  5 | 6
+    6: 10   1 | 10  1 | 10  3 | 10  4 |  0    5 |  5  5 | 5 8 9
+    7: 10+  1 | 10  1 | 10  3 | 10  4 |  0    4 |  5  5 | 1
+    8: 10   1 | 10  1 | 10  3 | 10  4 |  2r   5 |  5  5 | 1 6
+    9: 10   1 | 10  1 | 10  3 | 10  4 |  2b   6 |  5  5 | 4 6
+   10: 10   2 |  9  2 | 10  3 | 10  4 |  0    5 |  5  5 | 1 7
+   11: 10   1 | 10  1 | 10  3 | 10  4 |  0    5 |  5  5 | 2
+------------------------------------------------------------
+ best: 10   2 | 10  1 | 10  3 | 10  4 |  0    4 |  5  5
+worst: 11   1 |  9  2 | 10  3 | 10  4 |  2    7 |  5  5
+------------------------------------------------------------
+station appearance count histogram:
+0: 0
+1: 0
+2: 0
+3: 0
+4: 0
+5: 22
+6: 0
+7: 0
+8: 0
+9: 0
+10: 0
+------------------------------------------------------------
+alliance swap count histogram:
+7: 1
+6: 3
+5: 5
+4: 2
+3: 0
+2: 0
+1: 0
+0: 0
+
+elapsed time: 15.4134 seconds
+
