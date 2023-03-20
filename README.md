@@ -63,4 +63,11 @@ The Scheduler will check the block IDs of all ships it reads. If any block IDs m
 
 ## gen-schedules
 
+If you would like to generate a new set of schedules for the scheduler to use, you may use the bash script titled **gen-schedules**, referred to as the Schedule Generator. This script is made simply to generate a bunch of schedules, format the raw output of the MatchMaker program as \*.csv files, and to put all the output files into the appropriate directory.
+
+### Usage
+
+```
+./gen-schedules ROUNDS MAX_PARTICIPANTS
+```
 
