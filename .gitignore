@@ -8,3 +8,6 @@ selected_schedule.csv
 *clean.sh
 **/__pycache__
 **\~undo-tree\~
+
+!schedules/out/
+schedules/*
