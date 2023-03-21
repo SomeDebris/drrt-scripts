@@ -6,7 +6,6 @@ jobs=0
 
 function awk_it {
     cd "$1"
-
     echo "converting ${1} schedules from raw format to csv..."
 
     if [ "$( grep -Ri '^ERROR:.*silly' | awk -F: '{ print $1 }' )" ]; then
@@ -14,13 +13,12 @@ function awk_it {
     fi
 
     awk -f ../../stripper.awk *.txt
-
     mv *.csv "../out/"
 }
 
+
 if [ ! -d schedules ]; then
     echo "creating 'schedules' directory"
-
     mkdir schedules
 fi
 
@@ -28,7 +26,6 @@ cd schedules
 
 if [ ! -d out ]; then
     echo "creating 'schedules/out' directory"
-
     mkdir out
 fi
 
@@ -37,7 +34,6 @@ if [ "$(ls -A out/)" ]; then
 fi
 
 for i in 2 3 4; do
-
     DIRNAME="${i}v${i}"
     
     if [ ! -d "${DIRNAME}" ]; then
@@ -54,12 +50,10 @@ for i in 2 3 4; do
 
         if [ $jobs -ge 14 ]; then
             wait -n
-
             let 'jobs -= 1'
         fi
 
         echo "making schedule '${j}_${DIRNAME}.txt'..."
-
         MatchMaker -a "$i" -r "$1" -t "$j" -b > "${j}_${DIRNAME}.txt" &
         let 'jobs += 1'
     done
