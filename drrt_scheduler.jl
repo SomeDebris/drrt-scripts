@@ -1,6 +1,8 @@
 # The whole reason that I'm doing this is just so I can learn this language
 # a little better. It might be fun!
 
+import JSON
+
 global const RED_ALLIANCE_COLORS    = [ 0xbaa01e, 0x681818, 0x000000 ]
 global const BLUE_ALLIANCE_COLORS   = [ 0xbaa01e, 0x681818, 0x000000 ]
 
@@ -15,6 +17,16 @@ function ship_at(index::String)
     # return the ship file at this index.
     # surrogate ships will be strings, as they have an asterisk.
     # straight up call the ship_at(index::Int) function once int has been parsed
+
+    regex_noast = r"\*"
+    return ship_at( parse(Int, replace(index, regex_noast => "")) )
+end
+
+
+function ship_dict(ship_index::String)
+    open(ship_index) do file
+
+    end
 end
 
 
