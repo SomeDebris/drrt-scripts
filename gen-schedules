@@ -4,16 +4,23 @@ set -e
 
 jobs=0
 
-function awk_it {
-    cd "$1"
-    echo "converting ${1} schedules from raw format to csv..."
+AWK_STRIPPER="$(readlink -e stripper.awk)"
 
-    if [ "$( grep -Ri '^ERROR:.*silly' | awk -F: '{ print $1 }' )" ]; then
-        rm $( grep -Ri '^ERROR:.*silly' | awk -F: '{ print $1 }' )
-    fi
+if [ ! -n "$AWK" ]; then
+    AWK=mawk2
+fi
 
-    awk -f ../../stripper.awk *.txt
-    mv *.csv "../out/"
+function schedule_it {
+    # $1 = rounds
+    # $2 = alliance size
+    # $3 = team count
+    echo "making schedule '${3}_${2}v${2}.txt'..."
+
+    MatchMaker -a "$2" -r "$1" -t "$3" -b > "${3}_${2}v${2}.txt"
+
+    $AWK -f "$AWK_STRIPPER" "${3}_${2}v${2}.txt"
+
+    mv "${3}_${2}v${2}.csv" ../out
 }
 
 
@@ -53,18 +60,11 @@ for i in 2 3 4; do
             let 'jobs -= 1'
         fi
 
-        echo "making schedule '${j}_${DIRNAME}.txt'..."
-        MatchMaker -a "$i" -r "$1" -t "$j" -b > "${j}_${DIRNAME}.txt" &
+        schedule_it "$1" "$i" "$j" &
         let 'jobs += 1'
     done
     
     cd ..
-
-    wait
-    jobs=0
-
-    awk_it "${DIRNAME}" &
-    let 'jobs += 1'
 done
 
 wait
