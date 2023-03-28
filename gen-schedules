@@ -7,7 +7,7 @@ jobs=0
 AWK_STRIPPER="$(readlink -e stripper.awk)"
 
 if [ ! -n "$AWK" ]; then
-    AWK=mawk2
+    AWK=awk
 fi
 
 function schedule_it {
