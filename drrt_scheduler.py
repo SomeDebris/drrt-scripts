@@ -52,7 +52,7 @@ def main(args):
 
     # Get list of ship/participant filepaths from ship_index.json
     # Also may check if those files exist
-    ships = _get_participants(not args.no_check)
+    ships = get_ship_path_list(not args.no_check)
     print(f'Found {len(ships)} ships in ship_index.json.')
 
     # Checks if there are enough ships to fill both alliances at least once
