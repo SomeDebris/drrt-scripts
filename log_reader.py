@@ -117,6 +117,7 @@ def parse_mlog(mlog_content):
         - first substring = parse for ID
         - second = parse for fields
     """
+    global ALL_SHIPS
     global Current_Match_ID
     global Last_Alliance_Name
 
