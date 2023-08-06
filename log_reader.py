@@ -238,11 +238,11 @@ def parse_mlog(mlog_content):
             blue_ship['deltaP'] = 1
         
     for blue_ship in blue_ships:
-        if (~blue_ship['destroyed']):
+        if (not blue_ship['destroyed']):
             blue_ship['deltaS'] = 1
 
     for red_ship in red_ships:
-        if (~red_ship['destroyed']):
+        if (not red_ship['destroyed']):
             red_ship['deltaS'] = 1
 
 
