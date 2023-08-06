@@ -122,6 +122,7 @@ def parse_mlog(mlog_content):
     red_ship_index = {}
     red_ship_index_length = 0
     blue_ship_index = {}
+    blue_ship_index_length = 0
 
     for line in mlog_content.splitlines():
         if not line:
