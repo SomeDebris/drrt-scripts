@@ -190,8 +190,8 @@ def parse_mlog(mlog_content):
         else:
             print("well, {}'s apparently not in my list!".format(message_id[0]))
 
-        print(red_alliance)
-        print(blue_alliance)
+    print(red_alliance)
+    print(blue_alliance)
     
 if __name__ == '__main__':
     main()
