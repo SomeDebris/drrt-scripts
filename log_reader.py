@@ -208,7 +208,7 @@ def parse_mlog(mlog_content):
             print("well, {}'s apparently not in my list!".format(message_id[0]))
 
 
-    if ~(red_mlog_is_complete and blue_mlog_is_complete):
+    if ~(mlog_completion >= 2):
         print("mlog not complete! Cannot continue.")
         return
 
