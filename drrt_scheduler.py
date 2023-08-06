@@ -174,7 +174,7 @@ def get_ship_path_list(check):
     for ship in ship_list:
         ship_path = os.path.join(SCRIPT_DIR, 'ships', ship['filename'])
         if not os.path.exists(ship_path):
-            print_err(f'get_ship_list: Ship file\'{ship['filename']}\' not found!', True)
+            print_err("get_ship_list: Ship file \'{}\' not found!".format(ship['filename']), True)
             ships_notfound = True
         else:
             abs_paths.append(ship_path)
