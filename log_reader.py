@@ -80,7 +80,7 @@ def get_ship_list():
             continue
         ship_info = line.split("|")
         ship_list.append({ 'name':ship_info[0],'author':ship_info[1],'filename':ship_info[2],
-                          'D':0, 'P':0, 'L':0, 'S':0, 'rank':0.0, 'RPs':0})
+                          'D':0, 'P':0, 'L':0, 'S':0, 'rank':0, 'RPs':0, 'ranking_score':0.0})
     
     ship_index_file.close()
 
