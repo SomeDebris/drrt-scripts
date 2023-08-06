@@ -260,13 +260,13 @@ def distribute_points(alliance):
         for ship in alliance:
             if (participant['name'] == ship['name']):
                 participant['RPs'] += ship['RPs']
-                if (ship['deltaD'])
+                if ('deltaD' in ship):
                     participant['D'] += ship['deltaD']
-                if (ship['deltaP'])
+                if ('deltaP' in ship):
                     participant['P'] += ship['deltaP']
-                if (ship['deltaL'])
-                    participant[':'] += ship['deltaL']
-                if (ship['deltaS'])
+                if ('deltaL' in ship):
+                    participant['L'] += ship['deltaL']
+                if ('deltaS' in ship):
                     participant['S'] += ship['deltaS']
                 matches_played = sum(participant['D'], participant['P'], participant['L'])
                 participant['ranking_score'] = participant['RPs'] / matches_played
