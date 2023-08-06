@@ -211,14 +211,14 @@ def parse_mlog(mlog_content):
 
     if (Last_Alliance_Name['red'] == red_alliance['name']):
         print("Red alliance name '{}' matches previous name '{}'; not counting match".format(
-            red_alliance['name'], Last_Alliance_Name['red'])
+            red_alliance['name'], Last_Alliance_Name['red']))
         return
     else:
         Last_Alliance_Name['red'] = red_alliance['name']
 
     if (Last_Alliance_Name['blue'] == blue_alliance['name']):
         print("Blue alliance name '{}' matches previous name '{}'; not counting match".format(
-            blue_alliance['name'], Last_Alliance_Name['blue'])
+            blue_alliance['name'], Last_Alliance_Name['blue']))
         return
     else:
         Last_Alliance_Name['blue'] = blue_alliance['name']
