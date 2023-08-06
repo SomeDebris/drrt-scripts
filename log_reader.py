@@ -21,6 +21,8 @@ BLUE_ALLIANCE_TITLE_COLORS = [0x0aa879, 0x222d84, 0x000000]
 
 Current_Match_ID = 0
 
+Last_Alliance_Name = {'red':None,'blue':None}
+
 ALL_SHIPS = {}
 
 
@@ -116,6 +118,9 @@ def parse_mlog(mlog_content):
         - second = parse for fields
     """
     global Current_Match_ID
+    global Last_Alliance_Name
+
+    is_qual_match = True
 
     field_regex = re.compile("(\w+):\{(.+?)\}")
     id_regex = re.compile("\[([A-Z]+)\]")
@@ -203,6 +208,22 @@ def parse_mlog(mlog_content):
         print("mlog not complete! Cannot continue.")
         return
 
+
+    if (Last_Alliance_Name['red'] == red_alliance['name']):
+        print("Red alliance name '{}' matches previous name '{}'; not counting match".format(
+            red_alliance['name'], Last_Alliance_Name['red'])
+        return
+    else:
+        Last_Alliance_Name['red'] = red_alliance['name']
+
+    if (Last_Alliance_Name['blue'] == blue_alliance['name']):
+        print("Blue alliance name '{}' matches previous name '{}'; not counting match".format(
+            blue_alliance['name'], Last_Alliance_Name['blue'])
+        return
+    else:
+        Last_Alliance_Name['blue'] = blue_alliance['name']
+        
+
     red_score = red_alliance['damageTaken']
     blue_score = blue_alliance['damageTaken']
 
@@ -244,6 +265,9 @@ def parse_mlog(mlog_content):
     # all ship's rank and ranking score is calced
     distribute_points(red_ships)
     distribute_points(blue_ships)
+
+    # what check do I do to ensure that the ranking score is not freaking duplicated
+    # APPEND A THING TO EACH 
 
     red_alliance['ships'] = red_ships
     blue_alliance['ships'] = blue_ships
