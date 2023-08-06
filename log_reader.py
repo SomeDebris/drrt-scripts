@@ -220,6 +220,9 @@ def parse_mlog(mlog_content):
         print_err("Both Alliance names Match!", True)
         print_err("Not counting match.", True)
         return
+    else:
+        Last_Alliance_Name['red'] = red_alliance['name']
+        Last_Alliance_Name['blue'] = blue_alliance['name']
 
     red_score = red_alliance['damageTaken']
     blue_score = blue_alliance['damageTaken']
