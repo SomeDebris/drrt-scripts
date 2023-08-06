@@ -93,7 +93,6 @@ def read_latest_mlog_symlink():
         latest_mlog_file = open(LATEST_MLOG, 'r')
         latest_mlog_content = latest_mlog_file.read()
         latest_mlog_file.close()
-        print(latest_mlog_content)
         return latest_mlog_content
     else:
         print("can't find \"{}\"!".format(LATEST_MLOG))
@@ -144,9 +143,6 @@ def parse_mlog(mlog_content):
         fields_dict = dict(fields)
         message_id = re.findall(id_regex, line)
 
-        print(message_id[0])
-        print(fields_dict)
-        
         if message_id[0] == 'START':
             if (fields_dict['fleet'] == '0'):
                 # It's the alliance on the RIGHT
@@ -177,15 +173,11 @@ def parse_mlog(mlog_content):
 
         elif message_id[0] == 'DESTRUCTION':
             if (fields_dict['fship'] == '100'):
-                print(red_ships[ red_ship_index[ fields_dict['ship'] ] ])
                 red_ships[ red_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
                 red_ships[ red_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
-                print(red_ships[ red_ship_index[ fields_dict['ship'] ] ])
             else:
-                print(blue_ships[ blue_ship_index[ fields_dict['ship'] ] ])
                 blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
                 blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
-                print(blue_ships[ blue_ship_index[ fields_dict['ship'] ] ])
 
         elif message_id[0] == 'RESULT':
             mlog_completion += 1
