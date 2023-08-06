@@ -216,10 +216,14 @@ def parse_mlog(mlog_content):
 
     if (red_score >= blue_score):
         match_info['winner'] = 'red'
+        for red_ship in red_ships:
+            red_ship['RPs'] += 2
         for blue_ship in blue_ships:
             blue_ship['deltaL'] = 1
     else:
         match_info['winner'] = 'blue'
+        for blue_ship in blue_ships:
+            blue_ship['RPs'] += 2
         for red_ship in red_ships:
             red_ship['deltaL'] = 1
 
@@ -245,7 +249,7 @@ def parse_mlog(mlog_content):
         if (not red_ship['destroyed']):
             red_ship['deltaS'] = 1
 
-
+    # all ships are given ranking points
 
     red_alliance['ships'] = red_ships
     blue_alliance['ships'] = blue_ships
