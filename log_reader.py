@@ -76,8 +76,11 @@ def get_ship_list():
     ship_index_content = ship_index_file.read()
 
     for line in ship_index_content.splitlines():
+        if not line:
+            continue
         ship_info = line.split("|")
-        ship_list.append({ 'name':ship_info[0],'author':ship_info[1],'filename':ship_info[2] })
+        ship_list.append({ 'name':ship_info[0],'author':ship_info[1],'filename':ship_info[2],
+                          'D':0, 'P':0, 'L':0, 'S':0, 'rank':0.0, 'RPs':0})
     
     ship_index_file.close()
 
@@ -128,6 +131,11 @@ def parse_mlog(mlog_content):
     red_ship_index_length = 0
     blue_ship_index = {}
     blue_ship_index_length = 0
+
+    mlog_completion = 0
+
+    #check the mlog to see if its complete
+
 
     for line in mlog_content.splitlines():
         if not line:
@@ -184,10 +192,12 @@ def parse_mlog(mlog_content):
                 red_alliance['damageTaken'] = int(fields_dict['DT'])
                 red_alliance['damageInflicted'] = int(fields_dict['DI'])
                 red_alliance['survivorCount'] = int(fields_dict['alive'])
+                mlog_completion += 1
             else:
                 blue_alliance['damageTaken'] = int(fields_dict['DT'])
                 blue_alliance['damageInflicted'] = int(fields_dict['DI'])
                 blue_alliance['survivorCount'] = int(fields_dict['alive'])
+                mlog_completion += 1
 
         elif message_id[0] == 'SURVIVAL':
             if (fields_dict['fleet'] == '0'):
@@ -197,6 +207,10 @@ def parse_mlog(mlog_content):
         else:
             print("well, {}'s apparently not in my list!".format(message_id[0]))
 
+
+    if ~(red_mlog_is_complete and blue_mlog_is_complete):
+        print("mlog not complete! Cannot continue.")
+        return
 
     red_score = red_alliance['damageTaken']
     blue_score = blue_alliance['damageTaken']
@@ -213,36 +227,26 @@ def parse_mlog(mlog_content):
     if (red_score == 0):
         for blue_ship in blue_ships:
             blue_ship['deltaD'] = 1
-            blue_ship['deltaP'] = 0
-            blue_ship['deltaL'] = 0
     elif (blue_score == 0):
         for red_ship in red_ships:
             red_ship['deltaD'] = 1
-            red_ship['deltaP'] = 0
-            red_ship['deltaL'] = 0
 
     elif (match_info['winner'] == 'red'):
         for red_ship in red_ships:
-            red_ship['deltaD'] = 0
             red_ship['deltaP'] = 1
-            red_ship['deltaL'] = 0
     else: 
         for blue_ship in blue_ships:
-            blue_ship['deltaD'] = 0
             blue_ship['deltaP'] = 1
-            blue_ship['deltaL'] = 0
         
     for blue_ship in blue_ships:
-        if (blue_ship['destroyed']):
-            blue_ship['deltaS'] = 0
-        else:
+        if (~blue_ship['destroyed']):
             blue_ship['deltaS'] = 1
 
     for red_ship in red_ships:
-        if (red_ship['destroyed']):
-            red_ship['deltaS'] = 0
-        else:
+        if (~red_ship['destroyed']):
             red_ship['deltaS'] = 1
+
+
 
     red_alliance['ships'] = red_ships
     blue_alliance['ships'] = blue_ships
