@@ -167,10 +167,12 @@ def parse_mlog(mlog_content):
                 print(red_ships[ red_ship_index[ fields_dict['ship'] ] ])
                 red_ships[ red_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
                 red_ships[ red_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
+                print(red_ships[ red_ship_index[ fields_dict['ship'] ] ])
             else:
                 print(blue_ships[ blue_ship_index[ fields_dict['ship'] ] ])
                 blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
                 blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
+                print(blue_ships[ blue_ship_index[ fields_dict['ship'] ] ])
 
         elif message_id[0] == 'RESULT':
             if (fields_dict['fleet'] == 0):
