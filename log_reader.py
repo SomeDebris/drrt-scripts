@@ -221,7 +221,7 @@ def parse_mlog(mlog_content):
             red_ship['deltaP'] = 0
             red_ship['deltaL'] = 0
 
-    elif (match_info['winner'] == 'red')
+    elif (match_info['winner'] == 'red'):
         for red_ship in red_ships:
             red_ship['deltaD'] = 0
             red_ship['deltaP'] = 1
