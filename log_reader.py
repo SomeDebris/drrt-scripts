@@ -148,6 +148,9 @@ def parse_mlog(mlog_content):
         fields_dict = dict(fields)
         message_id = re.findall(id_regex, line)
 
+        if len(message_id) < 1:
+            continue
+
         if message_id[0] == 'START':
             if (fields_dict['fleet'] == '0'):
                 # It's the alliance on the RIGHT
@@ -290,7 +293,7 @@ def distribute_points(alliance):
                 matches_played = participant['D'] + participant['P'] + participant['L']
                 participant['ranking_score'] = participant['RPs'] / matches_played
 
-def recalculate_ranks(ship_array)
+def recalculate_ranks(ship_array):
     return sorted(ship_array, key=lambda d: d['ranking_score'], reverse=True) 
     
 
