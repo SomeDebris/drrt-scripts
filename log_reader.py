@@ -131,9 +131,9 @@ def parse_mlog(mlog_content):
         fields_dict = dict(fields)
 
         message_id = re.findall(id_regex, line)
-        print(message_id)
+        print(message_id[0])
         
-        if message_id == 'START':
+        if message_id[0] == 'START':
             if (fields_dict['fleet'] == 0):
                 # It's the alliance on the RIGHT
                 red_alliance['name'] = fields_dict['name']
@@ -141,7 +141,7 @@ def parse_mlog(mlog_content):
             else:
                 blue_alliance['name'] = fields_dict['name']
 
-        elif message_id == 'SHIP':
+        elif message_id[0] == 'SHIP':
             if (fields_dict['fleet'] == 0):
                 red_ships.append({ 'name':fields_dict['ship'], 'destroyed':True })
                 red_ship_index[fields_dict['ship']] = red_ship_index_length
@@ -151,7 +151,7 @@ def parse_mlog(mlog_content):
                 blue_ship_index[fields_dict['ship']] = blue_ship_index_length
                 blue_ship_index_length += 1
 
-        elif message_id == 'DESTRUCTION':
+        elif message_id[0] == 'DESTRUCTION':
             if (fields_dict['fship'] == 100):
                 red_ships[fields_dict['ship']]['RPs'] += 1
                 red_ships[fields_dict['ship']]['destructions'] += 1
@@ -159,7 +159,7 @@ def parse_mlog(mlog_content):
                 blue_ships[fields_dict['ship']]['RPs'] += 1
                 blue_ships[fields_dict['ship']]['destructions'] += 1
 
-        elif message_id == 'RESULT':
+        elif message_id[0] == 'RESULT':
             if (fields_dict['fleet'] == 0):
                 red_alliance['damageTaken'] = fields_dict['DT']
                 red_alliance['damageInflicted'] = fields_dict['DI']
@@ -169,13 +169,13 @@ def parse_mlog(mlog_content):
                 blue_alliance['damageInflicted'] = fields_dict['DI']
                 blue_alliance['survivorCount'] = fields_dict['alive']
 
-        elif message_id == 'SURVIVAL':
+        elif message_id[0] == 'SURVIVAL':
             if (fields_dict['fleet'] == 0):
                 red_ships[fields_dict['ship']]['destroyed'] = False
             else:
                 red_ships[fields_dict['ship']]['destroyed'] = False
         else:
-            print("well, {}'s apparently not in my list!".format(message_id))
+            print("well, {}'s apparently not in my list!".format(message_id[0]))
 
         print(red_alliance)
         print(blue_alliance)
