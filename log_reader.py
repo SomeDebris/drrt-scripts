@@ -145,11 +145,11 @@ def parse_mlog(mlog_content):
         elif message_id[0] == 'SHIP':
             if (fields_dict['fleet'] == 0):
                 red_ships.append({ 'name':fields_dict['ship'], 'destroyed':True })
-                red_ship_index[fields_dict['ship']] = red_ship_index_length
+                red_ship_index[ int( fields_dict['ship'] ) ] = red_ship_index_length
                 red_ship_index_length += 1
             else:
                 blue_ships.append({ 'name':fields_dict['ship'], 'destroyed':True })
-                blue_ship_index[fields_dict['ship']] = blue_ship_index_length
+                blue_ship_index[ int( fields_dict['ship'] ) ] = blue_ship_index_length
                 blue_ship_index_length += 1
 
         elif message_id[0] == 'DESTRUCTION':
@@ -172,9 +172,9 @@ def parse_mlog(mlog_content):
 
         elif message_id[0] == 'SURVIVAL':
             if (fields_dict['fleet'] == 0):
-                red_ships[fields_dict['ship']]['destroyed'] = False
+                red_ships[ int( fields_dict['ship'] ) ]['destroyed'] = False
             else:
-                red_ships[fields_dict['ship']]['destroyed'] = False
+                red_ships[ int( fields_dict['ship'] ) ]['destroyed'] = False
         else:
             print("well, {}'s apparently not in my list!".format(message_id[0]))
 
