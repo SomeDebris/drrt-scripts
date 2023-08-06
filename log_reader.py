@@ -153,7 +153,12 @@ def parse_mlog(mlog_content):
                 red_ship_index[fields_dict['ship']] = red_ship_index_length
                 red_ship_index_length += 1
             else:
-                blue_ships.append({ 'name':fields_dict['ship'], 'destroyed':True })
+                blue_ships.append({ 
+                                  'name':fields_dict['ship'], 
+                                  'destroyed':True,
+                                  'RPs':0,
+                                  'destructions':0
+                                  })
                 blue_ship_index[fields_dict['ship']] = blue_ship_index_length
                 blue_ship_index_length += 1
 
