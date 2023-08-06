@@ -154,11 +154,11 @@ def parse_mlog(mlog_content):
 
         elif message_id[0] == 'DESTRUCTION':
             if (fields_dict['fship'] == 100):
-                red_ships[ int( fields_dict['ship'] ) ]['RPs'] += 1
-                red_ships[ int( fields_dict['ship'] ) ]['destructions'] += 1
+                red_ships[ red_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
+                red_ships[ red_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
             else:
-                blue_ships[ int( fields_dict['ship'] ) ]['RPs'] += 1
-                blue_ships[ int( fields_dict['ship'] ) ]['destructions'] += 1
+                blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
+                blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
 
         elif message_id[0] == 'RESULT':
             if (fields_dict['fleet'] == 0):
@@ -172,9 +172,9 @@ def parse_mlog(mlog_content):
 
         elif message_id[0] == 'SURVIVAL':
             if (fields_dict['fleet'] == 0):
-                red_ships[ int( fields_dict['ship'] ) ]['destroyed'] = False
+                red_ships[ red_ship_index[ fields_dict['ship'] ] ]['destroyed'] = False
             else:
-                red_ships[ int( fields_dict['ship'] ) ]['destroyed'] = False
+                blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['destroyed'] = False
         else:
             print("well, {}'s apparently not in my list!".format(message_id[0]))
 
