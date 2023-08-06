@@ -247,8 +247,8 @@ def parse_mlog(mlog_content):
     red_alliance['ships'] = red_ships
     blue_alliance['ships'] = blue_ships
 
-    print(red_alliance)
-    print(blue_alliance)
+    print(json.dumps(red_alliance, indent=4))
+    print(json.dumps(blue_alliance, indent=4))
     
 if __name__ == '__main__':
     main()
