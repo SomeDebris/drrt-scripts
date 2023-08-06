@@ -181,13 +181,13 @@ def parse_mlog(mlog_content):
 
         elif message_id[0] == 'RESULT':
             if (fields_dict['fleet'] == '0'):
-                red_alliance['damageTaken'] = fields_dict['DT']
-                red_alliance['damageInflicted'] = fields_dict['DI']
-                red_alliance['survivorCount'] = fields_dict['alive']
+                red_alliance['damageTaken'] = int(fields_dict['DT'])
+                red_alliance['damageInflicted'] = int(fields_dict['DI'])
+                red_alliance['survivorCount'] = int(fields_dict['alive'])
             else:
-                blue_alliance['damageTaken'] = fields_dict['DT']
-                blue_alliance['damageInflicted'] = fields_dict['DI']
-                blue_alliance['survivorCount'] = fields_dict['alive']
+                blue_alliance['damageTaken'] = int(fields_dict['DT'])
+                blue_alliance['damageInflicted'] = int(fields_dict['DI'])
+                blue_alliance['survivorCount'] = int(fields_dict['alive'])
 
         elif message_id[0] == 'SURVIVAL':
             if (fields_dict['fleet'] == '0'):
@@ -198,8 +198,8 @@ def parse_mlog(mlog_content):
             print("well, {}'s apparently not in my list!".format(message_id[0]))
 
 
-    red_score = int(red_alliance['damageTaken'])
-    blue_score = int(blue_alliance['damageTaken'])
+    red_score = red_alliance['damageTaken']
+    blue_score = blue_alliance['damageTaken']
 
     if (red_score >= blue_score):
         match_info['winner'] = 'red'
