@@ -154,9 +154,11 @@ def parse_mlog(mlog_content):
 
         elif message_id[0] == 'DESTRUCTION':
             if (fields_dict['fship'] == 100):
+                print(red_ships[ red_ship_index[ fields_dict['ship'] ] ])
                 red_ships[ red_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
                 red_ships[ red_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
             else:
+                print(blue_ships[ blue_ship_index[ fields_dict['ship'] ] ])
                 blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
                 blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
 
