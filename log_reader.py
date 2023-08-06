@@ -154,11 +154,11 @@ def parse_mlog(mlog_content):
 
         elif message_id[0] == 'DESTRUCTION':
             if (fields_dict['fship'] == 100):
-                red_ships[fields_dict['ship']]['RPs'] += 1
-                red_ships[fields_dict['ship']]['destructions'] += 1
+                red_ships[ int( fields_dict['ship'] ) ]['RPs'] += 1
+                red_ships[ int( fields_dict['ship'] ) ]['destructions'] += 1
             else:
-                blue_ships[fields_dict['ship']]['RPs'] += 1
-                blue_ships[fields_dict['ship']]['destructions'] += 1
+                blue_ships[ int( fields_dict['ship'] ) ]['RPs'] += 1
+                blue_ships[ int( fields_dict['ship'] ) ]['destructions'] += 1
 
         elif message_id[0] == 'RESULT':
             if (fields_dict['fleet'] == 0):
