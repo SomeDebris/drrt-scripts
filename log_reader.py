@@ -129,10 +129,10 @@ def parse_mlog(mlog_content):
             continue
         fields = re.findall(field_regex, line)
         fields_dict = dict(fields)
-        print(fields_dict)
-
         message_id = re.findall(id_regex, line)
+
         print(message_id[0])
+        print(fields_dict)
         
         if message_id[0] == 'START':
             if (fields_dict['fleet'] == 0):
