@@ -149,6 +149,42 @@ def _get_participants(check):
             # If no validation, find the absolute path for all given files
             return [os.path.join(DATA_DIR, ship) for ship in participants]
 
+def get_ship_path_list(check):
+    """
+    load all ships from ship_index.txt into set of objects
+    """
+    ship_list = []
+    ship_index_file = open(os.path.join(SCRIPT_DIR, "ship_index.txt"), 'r')
+    ship_index_content = ship_index_file.read()
+
+    for line in ship_index_content.splitlines():
+        if not line:
+            continue
+        ship_info = line.split("|")
+        ship_list.append({ 'name':ship_info[0],'author':ship_info[1],'filename':ship_info[2],
+                          'D':0, 'P':0, 'L':0, 'S':0, 'rank':0, 'RPs':0, 'ranking_score':0.0})
+    ship_index_file.close()
+
+    if check:
+        if len(ship_list) <= 0:
+            print_err(f'get_ship_list: No ship files found!')
+
+    abs_paths = []
+    ships_notfound = False
+    for ship in ship_list:
+        ship_path = os.path.join(SCRIPT_DIR, 'ships', ship['filename'])
+        if not os.path.exists(ship_path):
+            print_err(f'get_ship_list: Ship file\'{ship['filename']}\' not found!', True)
+            ships_notfound = True
+        else:
+            abs_paths.append(ship_path)
+    if ships_notfound:
+        print_err("Some ship files could not be found. Locate them and put them in the `ships` directory.")
+    else:
+        print("All ship files found!")
+
+    return abs_paths
+
 
 def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
     """Creates a RED ALLIANCE fleet file and a BLUE ALLIANCE fleet file for a specific match."""
