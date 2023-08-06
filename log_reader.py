@@ -188,16 +188,15 @@ def parse_mlog(mlog_content):
                 print(blue_ships[ blue_ship_index[ fields_dict['ship'] ] ])
 
         elif message_id[0] == 'RESULT':
+            mlog_completion += 1
             if (fields_dict['fleet'] == '0'):
                 red_alliance['damageTaken'] = int(fields_dict['DT'])
                 red_alliance['damageInflicted'] = int(fields_dict['DI'])
                 red_alliance['survivorCount'] = int(fields_dict['alive'])
-                mlog_completion += 1
             else:
                 blue_alliance['damageTaken'] = int(fields_dict['DT'])
                 blue_alliance['damageInflicted'] = int(fields_dict['DI'])
                 blue_alliance['survivorCount'] = int(fields_dict['alive'])
-                mlog_completion += 1
 
         elif message_id[0] == 'SURVIVAL':
             if (fields_dict['fleet'] == '0'):
