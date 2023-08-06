@@ -241,7 +241,9 @@ def parse_mlog(mlog_content):
         if (not red_ship['destroyed']):
             red_ship['deltaS'] = 1
 
-    # all ships are given ranking points
+    # all ship's rank and ranking score is calced
+    distribute_points(red_ships)
+    distribute_points(blue_ships)
 
     red_alliance['ships'] = red_ships
     blue_alliance['ships'] = blue_ships
@@ -249,5 +251,27 @@ def parse_mlog(mlog_content):
     print(json.dumps(red_alliance, indent=4))
     print(json.dumps(blue_alliance, indent=4))
     
+    print(json.dumps(ALL_SHIPS, indent=2))
+    
+def distribute_points(alliance):
+    global ALL_SHIPS
+
+    for participant in ALL_SHIPS:
+        for ship in alliance:
+            if (participant['name'] == ship['name']):
+                participant['RPs'] += ship['RPs']
+                if (ship['deltaD'])
+                    participant['D'] += ship['deltaD']
+                if (ship['deltaP'])
+                    participant['P'] += ship['deltaP']
+                if (ship['deltaL'])
+                    participant[':'] += ship['deltaL']
+                if (ship['deltaS'])
+                    participant['S'] += ship['deltaS']
+                matches_played = sum(participant['D'], participant['P'], participant['L'])
+                participant['ranking_score'] = participant['RPs'] / matches_played
+
+    
+
 if __name__ == '__main__':
     main()
