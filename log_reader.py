@@ -197,13 +197,58 @@ def parse_mlog(mlog_content):
         else:
             print("well, {}'s apparently not in my list!".format(message_id[0]))
 
-    print(red_alliance)
-    print(blue_alliance)
 
+    red_score = int(red_alliance['damageTaken'])
+    blue_score = int(blue_alliance['damageTaken'])
 
+    if (red_score >= blue_score):
+        match_info['winner'] = 'red'
+        for blue_ship in blue_ships:
+            blue_ship['deltaL'] = 1
+    else:
+        match_info['winner'] = 'blue'
+        for red_ship in red_ships:
+            red_ship['deltaL'] = 1
+
+    if (red_score == 0):
+        for blue_ship in blue_ships:
+            blue_ship['deltaD'] = 1
+            blue_ship['deltaP'] = 0
+            blue_ship['deltaL'] = 0
+    elif (blue_score == 0):
+        for red_ship in red_ships:
+            red_ship['deltaD'] = 1
+            red_ship['deltaP'] = 0
+            red_ship['deltaL'] = 0
+
+    elif (match_info['winner'] = 'red')
+        for red_ship in red_ships:
+            red_ship['deltaD'] = 0
+            red_ship['deltaP'] = 1
+            red_ship['deltaL'] = 0
+    else: 
+        for blue_ship in blue_ships:
+            blue_ship['deltaD'] = 0
+            blue_ship['deltaP'] = 1
+            blue_ship['deltaL'] = 0
+        
+    for blue_ship in blue_ships:
+        if (blue_ship['destroyed']):
+            blue_ship['deltaS'] = 0
+        else:
+            blue_ship['deltaS'] = 1
+
+    for red_ship in red_ships:
+        if (red_ship['destroyed']):
+            red_ship['deltaS'] = 0
+        else:
+            red_ship['deltaS'] = 1
 
     red_alliance['ships'] = red_ships
     blue_alliance['ships'] = blue_ships
+
+    print(red_alliance)
+    print(blue_alliance)
     
 if __name__ == '__main__':
     main()
