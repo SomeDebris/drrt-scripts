@@ -135,7 +135,7 @@ def parse_mlog(mlog_content):
         print(fields_dict)
         
         if message_id[0] == 'START':
-            if (fields_dict['fleet'] == 0):
+            if (fields_dict['fleet'] == '0'):
                 # It's the alliance on the RIGHT
                 red_alliance['name'] = fields_dict['name']
                 # TODO game should output fleet colors
@@ -143,7 +143,7 @@ def parse_mlog(mlog_content):
                 blue_alliance['name'] = fields_dict['name']
 
         elif message_id[0] == 'SHIP':
-            if (fields_dict['fleet'] == 0):
+            if (fields_dict['fleet'] == '0'):
                 red_ships.append({ 
                                   'name':fields_dict['ship'], 
                                   'destroyed':True,
@@ -163,7 +163,7 @@ def parse_mlog(mlog_content):
                 blue_ship_index_length += 1
 
         elif message_id[0] == 'DESTRUCTION':
-            if (fields_dict['fship'] == 100):
+            if (fields_dict['fship'] == '100'):
                 print(red_ships[ red_ship_index[ fields_dict['ship'] ] ])
                 red_ships[ red_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
                 red_ships[ red_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
@@ -175,7 +175,7 @@ def parse_mlog(mlog_content):
                 print(blue_ships[ blue_ship_index[ fields_dict['ship'] ] ])
 
         elif message_id[0] == 'RESULT':
-            if (fields_dict['fleet'] == 0):
+            if (fields_dict['fleet'] == '0'):
                 red_alliance['damageTaken'] = fields_dict['DT']
                 red_alliance['damageInflicted'] = fields_dict['DI']
                 red_alliance['survivorCount'] = fields_dict['alive']
@@ -185,7 +185,7 @@ def parse_mlog(mlog_content):
                 blue_alliance['survivorCount'] = fields_dict['alive']
 
         elif message_id[0] == 'SURVIVAL':
-            if (fields_dict['fleet'] == 0):
+            if (fields_dict['fleet'] == '0'):
                 red_ships[ red_ship_index[ fields_dict['ship'] ] ]['destroyed'] = False
             else:
                 blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['destroyed'] = False
