@@ -108,19 +108,77 @@ def parse_mlog(mlog_content):
         - first substring = parse for ID
         - second = parse for fields
     """
+    global Current_Match_ID
+
     field_regex = re.compile("(\w+):\{(.+?)\}")
     id_regex = re.compile("\[([A-Z]+)\]")
+
+    match_info = {}
+    red_alliance = {} 
+    blue_alliance = {}
+    red_ships = []
+    blue_ships = []
+
+    red_ship_index = {}
+    red_ship_index_length = 0
+    blue_ship_index = {}
+
     for line in mlog_content.splitlines():
         if not line:
             continue
         fields = re.findall(field_regex, line)
         print(fields)
+        fields_dict = dict(fields)
+
         message_id = re.findall(id_regex, line)
-        print(fields)
-     
+        print(message_id)
+        
+        if message_id == 'START':
+            if (fields_dict['fleet'] == 0):
+                # It's the alliance on the RIGHT
+                red_alliance['name'] = fields_dict['name']
+                # TODO game should output fleet colors
+            else:
+                blue_alliance['name'] = fields_dict['name']
 
-    
+        elif message_id == 'SHIP':
+            if (fields_dict['fleet'] == 0):
+                red_ships.append({ 'name':fields_dict['ship'], 'destroyed':True })
+                red_ship_index[fields_dict['ship']] = red_ship_index_length
+                red_ship_index_length += 1
+            else:
+                blue_ships.append({ 'name':fields_dict['ship'], 'destroyed':True })
+                blue_ship_index[fields_dict['ship']] = blue_ship_index_length
+                blue_ship_index_length += 1
 
+        elif message_id == 'DESTRUCTION':
+            if (fields_dict['fship'] == 100):
+                red_ships[fields_dict['ship']]['RPs'] += 1
+                red_ships[fields_dict['ship']]['destructions'] += 1
+            else:
+                blue_ships[fields_dict['ship']]['RPs'] += 1
+                blue_ships[fields_dict['ship']]['destructions'] += 1
+
+        elif message_id == 'RESULT':
+            if (fields_dict['fleet'] == 0):
+                red_alliance['damageTaken'] = fields_dict['DT']
+                red_alliance['damageInflicted'] = fields_dict['DI']
+                red_alliance['survivorCount'] = fields_dict['alive']
+            else:
+                blue_alliance['damageTaken'] = fields_dict['DT']
+                blue_alliance['damageInflicted'] = fields_dict['DI']
+                blue_alliance['survivorCount'] = fields_dict['alive']
+
+        elif message_id == 'SURVIVAL':
+            if (fields_dict['fleet'] == 0):
+                red_ships[fields_dict['ship']]['destroyed'] = False
+            else:
+                red_ships[fields_dict['ship']]['destroyed'] = False
+        else:
+            print("well, {}'s apparently not in my list!".format(message_id))
+
+        print(red_alliance)
+        print(blue_alliance)
     
 if __name__ == '__main__':
     main()
