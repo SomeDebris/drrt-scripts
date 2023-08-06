@@ -11,7 +11,7 @@ import sys
 import errno
 import re
 
-from drrt_common import DATA_DIR, SCRIPT_DIR
+from drrt_common import DATA_DIR, SCRIPT_DIR, print_err
 
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
 LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
@@ -97,7 +97,7 @@ def read_latest_mlog_symlink():
         latest_mlog_file.close()
         return latest_mlog_content
     else:
-        print("can't find \"{}\"!".format(LATEST_MLOG))
+        print_err("can't find \"{}\"!".format(LATEST_MLOG), True)
         return False
 
     # latest_mlog_content shall be PARSED to heck and back
@@ -201,28 +201,21 @@ def parse_mlog(mlog_content):
             else:
                 blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['destroyed'] = False
         else:
-            print("well, {}'s apparently not in my list!".format(message_id[0]))
+            print_err("{}'s apparently not in my list!".format(message_id[0]), True)
 
 
     if (not (mlog_completion >= 1)):
-        print("mlog not complete! Cannot continue.")
+        print_err("mlog not complete! Cannot continue.", True)
         return
-
-
-    if (Last_Alliance_Name['red'] == red_alliance['name']):
-        print("Red alliance name '{}' matches previous name '{}'; not counting match".format(
-            red_alliance['name'], Last_Alliance_Name['red']))
+    
+    same_name = [
+            Last_Alliance_Name['red'] == red_alliance['name'],
+            Last_Alliance_Name['blue'] == blue_alliance['name']
+            ]
+    if (same_name[0] and same_name[1]):
+        print_err("Both Alliance names Match!", True)
+        print_err("Not counting match.", True)
         return
-    else:
-        Last_Alliance_Name['red'] = red_alliance['name']
-
-    if (Last_Alliance_Name['blue'] == blue_alliance['name']):
-        print("Blue alliance name '{}' matches previous name '{}'; not counting match".format(
-            blue_alliance['name'], Last_Alliance_Name['blue']))
-        return
-    else:
-        Last_Alliance_Name['blue'] = blue_alliance['name']
-        
 
     red_score = red_alliance['damageTaken']
     blue_score = blue_alliance['damageTaken']
