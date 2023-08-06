@@ -128,8 +128,8 @@ def parse_mlog(mlog_content):
         if not line:
             continue
         fields = re.findall(field_regex, line)
-        print(fields)
         fields_dict = dict(fields)
+        print(fields_dict)
 
         message_id = re.findall(id_regex, line)
         print(message_id[0])
