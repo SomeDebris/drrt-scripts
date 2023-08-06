@@ -266,6 +266,8 @@ def parse_mlog(mlog_content):
     distribute_points(red_ships)
     distribute_points(blue_ships)
 
+    ALL_SHIPS = recalculate_ranks(ALL_SHIPS)
+
     # what check do I do to ensure that the ranking score is not freaking duplicated
     # APPEND A THING TO EACH 
 
@@ -295,7 +297,9 @@ def distribute_points(alliance):
                 matches_played = participant['D'] + participant['P'] + participant['L']
                 participant['ranking_score'] = participant['RPs'] / matches_played
 
-    ALL_SHIPS = sorted(ALL_SHIPS, key=lambda d: d['ranking_score'], reverse=True) 
+def recalculate_ranks(ship_array)
+    return sorted(ship_array, key=lambda d: d['ranking_score'], reverse=True) 
+    
 
 if __name__ == '__main__':
     main()
