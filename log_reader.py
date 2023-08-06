@@ -9,6 +9,7 @@ import os
 import subprocess
 import sys
 import errno
+import re
 
 from drrt_common import DATA_DIR, SCRIPT_DIR
 
@@ -51,9 +52,9 @@ def main():
                     break
                 print('Read: "{0}"'.format(data))
                 mlogs = read_latest_mlog(mlogs)
-                read_latest_mlog_symlink()
-                assemble_ships()
-    
+                parse_mlog(read_latest_mlog_symlink())
+                # print(json.dumps(get_ship_list(), sort_keys=True, indent=4))
+
 def read_latest_mlog(previous_known_mlogs):
     mlog_initial_count = len(previous_known_mlogs)
     current_known_mlogs = [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
@@ -85,11 +86,13 @@ def read_latest_mlog_symlink():
         latest_mlog_content = latest_mlog_file.read()
         latest_mlog_file.close()
         print(latest_mlog_content)
+        return latest_mlog_content
     else:
         print("can't find \"{}\"!".format(LATEST_MLOG))
+        return False
 
     # latest_mlog_content shall be PARSED to heck and back
-def parse_mlog(mlog_path):
+def parse_mlog(mlog_content):
     """
     returns a JSON String of what occured in the match described
     by the input mlog.
@@ -100,8 +103,21 @@ def parse_mlog(mlog_path):
         - set ships as destroyed if they don't appear in a [SURVIVAL]
           statement
         - give ranking points to each ship
+
+    Loop through each line. Split at FIRST SPACE:
+        - first substring = parse for ID
+        - second = parse for fields
     """
-    
+    field_regex = re.compile("(\w+):\{(.+?)\}")
+    id_regex = re.compile("\[([A-Z]+)\]")
+    for line in mlog_content.splitlines():
+        if not line:
+            continue
+        fields = re.findall(field_regex, line)
+        print(fields)
+        message_id = re.findall(id_regex, line)
+        print(fields)
+     
 
     
 
