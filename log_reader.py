@@ -15,6 +15,10 @@ from drrt_common import DATA_DIR, SCRIPT_DIR
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
 LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
 
+RED_ALLIANCE_TITLE_COLORS = [0xbaa01e, 0x681818, 0x000000]
+BLUE_ALLIANCE_TITLE_COLORS = [0x0aa879, 0x222d84, 0x000000]
+
+Current_Match_ID = 0
 
 
 # def main(args):
@@ -26,6 +30,10 @@ First:
 MLOG_SIGNAL_PIPE = '/tmp/drrt_mlog_signal_pipe'
 
 def main():
+
+    mlogs = [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
+    mlog_initial_count = len(mlogs)
+
     try:
         os.mkfifo(MLOG_SIGNAL_PIPE)
     except OSError as oe:
@@ -40,23 +48,63 @@ def main():
                 data = mlog_signal_pipe.read()
                 if len(data) == 0:
                     print("writer closed!")
-                    read_latest_mlog()
                     break
                 print('Read: "{0}"'.format(data))
+                mlogs = read_latest_mlog(mlogs)
+                read_latest_mlog_symlink()
+                assemble_ships()
     
-def read_latest_mlog():
-    # mlogs = [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
-    # print(mlogs)
+def read_latest_mlog(previous_known_mlogs):
+    mlog_initial_count = len(previous_known_mlogs)
+    current_known_mlogs = [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
+    mlog_final_count = len(current_known_mlogs) - mlog_initial_count
+
+    return current_known_mlogs
+
+def get_ship_list():
+    """
+    load all ships from ship_index.txt into set of objects
+    """
+    ship_list = []
+    ship_index_file = open(os.path.join(SCRIPT_DIR, "ship_index.txt"), 'r')
+    ship_index_content = ship_index_file.read()
+
+    for line in ship_index_content.splitlines():
+        ship_info = line.split("|")
+        ship_list.append({ 'name':ship_info[0],'author':ship_info[1],'filename':ship_info[2] })
+    
+    ship_index_file.close()
+
+    return ship_list
 
 def read_latest_mlog_symlink():
-    latest_mlog = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
-    latest_mlog_file = open(latest_mlog, 'r')
+    latest_mlog_content = None
+    
+    if (os.path.exists(LATEST_MLOG)):
+        latest_mlog_file = open(LATEST_MLOG, 'r')
+        latest_mlog_content = latest_mlog_file.read()
+        latest_mlog_file.close()
+        print(latest_mlog_content)
+    else:
+        print("can't find \"{}\"!".format(LATEST_MLOG))
 
-    latest_mlog_content = latest_mlog_file.read()
+    # latest_mlog_content shall be PARSED to heck and back
+def parse_mlog(mlog_path):
+    """
+    returns a JSON String of what occured in the match described
+    by the input mlog.
+    
+    What do I do?
+        - define list of ships participating in match from [SHIP]
+          and [START] statements
+        - set ships as destroyed if they don't appear in a [SURVIVAL]
+          statement
+        - give ranking points to each ship
+    """
+    
 
-    latest_mlog_file.close()
+    
 
-    print(latest_mlog_content)
     
 if __name__ == '__main__':
     main()
