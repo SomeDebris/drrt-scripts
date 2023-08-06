@@ -268,10 +268,10 @@ def distribute_points(alliance):
                     participant['L'] += ship['deltaL']
                 if ('deltaS' in ship):
                     participant['S'] += ship['deltaS']
-                matches_played = sum(participant['D'], participant['P'], participant['L'])
+                matches_played = participant['D'] + participant['P'] + participant['L']
                 participant['ranking_score'] = participant['RPs'] / matches_played
 
-    
+   ALL_SHIPS = sorted(ALL_SHIPS, key=lambda d: d['ranking_score']) 
 
 if __name__ == '__main__':
     main()
