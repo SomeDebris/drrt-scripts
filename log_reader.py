@@ -21,6 +21,8 @@ BLUE_ALLIANCE_TITLE_COLORS = [0x0aa879, 0x222d84, 0x000000]
 
 Current_Match_ID = 0
 
+ALL_SHIPS = {}
+
 
 # def main(args):
 """
@@ -31,9 +33,12 @@ First:
 MLOG_SIGNAL_PIPE = '/tmp/drrt_mlog_signal_pipe'
 
 def main():
+    global ALL_SHIPS
 
     mlogs = [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
     mlog_initial_count = len(mlogs)
+
+    ALL_SHIPS = get_ship_list()
 
     try:
         os.mkfifo(MLOG_SIGNAL_PIPE)
@@ -194,6 +199,11 @@ def parse_mlog(mlog_content):
 
     print(red_alliance)
     print(blue_alliance)
+
+
+
+    red_alliance['ships'] = red_ships
+    blue_alliance['ships'] = blue_ships
     
 if __name__ == '__main__':
     main()
