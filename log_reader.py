@@ -302,7 +302,7 @@ def distribute_points(alliance):
 def recalculate_ranks(ship_array):
     return sorted(ship_array, key=lambda d: d['ranking_score'], reverse=True) 
 
-def datasheet_append_ships(ships):
+def datasheet_append_ships(ships, fleet=None):
     values = []
 
     for ship in ships:
@@ -314,7 +314,10 @@ def datasheet_append_ships(ships):
             ship['deltaL'] = 0
         if (not 'deltaS' in ship):
             ship['deltaS'] = 0
-        values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'] ])
+        alliance_name = ''
+        if (fleet):
+            alliance_name = fleet['name']
+        values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'], alliance_name ])
 
     append_to_sheet(values, 'DATA_ENTRY!A1')
     
