@@ -22,17 +22,17 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 DRRT_DATASHEET_ID = '1rzksRiVxzHi6ukZpWg0OV-U27fCTnkRNALUtAi5iB7w'
-DRRT_RANGE_NAME = 'PyTest1!A2:E
+DRRT_RANGE_NAME = 'PyTest1!A2:E'
 
 # https://stackoverflow.com/questions/68859429/how-to-append-data-in-a-googlesheet-using-python
 def main():
-    append_to_sheet([['test1','test2']], 'PyTest1!A1')
+    append_to_sheet([['tESt1','test2', 'test3']], 'PyTest1!A1')
 
 
-def get_service()
+def get_service():
     credentials = None
     if os.path.exists('token.json'):
         credentials = Credentials.from_authorized_user_file('token.json', SCOPES)
