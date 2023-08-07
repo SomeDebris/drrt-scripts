@@ -31,7 +31,7 @@ SERVICE = None
 
 # https://stackoverflow.com/questions/68859429/how-to-append-data-in-a-googlesheet-using-python
 def main():
-    append_to_sheet([['tESt1','test2', 'test3']], 'PyTest1!A1')
+    replace_match_schedule()
 
 
 def get_service():
@@ -66,7 +66,7 @@ def append_to_sheet(values, sheet_range, sheet_id=DRRT_DATASHEET_ID):
         print(f"An error occured: {error}")
         return error
 
-def replace_ships(ships, sheet_range='Ships!A2', sheet_id=DRRT_DATASHEET_ID)
+def replace_ships(ships, sheet_range='Ships!A2:B', sheet_id=DRRT_DATASHEET_ID):
     global SERVICE
 
     values = []
@@ -92,7 +92,37 @@ def replace_ships(ships, sheet_range='Ships!A2', sheet_id=DRRT_DATASHEET_ID)
     except HttpError as error:
         print(f"An error occured: {error}")
         return error
+
+def replace_match_schedule(sheet_range='Calc!A1:F', sheet_id = DRRT_DATASHEET_ID):
+    global SERVICE
     
+    values = []
+    deletion = []
+
+    with open('selected_schedule.csv', newline='') as csvfile:
+        schedule_reader = csv.reader(csvfile)
+        for row in schedule_reader:
+            values.append(row)
+            deletionRow = []
+            for item in row:
+                deletionRow.append('')
+            deletion.append(deletionRow)
+
+    try:
+        if (not SERVICE):
+            SERVICE = get_service()
+        body = {
+            'values':
+        }
+        destroy = SERVICE.spreadsheets().values().append(
+                spreadsheetId=sheet_id, range=sheet_range,
+                valueInputOption="RAW", body=body).execute()
+        create = SERVICE.spreadsheets().values().update(
+                spreadsheetId=sheet_id, range=sheet_range,
+                valueInputOption="RAW", body=body).execute()
+    except HttpError as error:
+        print(f"An error occured: {error}")
+        return error
 
 
 
