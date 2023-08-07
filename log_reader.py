@@ -267,8 +267,7 @@ def parse_mlog(mlog_content):
     distribute_points(red_ships)
     distribute_points(blue_ships)
 
-    datasheet_append_ships(red_ships)
-    datasheet_append_ships(blue_ships)
+    datasheet_append_ships(red_ships + blue_ships)
 
     ALL_SHIPS = recalculate_ranks(ALL_SHIPS)
 
