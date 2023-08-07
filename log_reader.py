@@ -12,7 +12,7 @@ import errno
 import re
 
 from drrt_common import DATA_DIR, SCRIPT_DIR, print_err
-from drrt_datasheet import append_to_sheet
+from drrt_datasheet import append_to_sheet, replace_ships
 
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
 LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
@@ -42,6 +42,7 @@ def main():
     mlog_initial_count = len(mlogs)
 
     ALL_SHIPS = get_ship_list()
+    replace_ships(ALL_SHIPS)
 
     try:
         os.mkfifo(MLOG_SIGNAL_PIPE)
@@ -313,7 +314,7 @@ def datasheet_append_ships(ships):
             ship['deltaS'] = 0
         values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'] ])
 
-    append_to_sheet(values, 'PyTest1!A1')
+    append_to_sheet(values, 'DATA_ENTRY!A1')
     
     
 

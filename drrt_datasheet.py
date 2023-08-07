@@ -27,6 +27,8 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 DRRT_DATASHEET_ID = '1rzksRiVxzHi6ukZpWg0OV-U27fCTnkRNALUtAi5iB7w'
 DRRT_RANGE_NAME = 'PyTest1!A2:E'
 
+SERVICE = None
+
 # https://stackoverflow.com/questions/68859429/how-to-append-data-in-a-googlesheet-using-python
 def main():
     append_to_sheet([['tESt1','test2', 'test3']], 'PyTest1!A1')
@@ -50,12 +52,48 @@ def get_service():
     return build('sheets', 'v4', credentials=credentials)
 
 def append_to_sheet(values, sheet_range, sheet_id=DRRT_DATASHEET_ID):
-    service = get_service()
-    body = {'values':values}
+    global SERVICE
 
-    result = service.spreadsheets().values().append(
-            spreadsheetId=sheet_id, range=sheet_range,
-            valueInputOption="RAW", body=body).execute()
+    try:
+        if (not SERVICE):
+            SERVICE = get_service()
+        body = {'values':values}
+
+        result = SERVICE.spreadsheets().values().append(
+                spreadsheetId=sheet_id, range=sheet_range,
+                valueInputOption="RAW", body=body).execute()
+    except HttpError as error:
+        print(f"An error occured: {error}")
+        return error
+
+def replace_ships(ships, sheet_range='Ships!A2', sheet_id=DRRT_DATASHEET_ID)
+    global SERVICE
+
+    values = []
+
+    for ship in ships:
+        if not ship['name'] or not ship['author']:
+            print_err("ship {} doesn't have a name or author.".format(ship))
+
+        values.append([ ship['name'], ship['author'] ])
+
+    body = {
+        'values': values
+    }
+
+    try:
+        if (not SERVICE):
+            SERVICE = get_service()
+
+        result = SERVICE.spreadsheets().values().update(
+                spreadsheetId=sheet_id, range=sheet_range,
+                valueInputOption="RAW", body=body).execute()
+        print("Updated Ships List!")
+    except HttpError as error:
+        print(f"An error occured: {error}")
+        return error
+    
+
 
 
 if __name__ == '__main__':
