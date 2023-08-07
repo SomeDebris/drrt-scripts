@@ -12,6 +12,7 @@ import errno
 import re
 
 from drrt_common import DATA_DIR, SCRIPT_DIR, print_err
+from drrt_datasheet import append_to_sheet
 
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
 LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
@@ -266,6 +267,9 @@ def parse_mlog(mlog_content):
     distribute_points(red_ships)
     distribute_points(blue_ships)
 
+    datasheet_append_ships(red_ships)
+    datasheet_append_ships(blue_ships)
+
     ALL_SHIPS = recalculate_ranks(ALL_SHIPS)
 
     # what check do I do to ensure that the ranking score is not freaking duplicated
@@ -299,6 +303,22 @@ def distribute_points(alliance):
 
 def recalculate_ranks(ship_array):
     return sorted(ship_array, key=lambda d: d['ranking_score'], reverse=True) 
+
+def datasheet_append_ships(ships):
+    for ship in ships:
+        if (not 'deltaD' in ship):
+            ship['deltaD'] = 0
+        if (not 'deltaP' in ship):
+            ship['deltaP'] = 0
+        if (not 'deltaL' in ship):
+            ship['deltaL'] = 0
+        if (not 'deltaS' in ship):
+            ship['deltaS'] = 0
+        values = [
+            [ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'] ]
+             ]
+        append_to_sheet(values, 'PyTest1!A1')
+    
     
 
 if __name__ == '__main__':
