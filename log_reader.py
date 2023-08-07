@@ -305,6 +305,8 @@ def recalculate_ranks(ship_array):
     return sorted(ship_array, key=lambda d: d['ranking_score'], reverse=True) 
 
 def datasheet_append_ships(ships):
+    values = []
+
     for ship in ships:
         if (not 'deltaD' in ship):
             ship['deltaD'] = 0
@@ -314,10 +316,9 @@ def datasheet_append_ships(ships):
             ship['deltaL'] = 0
         if (not 'deltaS' in ship):
             ship['deltaS'] = 0
-        values = [
-            [ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'] ]
-             ]
-        append_to_sheet(values, 'PyTest1!A1')
+        values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'] ])
+
+    append_to_sheet(values, 'PyTest1!A1')
     
     
 
