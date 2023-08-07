@@ -264,8 +264,10 @@ def parse_mlog(mlog_content):
 
     for ship in red_ships:
         ship['fleet_name'] = red_alliance['name']
+        ship['enemy_fleet_name'] = blue_alliance['name']
     for ship in blue_ships:
         ship['fleet_name'] = blue_alliance['name']
+        ship['enemy_fleet_name'] = red_alliance['name']
 
     # all ship's rank and ranking score is calced
     distribute_points(red_ships + blue_ships)
@@ -320,8 +322,10 @@ def datasheet_append_ships(ships):
         if (not 'deltaS' in ship):
             ship['deltaS'] = 0
         if (not 'fleet_name' in ship):
-            ship['fleet_name' = 'NONE'
-        values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'], ship['fleet_name'] ])
+            ship['fleet_name'] = 'NONE'
+        if (not 'enemy_fleet_name' in ship):
+            ship['enemy_fleet_name'] = 'NONE'
+        values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'], ship['fleet_name'], ship['enemy_fleet_name']])
 
     append_to_sheet(values, 'DATA_ENTRY!A1')
     
