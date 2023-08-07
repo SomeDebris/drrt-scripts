@@ -98,16 +98,19 @@ def replace_match_schedule(sheet_range='Calc!A1:F', sheet_id = DRRT_DATASHEET_ID
     
     values = []
     deletion = []
-
+    deletionRow = []
     with open('selected_schedule.csv', newline='') as csvfile:
         schedule_reader = csv.reader(csvfile)
         for row in schedule_reader:
             values.append(row)
-            deletionRow = []
-            for item in row:
-                deletionRow.append('')
-            deletion.append(deletionRow)
+        deletion_row_local = []
+        for item in row:
+            deletion_row_local.append('')
+        deletionRow = deletion_row_local
 
+    for i in range(0, 200)
+        deletion.append(deletionRow)
+    
     try:
         if (not SERVICE):
             SERVICE = get_service()
