@@ -255,17 +255,13 @@ def parse_mlog(mlog_content):
         for blue_ship in blue_ships:
             blue_ship['deltaP'] = 1
         
-    for blue_ship in blue_ships:
-        if (not blue_ship['destroyed']):
-            blue_ship['deltaS'] = 1
+    for ship in blue_ships + red_ships:
+        if (not ship['destroyed']):
+            ship['deltaS'] = 1
 
-    for red_ship in red_ships:
-        if (not red_ship['destroyed']):
-            red_ship['deltaS'] = 1
 
     # all ship's rank and ranking score is calced
-    distribute_points(red_ships)
-    distribute_points(blue_ships)
+    distribute_points(red_ships + blue_ships)
 
     datasheet_append_ships(red_ships + blue_ships)
 
