@@ -38,8 +38,8 @@ def get_service():
         credentials = Credentials.from_authorized_user_file('token.json', SCOPES)
 
     if not credentials or not credentials.valid:
-        if credentials and credentials.expired and creds.refresh_token:
-            creds.refresh(Request())
+        if credentials and credentials.expired and credentials.refresh_token:
+            credentials.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
                     'credentials_drrt.json', SCOPES)
