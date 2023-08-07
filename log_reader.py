@@ -12,7 +12,7 @@ import errno
 import re
 
 from drrt_common import DATA_DIR, SCRIPT_DIR, print_err
-from drrt_datasheet import append_to_sheet, replace_ships
+from drrt_datasheet import append_to_sheet, replace_ships, replace_match_schedule
 
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
 LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
@@ -43,6 +43,7 @@ def main():
 
     ALL_SHIPS = get_ship_list()
     replace_ships(ALL_SHIPS)
+    replace_match_schedule()
 
     try:
         os.mkfifo(MLOG_SIGNAL_PIPE)

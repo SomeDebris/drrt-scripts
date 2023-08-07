@@ -105,10 +105,10 @@ def replace_match_schedule(sheet_range='Calc!A1:F', sheet_id = DRRT_DATASHEET_ID
             values.append(row)
         deletion_row_local = []
         for item in row:
-            deletion_row_local.append('')
+            deletion_row_local.append("")
         deletionRow = deletion_row_local
 
-    for i in range(0, 200)
+    for i in range(0, 200):
         deletion.append(deletionRow)
     
     try:
@@ -122,10 +122,10 @@ def replace_match_schedule(sheet_range='Calc!A1:F', sheet_id = DRRT_DATASHEET_ID
         }
         destroy = SERVICE.spreadsheets().values().update(
                 spreadsheetId=sheet_id, range=sheet_range,
-                valueInputOption="RAW", body=body_deletion).execute()
+                valueInputOption="USER_ENTERED", body=body_deletion).execute()
         create = SERVICE.spreadsheets().values().update(
                 spreadsheetId=sheet_id, range=sheet_range,
-                valueInputOption="RAW", body=body_values).execute()
+                valueInputOption="USER_ENTERED", body=body_values).execute()
     except HttpError as error:
         print(f"An error occured: {error}")
         return error
