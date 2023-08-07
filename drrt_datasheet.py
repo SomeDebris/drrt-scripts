@@ -111,15 +111,18 @@ def replace_match_schedule(sheet_range='Calc!A1:F', sheet_id = DRRT_DATASHEET_ID
     try:
         if (not SERVICE):
             SERVICE = get_service()
-        body = {
-            'values':
+        body_values = {
+            'values':values
         }
-        destroy = SERVICE.spreadsheets().values().append(
+        body_deletion = {
+            'values':deletion
+        }
+        destroy = SERVICE.spreadsheets().values().update(
                 spreadsheetId=sheet_id, range=sheet_range,
-                valueInputOption="RAW", body=body).execute()
+                valueInputOption="RAW", body=body_deletion).execute()
         create = SERVICE.spreadsheets().values().update(
                 spreadsheetId=sheet_id, range=sheet_range,
-                valueInputOption="RAW", body=body).execute()
+                valueInputOption="RAW", body=body_values).execute()
     except HttpError as error:
         print(f"An error occured: {error}")
         return error
