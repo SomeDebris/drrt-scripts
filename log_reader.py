@@ -56,45 +56,54 @@ def main():
     # Open script by checking what type of thing we're doing
     while True:
         print("opening MLOG_SIGNAL_PIPE...")
-        with open(MLOG_SIGNAL_PIPE) as mlog_signal_pipe:
-            print("Are we running QUALS or PLAYOFFS?")
-            while True:
-                data = mlog_signal_pipe.read()
-                if len(data) == 0:
-                    print("writer closed!")
-                    break
-                print('Read: "{0}"'.format(data))
-                if data == 'playoffs':
-                    print("It's Playoffs time!")
-                    is_playoffs = True
-                if data == 'qualifications':
-                    print("Let's get this tournament started!")
-                else:
-                    print(f"'{data}' is an invalid signal at this time.")
-                    print(f"Please say 'playoffs' or 'qualifications'!")
-
+        print("Are we running QUALS or PLAYOFFS?")
+        data = pipe_read(MLOG_SIGNAL_PIPE)
+        if (data == 'stop'):
+            print("Stop recieved!")
+            break
+        elif (data == 'qualifications'):
+            print("Hope you have a good Quals!")
+            break
+        elif (data == 'playoffs'):
+            print("You're nearly there! Get those playoffs done!")
+            break
+        else:
+            print("Please say 'qualifications', 'playoffs', or 'stop' to {MLOG_SIGNAL_PIPE}.")
+            print(f"You said: '{data}'")
 
 
     while True:
         print("opening MLOG_SIGNAL_PIPE...")
-        with open(MLOG_SIGNAL_PIPE) as mlog_signal_pipe:
-            print("mlog signal pipe opened!")
-            while True:
-                data = mlog_signal_pipe.read()
-                if len(data) == 0:
-                    print("writer closed!")
-                    break
-                print('Read: "{0}"'.format(data))
-                if data == 'reload':
-                    ALL_SHIPS = get_ship_list()
-                    calculate_all_mlogs(get_mlog_list())
-                elif data == 'normal':
-                    parse_mlog(read_latest_mlog_symlink(), True)
-                elif data == 'review match':
-                    print("nothing to do!")
-                else:
-                    print_err(f"{data} is an invalid signal for DRRT.", True)
+        print("opening MLOG_SIGNAL_PIPE...")
+        data = pipe_read(MLOG_SIGNAL_PIPE)
+        if (data == 'stop'):
+            print("Stop recieved!")
+            break
+        if data == 'append':
+            ALL_SHIPS = get_ship_list()
+            calculate_all_mlogs(get_mlog_list())
+        elif data == 'normal':
+            parse_mlog(read_latest_mlog_symlink(), True)
+        elif data == 'review match':
+            print("nothing to do!")
+        else:
+            print("Please say 'reload', 'review match', 'append', or 'stop' to {MLOG_SIGNAL_PIPE}.")
+            print(f"You said: '{data}'")
                 # print(json.dumps(get_ship_list(), sort_keys=True, indent=4))
+
+def pipe_read(named_pipe=MLOG_SIGNAL_PIPE)
+    print(f"Trying to open '{named_pipe}'...")
+    with open(named_pipe) as mlog_signal_pipe:
+        print(f"'{named_pipe}' opened!")
+        while True:
+            data = mlog_signal_pipe.read()
+            if len(data) == 0:
+                print("writer closed!")
+                break
+            print('Read: "{0}"'.format(data))
+            return data
+    
+    
 
 def read_latest_mlog(previous_known_mlogs):
     mlog_initial_count = len(previous_known_mlogs)
