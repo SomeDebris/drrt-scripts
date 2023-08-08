@@ -38,7 +38,7 @@ MLOG_SIGNAL_PIPE = '/tmp/drrt_mlog_signal_pipe'
 def main():
     global ALL_SHIPS
 
-    mlogs = [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
+    mlogs = get_mlog_list()
     mlog_initial_count = len(mlogs)
 
     ALL_SHIPS = get_ship_list()
@@ -61,8 +61,11 @@ def main():
                     print("writer closed!")
                     break
                 print('Read: "{0}"'.format(data))
-                mlogs = read_latest_mlog(mlogs)
-                parse_mlog(read_latest_mlog_symlink())
+                if data == 'normal':
+                    ALL_SHIPS = get_ship_list()
+                    parse_mlogs_from_filename(get_mlog_list())
+                elif data == 'review match':
+                    parse_mlog(read_latest_mlog_symlink())
                 # print(json.dumps(get_ship_list(), sort_keys=True, indent=4))
 
 def read_latest_mlog(previous_known_mlogs):
@@ -90,6 +93,20 @@ def get_ship_list():
     ship_index_file.close()
 
     return ship_list
+
+def get_mlog_list():
+    return [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
+
+def parse_mlogs_from_filename(filenames):
+    for filename in filenames:
+        if (os.path.exists(filename)):
+            with open(filename) as mlog:
+                parse_mlog(mlog.read())
+        else:
+            print_err("can't find '{}'!".format(filename), True)
+
+
+    
 
 def read_latest_mlog_symlink():
     latest_mlog_content = None
