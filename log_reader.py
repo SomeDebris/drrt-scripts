@@ -100,12 +100,13 @@ def get_mlog_list():
 def parse_mlogs_from_filename(filenames):
     all_ship_match_performances = []
     for filename in filenames:
-        if (os.path.exists(filename)):
-            with open(filename) as mlog:
+        file_path = os.path.join(REASSEMBLY_DATA, filename)
+        if (os.path.exists(file_path)):
+            with open(file_path) as mlog:
                 alliances = parse_mlog(mlog.read())
-                all_ship_match_performances.append(alliances[0] + alliances[1])
+                all_ship_match_performances.append(alliances[0]['ships'] + alliances[1]['ships'])
         else:
-            print_err("can't find '{}'!".format(filename), True)
+            print_err("can't find '{}'!".format(file_path), True)
 
     datasheet_append_ships(all_ship_match_performances)
 
