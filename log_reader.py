@@ -250,6 +250,7 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
         print_err("parse_mlog: Both Alliance names Match!", True)
         print_err("parse_mlog: RED: '{}'".format(Last_Alliance_Name['red']), True)
         print_err("parse_mlog: BLUE: '{}'".format(Last_Alliance_Name['blue']), True)
+        print_err("parse_mlog: mlog filename: '{}'".format(filename), True)
         if (check_duplicates):
             print_err("parse_mlog: Not counting match.", True)
             return
