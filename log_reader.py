@@ -55,13 +55,13 @@ def main():
 
     # Open script by checking what type of thing we're doing
     while True:
-        print("opening MLOG_SIGNAL_PIPE...")
         print("Are we running QUALS or PLAYOFFS?")
         data = pipe_read(MLOG_SIGNAL_PIPE)
         if (data == 'stop'):
             print("Stop recieved!")
             break
         elif (data == 'qualifications'):
+            print("--- QUALIFICATIONS ---")
             print("Hope you have a good Quals!")
             break
         elif (data == 'playoffs'):
@@ -73,16 +73,14 @@ def main():
 
 
     while True:
-        print("opening MLOG_SIGNAL_PIPE...")
-        print("opening MLOG_SIGNAL_PIPE...")
         data = pipe_read(MLOG_SIGNAL_PIPE)
         if (data == 'stop'):
             print("Stop recieved!")
             break
-        if data == 'append':
+        if data == 'reload':
             ALL_SHIPS = get_ship_list()
             calculate_all_mlogs(get_mlog_list())
-        elif data == 'normal':
+        elif data == 'append':
             parse_mlog(read_latest_mlog_symlink(), True)
         elif data == 'review match':
             print("nothing to do!")
@@ -91,7 +89,7 @@ def main():
             print(f"You said: '{data}'")
                 # print(json.dumps(get_ship_list(), sort_keys=True, indent=4))
 
-def pipe_read(named_pipe=MLOG_SIGNAL_PIPE)
+def pipe_read(named_pipe=MLOG_SIGNAL_PIPE):
     print(f"Trying to open '{named_pipe}'...")
     with open(named_pipe) as mlog_signal_pipe:
         print(f"'{named_pipe}' opened!")
@@ -100,7 +98,7 @@ def pipe_read(named_pipe=MLOG_SIGNAL_PIPE)
             if len(data) == 0:
                 print("writer closed!")
                 break
-            print('Read: "{0}"'.format(data))
+            print('\tRead: "{0}"'.format(data))
             return data
     
     
