@@ -65,7 +65,7 @@ def main():
                     ALL_SHIPS = get_ship_list()
                     calculate_all_mlogs(get_mlog_list())
                 elif data == 'normal':
-                    parse_mlog(read_latest_mlog_symlink())
+                    parse_mlog(read_latest_mlog_symlink(), True)
                 elif data == 'review match':
                     print("nothing to do!")
                 # print(json.dumps(get_ship_list(), sort_keys=True, indent=4))
@@ -100,7 +100,7 @@ def get_mlog_list():
     return [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
 
 
-def calculate_all_mlogs(filenames):
+def calculate_all_mlogs(filenames, check_duplicates=False):
     # array of ships, data taken from match log and not
     # cognizant of full match record
     all_ship_match_performances = []
@@ -108,7 +108,7 @@ def calculate_all_mlogs(filenames):
         file_path = os.path.join(REASSEMBLY_DATA, filename)
         if (os.path.exists(file_path)):
             with open(file_path) as mlog:
-                alliances = parse_mlog(mlog.read(), filename)
+                alliances = parse_mlog(mlog.read(), check_duplicates, filename)
                 if (alliances):
                     all_ship_match_performances += alliances
                 else:
@@ -132,7 +132,7 @@ def read_latest_mlog_symlink():
 
     # latest_mlog_content shall be PARSED to heck and back
 
-def parse_mlog(mlog_content, filename="match_log_latest.txt"):
+def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
     """
     What do I do?
         - define list of ships participating in match from [SHIP]
@@ -248,8 +248,11 @@ def parse_mlog(mlog_content, filename="match_log_latest.txt"):
             ]
     if (same_name[0] and same_name[1]):
         print_err("parse_mlog: Both Alliance names Match!", True)
-        print_err("parse_mlog: Not counting match.", True)
-        return
+        print_err("parse_mlog: RED: '{}'".format(Last_Alliance_Name['red']), True)
+        print_err("parse_mlog: BLUE: '{}'".format(Last_Alliance_Name['blue']), True)
+        if (check_duplicates):
+            print_err("parse_mlog: Not counting match.", True)
+            return
     else:
         Last_Alliance_Name['red'] = red_alliance['name']
         Last_Alliance_Name['blue'] = blue_alliance['name']
@@ -340,7 +343,7 @@ def distribute_points(alliance):
 def recalculated_ranks(ship_array):
     return sorted(ship_array, key=lambda d: d['ranking_score'], reverse=True) 
 
-def datasheet_update_ships(ships):
+def datasheet_update_ships(ships, sheet_range='DATA_ENTRY!A2'):
     values = []
 
     for ship in ships:
@@ -360,7 +363,7 @@ def datasheet_update_ships(ships):
             ship['enemy_fleet_name'] = 'NONE'
         values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'], ship['fleet_name'], ship['enemy_fleet_name'], ship['mlog_filename']])
 
-    update_sheet(values, 'DATA_ENTRY!A2')
+    update_sheet(values, sheet_range)
 
 def datasheet_append_ships(ships):
     values = []
