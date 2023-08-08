@@ -51,6 +51,30 @@ def main():
         if oe.errno != errno.EEXIST:
             raise
 
+    is_playoffs = False
+
+    # Open script by checking what type of thing we're doing
+    while True:
+        print("opening MLOG_SIGNAL_PIPE...")
+        with open(MLOG_SIGNAL_PIPE) as mlog_signal_pipe:
+            print("Are we running QUALS or PLAYOFFS?")
+            while True:
+                data = mlog_signal_pipe.read()
+                if len(data) == 0:
+                    print("writer closed!")
+                    break
+                print('Read: "{0}"'.format(data))
+                if data == 'playoffs':
+                    print("It's Playoffs time!")
+                    is_playoffs = True
+                if data == 'qualifications':
+                    print("Let's get this tournament started!")
+                else:
+                    print(f"'{data}' is an invalid signal at this time.")
+                    print(f"Please say 'playoffs' or 'qualifications'!")
+
+
+
     while True:
         print("opening MLOG_SIGNAL_PIPE...")
         with open(MLOG_SIGNAL_PIPE) as mlog_signal_pipe:
@@ -68,6 +92,8 @@ def main():
                     parse_mlog(read_latest_mlog_symlink(), True)
                 elif data == 'review match':
                     print("nothing to do!")
+                else:
+                    print_err(f"{data} is an invalid signal for DRRT.", True)
                 # print(json.dumps(get_ship_list(), sort_keys=True, indent=4))
 
 def read_latest_mlog(previous_known_mlogs):
