@@ -115,7 +115,7 @@ def calculate_all_mlogs(filenames):
                     print_err("calculate_all_mlogs: For some reason, nothing was returned.", True)
         else:
             print_err("calculate_all_mlogs: can't find '{}'!".format(file_path), True)
-    datasheet_append_ships(all_ship_match_performances)
+    replace_ships(all_ship_match_performances, 'DATA_ENTRY!A2:J')
 
 
 def read_latest_mlog_symlink():
