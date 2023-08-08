@@ -109,9 +109,12 @@ def calculate_all_mlogs(filenames):
         if (os.path.exists(file_path)):
             with open(file_path) as mlog:
                 alliances = parse_mlog(mlog.read(), filename)
-                all_ship_match_performances += alliances[0]['ships'] + alliances[1]['ships']
+                if (alliances):
+                    all_ship_match_performances += alliances
+                else:
+                    print_err("calculate_all_mlogs: For some reason, nothing was returned.", True)
         else:
-            print_err("can't find '{}'!".format(file_path), True)
+            print_err("calculate_all_mlogs: can't find '{}'!".format(file_path), True)
     datasheet_append_ships(all_ship_match_performances)
 
 
@@ -124,16 +127,13 @@ def read_latest_mlog_symlink():
         latest_mlog_file.close()
         return latest_mlog_content
     else:
-        print_err("can't find \"{}\"!".format(LATEST_MLOG), True)
+        print_err("read_latest_mlog_symlink: can't find \"{}\"!".format(LATEST_MLOG), True)
         return False
 
     # latest_mlog_content shall be PARSED to heck and back
 
 def parse_mlog(mlog_content, filename="match_log_latest.txt"):
     """
-    returns a JSON String of what occured in the match described
-    by the input mlog.
-    
     What do I do?
         - define list of ships participating in match from [SHIP]
           and [START] statements
@@ -235,11 +235,11 @@ def parse_mlog(mlog_content, filename="match_log_latest.txt"):
             else:
                 blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['destroyed'] = False
         else:
-            print_err("{}'s apparently not in my list!".format(message_id[0]), True)
+            print_err("parse_mlog: {}'s apparently not in my list!".format(message_id[0]), True)
 
 
     if (not (mlog_completion >= 1)):
-        print_err("mlog not complete! Cannot continue.", True)
+        print_err("parse_mlog: mlog not complete! Cannot continue.", True)
         return
     
     same_name = [
@@ -247,8 +247,8 @@ def parse_mlog(mlog_content, filename="match_log_latest.txt"):
             Last_Alliance_Name['blue'] == blue_alliance['name']
             ]
     if (same_name[0] and same_name[1]):
-        print_err("Both Alliance names Match!", True)
-        print_err("Not counting match.", True)
+        print_err("parse_mlog: Both Alliance names Match!", True)
+        print_err("parse_mlog: Not counting match.", True)
         return
     else:
         Last_Alliance_Name['red'] = red_alliance['name']
@@ -311,7 +311,8 @@ def parse_mlog(mlog_content, filename="match_log_latest.txt"):
     red_alliance['ships'] = red_ships
     blue_alliance['ships'] = blue_ships
 
-    return (red_alliance, blue_alliance)
+    alliances = (red_alliance, blue_alliance)
+    return red_ships + blue_ships
 
     # print(json.dumps(red_alliance, indent=4))
     # print(json.dumps(blue_alliance, indent=4))
