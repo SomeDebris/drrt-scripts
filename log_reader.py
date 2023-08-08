@@ -98,12 +98,16 @@ def get_mlog_list():
     return [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
 
 def parse_mlogs_from_filename(filenames):
+    all_ship_match_performances = []
     for filename in filenames:
         if (os.path.exists(filename)):
             with open(filename) as mlog:
-                parse_mlog(mlog.read())
+                alliances = parse_mlog(mlog.read())
+                all_ship_match_performances.append(alliances[0] + alliances[1])
         else:
             print_err("can't find '{}'!".format(filename), True)
+
+    datasheet_append_ships(all_ship_match_performances)
 
 
     
@@ -121,7 +125,8 @@ def read_latest_mlog_symlink():
         return False
 
     # latest_mlog_content shall be PARSED to heck and back
-def parse_mlog(mlog_content):
+
+def parse_mlog(mlog_content, filename="match_log_latest.txt"):
     """
     returns a JSON String of what occured in the match described
     by the input mlog.
@@ -288,12 +293,12 @@ def parse_mlog(mlog_content):
         ship['enemy_fleet_name'] = red_alliance['name']
 
     # all ship's rank and ranking score is calced
-    distribute_points(red_ships + blue_ships)
+    # distribute_points(red_ships + blue_ships)
 
 
-    datasheet_append_ships(red_ships + blue_ships)
+    # datasheet_append_ships(red_ships + blue_ships)
 
-    ALL_SHIPS = recalculate_ranks(ALL_SHIPS)
+    # ALL_SHIPS = recalculated_ranks(ALL_SHIPS)
 
     # what check do I do to ensure that the ranking score is not freaking duplicated
     # APPEND A THING TO EACH 
@@ -301,10 +306,12 @@ def parse_mlog(mlog_content):
     red_alliance['ships'] = red_ships
     blue_alliance['ships'] = blue_ships
 
-    print(json.dumps(red_alliance, indent=4))
-    print(json.dumps(blue_alliance, indent=4))
+    return (red_alliance, blue_alliance)
+
+    # print(json.dumps(red_alliance, indent=4))
+    # print(json.dumps(blue_alliance, indent=4))
     
-    print(json.dumps(ALL_SHIPS, indent=2))
+    # print(json.dumps(ALL_SHIPS, indent=2))
     
 def distribute_points(alliance):
     global ALL_SHIPS
@@ -324,7 +331,7 @@ def distribute_points(alliance):
                 matches_played = participant['D'] + participant['P'] + participant['L']
                 participant['ranking_score'] = participant['RPs'] / matches_played
 
-def recalculate_ranks(ship_array):
+def recalculated_ranks(ship_array):
     return sorted(ship_array, key=lambda d: d['ranking_score'], reverse=True) 
 
 def datasheet_append_ships(ships):
