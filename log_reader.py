@@ -115,7 +115,7 @@ def calculate_all_mlogs(filenames):
                     print_err("calculate_all_mlogs: For some reason, nothing was returned.", True)
         else:
             print_err("calculate_all_mlogs: can't find '{}'!".format(file_path), True)
-    update_sheet(all_ship_match_performances, 'DATA_ENTRY!A2:J')
+    datasheet_update_ships(all_ship_match_performances, 'DATA_ENTRY!A2:J')
 
 
 def read_latest_mlog_symlink():
@@ -339,6 +339,28 @@ def distribute_points(alliance):
 
 def recalculated_ranks(ship_array):
     return sorted(ship_array, key=lambda d: d['ranking_score'], reverse=True) 
+
+def datasheet_update_ships(ships):
+    values = []
+
+    for ship in ships:
+        if (not 'deltaD' in ship):
+            ship['deltaD'] = 0
+        if (not 'deltaP' in ship):
+            ship['deltaP'] = 0
+        if (not 'deltaL' in ship):
+            ship['deltaL'] = 0
+        if (not 'deltaS' in ship):
+            ship['deltaS'] = 0
+        if (not 'mlog_filename' in ship):
+            ship['mlog_filename'] = 'match_log_latest.txt'
+        if (not 'fleet_name' in ship):
+            ship['fleet_name'] = 'NONE'
+        if (not 'enemy_fleet_name' in ship):
+            ship['enemy_fleet_name'] = 'NONE'
+        values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'], ship['fleet_name'], ship['enemy_fleet_name'], ship['mlog_filename']])
+
+    update_sheet(values, 'DATA_ENTRY!A2')
 
 def datasheet_append_ships(ships):
     values = []
