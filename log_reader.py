@@ -61,11 +61,13 @@ def main():
                     print("writer closed!")
                     break
                 print('Read: "{0}"'.format(data))
-                if data == 'normal':
+                if data == 'reload':
                     ALL_SHIPS = get_ship_list()
                     parse_mlogs_from_filename(get_mlog_list())
-                elif data == 'review match':
+                elif data == 'normal':
                     parse_mlog(read_latest_mlog_symlink())
+                elif data == 'review match':
+                    print("nothing to do!")
                 # print(json.dumps(get_ship_list(), sort_keys=True, indent=4))
 
 def read_latest_mlog(previous_known_mlogs):
@@ -97,21 +99,21 @@ def get_ship_list():
 def get_mlog_list():
     return [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
 
+
 def parse_mlogs_from_filename(filenames):
+    # array of ships, data taken from match log and not
+    # cognizant of full match record
     all_ship_match_performances = []
     for filename in filenames:
         file_path = os.path.join(REASSEMBLY_DATA, filename)
         if (os.path.exists(file_path)):
             with open(file_path) as mlog:
                 alliances = parse_mlog(mlog.read())
-                all_ship_match_performances.append(alliances[0]['ships'] + alliances[1]['ships'])
+                all_ship_match_performances += alliances[0]['ships'] + alliances[1]['ships']
         else:
             print_err("can't find '{}'!".format(file_path), True)
-
     datasheet_append_ships(all_ship_match_performances)
 
-
-    
 
 def read_latest_mlog_symlink():
     latest_mlog_content = None
