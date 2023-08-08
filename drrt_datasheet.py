@@ -63,7 +63,7 @@ def append_to_sheet(values, sheet_range, sheet_id=DRRT_DATASHEET_ID):
                 spreadsheetId=sheet_id, range=sheet_range,
                 valueInputOption="RAW", body=body).execute()
     except HttpError as error:
-        print(f"An error occured: {error}")
+        print(f"append_to_sheet: An error occured: {error}")
         return error
 
 def replace_ships(ships, sheet_range='Ships!A2:B', sheet_id=DRRT_DATASHEET_ID):
@@ -72,8 +72,8 @@ def replace_ships(ships, sheet_range='Ships!A2:B', sheet_id=DRRT_DATASHEET_ID):
     values = []
 
     for ship in ships:
-        if not ship['name'] or not ship['author']:
-            print_err("ship {} doesn't have a name or author.".format(ship))
+        if not 'name' in ship or not 'author' in ship:
+            print_err("replace_ship: ship {} doesn't have a name or author.".format(ship))
 
         values.append([ ship['name'], ship['author'] ])
 
@@ -88,9 +88,9 @@ def replace_ships(ships, sheet_range='Ships!A2:B', sheet_id=DRRT_DATASHEET_ID):
         result = SERVICE.spreadsheets().values().update(
                 spreadsheetId=sheet_id, range=sheet_range,
                 valueInputOption="RAW", body=body).execute()
-        print("Updated Ships List!")
+        print("replace_ships: Updated Ships List!")
     except HttpError as error:
-        print(f"An error occured: {error}")
+        print(f"replace_ships: An error occured: {error}")
         return error
 
 def replace_match_schedule(sheet_range='Calc!A1:F', sheet_id = DRRT_DATASHEET_ID):
@@ -127,7 +127,7 @@ def replace_match_schedule(sheet_range='Calc!A1:F', sheet_id = DRRT_DATASHEET_ID
                 spreadsheetId=sheet_id, range=sheet_range,
                 valueInputOption="USER_ENTERED", body=body_values).execute()
     except HttpError as error:
-        print(f"An error occured: {error}")
+        print(f"replace_match_schedule: An error occured: {error}")
         return error
 
 
