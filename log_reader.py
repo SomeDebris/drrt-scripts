@@ -63,7 +63,7 @@ def main():
                 print('Read: "{0}"'.format(data))
                 if data == 'reload':
                     ALL_SHIPS = get_ship_list()
-                    parse_mlogs_from_filename(get_mlog_list())
+                    calculate_all_mlogs(get_mlog_list())
                 elif data == 'normal':
                     parse_mlog(read_latest_mlog_symlink())
                 elif data == 'review match':
@@ -100,7 +100,7 @@ def get_mlog_list():
     return [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
 
 
-def parse_mlogs_from_filename(filenames):
+def calculate_all_mlogs(filenames):
     # array of ships, data taken from match log and not
     # cognizant of full match record
     all_ship_match_performances = []
@@ -108,7 +108,7 @@ def parse_mlogs_from_filename(filenames):
         file_path = os.path.join(REASSEMBLY_DATA, filename)
         if (os.path.exists(file_path)):
             with open(file_path) as mlog:
-                alliances = parse_mlog(mlog.read())
+                alliances = parse_mlog(mlog.read(), filename)
                 all_ship_match_performances += alliances[0]['ships'] + alliances[1]['ships']
         else:
             print_err("can't find '{}'!".format(file_path), True)
@@ -291,9 +291,11 @@ def parse_mlog(mlog_content, filename="match_log_latest.txt"):
     for ship in red_ships:
         ship['fleet_name'] = red_alliance['name']
         ship['enemy_fleet_name'] = blue_alliance['name']
+        ship['mlog_filename'] = filename
     for ship in blue_ships:
         ship['fleet_name'] = blue_alliance['name']
         ship['enemy_fleet_name'] = red_alliance['name']
+        ship['mlog_filename'] = filename
 
     # all ship's rank and ranking score is calced
     # distribute_points(red_ships + blue_ships)
@@ -349,11 +351,13 @@ def datasheet_append_ships(ships):
             ship['deltaL'] = 0
         if (not 'deltaS' in ship):
             ship['deltaS'] = 0
+        if (not 'mlog_filename' in ship):
+            ship['mlog_filename'] = 'match_log_latest.txt'
         if (not 'fleet_name' in ship):
             ship['fleet_name'] = 'NONE'
         if (not 'enemy_fleet_name' in ship):
             ship['enemy_fleet_name'] = 'NONE'
-        values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'], ship['fleet_name'], ship['enemy_fleet_name']])
+        values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'], ship['fleet_name'], ship['enemy_fleet_name'], ship['mlog_filename']])
 
     append_to_sheet(values, 'DATA_ENTRY!A1')
     
