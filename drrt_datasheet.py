@@ -26,6 +26,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 DRRT_DATASHEET_ID = '1rzksRiVxzHi6ukZpWg0OV-U27fCTnkRNALUtAi5iB7w'
 DRRT_RANGE_NAME = 'PyTest1!A2:E'
+SHIP_ENTRY_RANGE = 'Ships!A2:B'
 
 SERVICE = None
 
@@ -66,13 +67,28 @@ def append_to_sheet(values, sheet_range, sheet_id=DRRT_DATASHEET_ID):
         print(f"append_to_sheet: An error occured: {error}")
         return error
 
-def replace_ships(ships, sheet_range='Ships!A2:B', sheet_id=DRRT_DATASHEET_ID):
+def update_sheet(values, sheet_range, sheet_id=DRRT_DATASHEET_ID):
+    global SERVICE
+
+    try:
+        if (not SERVICE):
+            SERVICE = get_service()
+        body = {'values':values}
+
+        result = SERVICE.spreadsheets().values().append(
+                spreadsheetId=sheet_id, range=sheet_range,
+                valueInputOption="RAW", body=body).execute()
+    except HttpError as error:
+        print(f"append_to_sheet: An error occured: {error}")
+        return error
+
+def replace_ships(ships, sheet_range=SHIP_ENTRY_RANGE, sheet_id=DRRT_DATASHEET_ID):
     global SERVICE
 
     values = []
 
     for ship in ships:
-        if not 'name' in ship or not 'author' in ship:
+        if (not 'name' in ship or not 'author' in ship):
             print_err("replace_ship: ship {} doesn't have a name or author.".format(ship))
 
         values.append([ ship['name'], ship['author'] ])

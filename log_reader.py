@@ -12,7 +12,7 @@ import errno
 import re
 
 from drrt_common import DATA_DIR, SCRIPT_DIR, print_err
-from drrt_datasheet import append_to_sheet, replace_ships, replace_match_schedule
+from drrt_datasheet import append_to_sheet, replace_ships, replace_match_schedule, update_sheet
 
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
 LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
@@ -115,7 +115,7 @@ def calculate_all_mlogs(filenames):
                     print_err("calculate_all_mlogs: For some reason, nothing was returned.", True)
         else:
             print_err("calculate_all_mlogs: can't find '{}'!".format(file_path), True)
-    replace_ships(all_ship_match_performances, 'DATA_ENTRY!A2:J')
+    update_sheet(all_ship_match_performances, 'DATA_ENTRY!A2:J')
 
 
 def read_latest_mlog_symlink():
