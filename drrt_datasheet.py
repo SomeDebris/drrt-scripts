@@ -75,9 +75,9 @@ def update_sheet(values, sheet_range, sheet_id=DRRT_DATASHEET_ID):
             SERVICE = get_service()
         body = {'values':values}
 
-        result = SERVICE.spreadsheets().values().append(
+        result = SERVICE.spreadsheets().values().update(
                 spreadsheetId=sheet_id, range=sheet_range,
-                valueInputOption="RAW", body=body).execute()
+                valueInputOption="USER_ENTERED", body=body).execute()
     except HttpError as error:
         print(f"append_to_sheet: An error occured: {error}")
         return error
