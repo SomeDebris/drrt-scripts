@@ -24,7 +24,23 @@ Current_Match_ID = 0
 
 Last_Alliance_Name = {'red':None,'blue':None}
 
+PLAYOFFS_SHEET_SELECTION = [
+    'DATA_ENTRY_WINNER_BRACKET!A2',
+    'DATA_ENTRY_LOSER_BRACKET!A2'
+]
+
 ALL_SHIPS = {}
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 
 # def main(args):
@@ -42,8 +58,6 @@ def main():
     mlog_initial_count = len(mlogs)
 
     ALL_SHIPS = get_ship_list()
-    replace_ships(ALL_SHIPS)
-    replace_match_schedule()
 
     try:
         os.mkfifo(MLOG_SIGNAL_PIPE)
@@ -52,6 +66,7 @@ def main():
             raise
 
     is_playoffs = False
+    playoffs_losers = False
 
     # Open script by checking what type of thing we're doing
     while True:
@@ -61,10 +76,15 @@ def main():
             print("Stop recieved!")
             break
         elif (data == 'qualifications'):
-            print("--- QUALIFICATIONS ---")
+            print(bcolors.BOLD + bcolors.OKBLUE + "--- QUALIFICATIONS ---" + bcolors.ENDC)
             print("Hope you have a good Quals!")
+            print("Replacing ship lists in sheet.")
+            replace_ships(ALL_SHIPS)
+            replace_match_schedule()
             break
         elif (data == 'playoffs'):
+            print(bcolors.BOLD + bcolors.HEADER + "--- PLAYOFFS ---" + bcolors.ENDC)
+            is_playoffs = True
             print("You're nearly there! Get those playoffs done!")
             break
         else:
@@ -79,11 +99,17 @@ def main():
             break
         if data == 'reload':
             ALL_SHIPS = get_ship_list()
-            calculate_all_mlogs(get_mlog_list())
+            calculate_all_mlogs(get_mlog_list(), False, is_playoffs, playoffs_losers)
         elif data == 'append':
             parse_mlog(read_latest_mlog_symlink(), True)
         elif data == 'review match':
             print("nothing to do!")
+        elif data == 'winners':
+            playoffs_losers = False
+            print(bcolors.OKGREEN + "Entering data into WINNERS BRACKET" + bcolors.ENDC)
+        elif data == 'losers':
+            playoffs_losers = True
+            print(bcolors.OKCYAN + "Entering data into LOSERS BRACKET" + bcolors.ENDC)
         else:
             print("Please say 'reload', 'review match', 'append', or 'stop' to {MLOG_SIGNAL_PIPE}.")
             print(f"You said: '{data}'")
@@ -133,7 +159,7 @@ def get_mlog_list():
     return [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
 
 
-def calculate_all_mlogs(filenames, check_duplicates=False):
+def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs_losers=False):
     # array of ships, data taken from match log and not
     # cognizant of full match record
     all_ship_match_performances = []
@@ -148,7 +174,17 @@ def calculate_all_mlogs(filenames, check_duplicates=False):
                     print_err("calculate_all_mlogs: For some reason, nothing was returned.", True)
         else:
             print_err("calculate_all_mlogs: can't find '{}'!".format(file_path), True)
-    datasheet_update_ships(all_ship_match_performances, 'DATA_ENTRY!A2:J')
+    sheet_location = None
+
+    if in_playoffs:
+        if playoffs_losers:
+            sheet_location = PLAYOFFS_SHEET_SELECTION[1]
+        else:
+            sheet_location = PLAYOFFS_SHEET_SELECTION[0]
+    else:
+        sheet_location = None
+
+    datasheet_update_ships(all_ship_match_performances, sheet_location)
 
 
 def read_latest_mlog_symlink():
@@ -377,7 +413,7 @@ def distribute_points(alliance):
 def recalculated_ranks(ship_array):
     return sorted(ship_array, key=lambda d: d['ranking_score'], reverse=True) 
 
-def datasheet_update_ships(ships, sheet_range='DATA_ENTRY!A2'):
+def datasheet_update_ships(ships, sheet_range):
     values = []
 
     for ship in ships:
