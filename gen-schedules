@@ -5,6 +5,7 @@ set -e
 jobs=0
 
 export AWK_STRIPPER="$(readlink -e stripper.awk)"
+alliance_lengths="$(seq 2 4)"
 
 if [ ! -n "$AWK" ]; then
     AWK=awk
@@ -51,7 +52,7 @@ if [ "$(ls -A out/)" ]; then
     rm out/*
 fi
 
-for i in 2 3 4; do
+for i in $alliance_lengths; do
     DIRNAME="${i}v${i}"
     
     if [ ! -d "${DIRNAME}" ]; then
@@ -79,5 +80,5 @@ for i in 2 3 4; do
     cd ..
 done
 
-parallel schedule_it {1} {2} {3} ::: $1 ::: $(seq 2 4) ::: $(seq 1 100)
+parallel schedule_it {1} {2} {3} ::: $1 ::: $alliance_lengths ::: $(seq 1 100)
 
