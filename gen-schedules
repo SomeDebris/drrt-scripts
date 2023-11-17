@@ -52,17 +52,19 @@ for i in 2 3 4; do
     fi
 
     cd "./${DIRNAME}"
+    
+    parallel schedule_it {1} {2} {3} ::: $1 ::: $(seq 1 100) ::: $(seq 2 4)
 
-    for j in $(seq $(expr "$i" '*' '2') $2); do
+    # for j in $(seq $(expr "$i" '*' '2') $2); do
 
-        if [ $jobs -ge 14 ]; then
-            wait -n
-            let 'jobs -= 1'
-        fi
+    #     if [ $jobs -ge 14 ]; then
+    #         wait -n
+    #         let 'jobs -= 1'
+    #     fi
 
-        schedule_it "$1" "$i" "$j" &
-        let 'jobs += 1'
-    done
+    #     schedule_it "$1" "$i" "$j" &
+    #     let 'jobs += 1'
+    # done
     
     cd ..
 done
