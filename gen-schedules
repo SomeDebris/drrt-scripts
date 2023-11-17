@@ -4,13 +4,13 @@ set -e
 
 jobs=0
 
-AWK_STRIPPER="$(readlink -e stripper.awk)"
+export AWK_STRIPPER="$(readlink -e stripper.awk)"
 
 if [ ! -n "$AWK" ]; then
     AWK=awk
 fi
 
-function schedule_it {
+schedule_it() {
     # $1 = rounds
     # $2 = alliance size
     # $3 = team count
@@ -18,10 +18,12 @@ function schedule_it {
 
     MatchMaker -a "$2" -r "$1" -t "$3" -b > "${3}_${2}v${2}.txt"
 
-    $AWK -f "$AWK_STRIPPER" "${3}_${2}v${2}.txt"
+    awk -f "$AWK_STRIPPER" "${3}_${2}v${2}.txt"
 
     mv "${3}_${2}v${2}.csv" ../out
 }
+
+export -f schedule_it
 
 
 if [ ! -d schedules ]; then
@@ -53,7 +55,7 @@ for i in 2 3 4; do
 
     cd "./${DIRNAME}"
     
-    parallel schedule_it {1} {2} {3} ::: $1 ::: $(seq 1 100) ::: $(seq 2 4)
+    parallel schedule_it {1} {2} {3} ::: $1 ::: $(seq 2 4) ::: $(seq 1 100)
 
     # for j in $(seq $(expr "$i" '*' '2') $2); do
 
