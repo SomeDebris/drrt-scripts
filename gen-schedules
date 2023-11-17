@@ -14,8 +14,7 @@ schedule_it() {
     # $1 = rounds
     # $2 = alliance size
     # $3 = team count
-
-    if [[ $1 <= $(($2 * 2)) ]]; then
+    if [ "$3" -ge "$(($2 * 2))" ]; then
         echo "making schedule '${3}_${2}v${2}.txt'..."
 
         MatchMaker -a "$2" -r "$1" -t "$3" -b > "${3}_${2}v${2}.txt"
