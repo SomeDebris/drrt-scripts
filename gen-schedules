@@ -21,7 +21,7 @@ schedule_it() {
     # $2 = alliance size
     # $3 = team count
     if [ "$3" -ge "$(($2 * 2))" ]; then
-        set -x
+        # set -x
         outfile_dir="${2}v${2}"
         outfile_basename="${3}_${2}v${2}"
 
@@ -34,17 +34,15 @@ schedule_it() {
 
             let 'rounds=rounds+1'
 
-            awk -F, -f "$AWK_STRIPPER" "$outfile_dir/${outfile_basename}.txt" \
+            awk -f "$AWK_STRIPPER" "$outfile_dir/${outfile_basename}.txt" \
                 > "out/${outfile_basename}.csv"
 
             is_surrogate=$?
 
-            echo $is_surrogate
-
             [ $is_surrogate -eq 1 ]
         do true; done
 
-        echo "Rounds for ${outfile_basename}: $rounds"
+        echo "Rounds for ${outfile_basename}: $(( rounds - 1 ))"
     else
         echo "Cannot generate a schedule with $3 ships with alliance length $2!"
         
