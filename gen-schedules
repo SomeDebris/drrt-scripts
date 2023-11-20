@@ -11,10 +11,21 @@ if [ ! -n "$AWK" ]; then
     AWK=awk
 fi
 
+# exit codes
+EXIT_SUCCESS=0
+EXIT_NO_ROUNDS=2
+EXIT_BAD_SCHEDULE_LENGTH=3
+
 schedule_it() {
     # $1 = rounds
     # $2 = alliance size
     # $3 = team count
+    if [ ! -n "$1" ]; then
+        echo "Cannot generate a schedule without an initial round count!"
+
+        exit $EXIT_NO_ROUNDS
+    fi
+
     if [ "$3" -ge "$(($2 * 2))" ]; then
         set -x
         outfile_basename="${2}v${2}/${3}_${2}v${2}"
@@ -29,7 +40,7 @@ schedule_it() {
     else
         echo "Cannot generate a schedule with $3 ships with alliance length $2!"
         
-        exit 1
+        exit $EXIT_BAD_SCHEDULE_LENGTH
     fi
 }
 
