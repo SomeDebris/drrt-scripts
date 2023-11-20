@@ -34,7 +34,7 @@ schedule_it() {
 
             let 'rounds=rounds+1'
 
-            awk -F',' -f "$AWK_STRIPPER" "${outfile_basename}.txt" \
+            awk -F, -f "$AWK_STRIPPER" "$outfile_dir/${outfile_basename}.txt" \
                 > "out/${outfile_basename}.csv"
         do true; done
 
