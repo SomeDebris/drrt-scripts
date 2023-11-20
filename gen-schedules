@@ -20,11 +20,6 @@ schedule_it() {
     # $1 = rounds
     # $2 = alliance size
     # $3 = team count
-    if [ ! -n "$1" ]; then
-        echo "Cannot generate a schedule without an initial round count!"
-
-        exit $EXIT_NO_ROUNDS
-    fi
 
     if [ "$3" -ge "$(($2 * 2))" ]; then
         set -x
@@ -90,6 +85,14 @@ for i in $alliance_lengths; do
     
     cd ..
 done
+
+if [ ! -n "$1" ]; then
+    echo "Cannot generate a schedule without an initial round count!"
+
+    exit $EXIT_NO_ROUNDS
+fi
+
+echo "Preparing to generate schedules."
 
 parallel schedule_it {1} {2} {3} ::: $1 ::: $alliance_lengths ::: $(seq 1 100)
 
