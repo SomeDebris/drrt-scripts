@@ -32,9 +32,13 @@ schedule_it() {
             MatchMaker -a "$2" -r "$rounds" -t "$3" -b \
                 > "$outfile_dir/${outfile_basename}.txt"
 
+            let 'rounds=rounds+1'
+
             awk -F',' -f "$AWK_STRIPPER" "${outfile_basename}.txt" \
                 > "out/${outfile_basename}.csv"
         do true; done
+
+        echo "Rounds for ${outfile_basename}: $rounds"
     else
         echo "Cannot generate a schedule with $3 ships with alliance length $2!"
         
