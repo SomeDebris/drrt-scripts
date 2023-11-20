@@ -29,13 +29,19 @@ schedule_it() {
         
         rounds=$1
         while  
-            MatchMaker -a "$2" -r "$rounds" -t "$3" -b \
+            MatchMaker -a "$2" -r "$rounds" -t "$3" -f \
                 > "$outfile_dir/${outfile_basename}.txt"
 
             let 'rounds=rounds+1'
 
             awk -F, -f "$AWK_STRIPPER" "$outfile_dir/${outfile_basename}.txt" \
                 > "out/${outfile_basename}.csv"
+
+            is_surrogate=$?
+
+            echo $is_surrogate
+
+            [ $is_surrogate -eq 1 ]
         do true; done
 
         echo "Rounds for ${outfile_basename}: $rounds"
