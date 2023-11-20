@@ -12,6 +12,7 @@
 # }
 BEGIN {
     code_exit = 0;
+    OFS=",";
 }
 
 # /^Match Schedule$/      { sched_start = 1; }
@@ -23,7 +24,7 @@ BEGIN {
     for (i = 2; i <= NF; i++ ) {
         printf "%s",$i (i == NF ? ORS : OFS);
 
-        if ($i ~ /\*/) {
+        if ( match( $i, /\*/ ) ) {
             code_exit = 2;
         }
     }
