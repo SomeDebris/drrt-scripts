@@ -10,12 +10,18 @@
 #     sub(".*/", "", file)
 #     return file
 # }
+BEGIN {
+    code_exit = 0;
+}
 
 # /^Match Schedule$/      { sched_start = 1; }
-/^Schedule Statistics$/ { exit; }
+/^Schedule Statistics$/ { exit code_exit; }
 
 / *[0-9]+: / {
     for (i = 2; i <= NF; i++ ) {
         printf "%s",$i (i == NF ? ORS : OFS)
+        if ($1 ~ /\*/) {
+            code_exit = 2;
+        }
     }
 }        
