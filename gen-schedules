@@ -29,7 +29,9 @@ schedule_it() {
         
         rounds=$1
         while  
-            MatchMaker -a "$2" -r "$rounds" -t "$3" -f \
+            echo "trying: rounds for ${outfile_basename}: $rounds"
+
+            MatchMaker -a "$2" -r "$rounds" -t "$3" -b \
                 > "$outfile_dir/${outfile_basename}.txt"
 
             let 'rounds=rounds+1'
@@ -42,7 +44,7 @@ schedule_it() {
             [ $is_surrogate -eq 1 ]
         do true; done
 
-        echo "Rounds for ${outfile_basename}: $(( rounds - 1 ))"
+        echo "result: rounds for ${outfile_basename}: $(( rounds - 1 ))"
     else
         echo "Cannot generate a schedule with $3 ships with alliance length $2!"
         
