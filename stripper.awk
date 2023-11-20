@@ -25,7 +25,7 @@ BEGIN {
         printf "%s",$i (i == NF ? ORS : OFS);
 
         if ( match( $i, /\*/ ) ) {
-            code_exit = 2;
+            code_exit = 1;
         }
     }
 }        
