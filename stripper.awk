@@ -1,15 +1,15 @@
 #!/bin/awk -f
 
-function no_extension(file) {
-    sub(/\.[^.]*$/, "", file)
+# function no_extension(file) {
+#     sub(/\.[^.]*$/, "", file)
 
-    return file
-}
+#     return file
+# }
 
-function basename(file) {
-    sub(".*/", "", file)
-    return file
-}
+# function basename(file) {
+#     sub(".*/", "", file)
+#     return file
+# }
 
 BEGIN {
     OFS = ","
@@ -20,6 +20,6 @@ BEGIN {
 
 / *[0-9]*: / {
     for (i = 2; i <= NF; i++ ) {
-        printf "%s",$i (i == NF ? ORS : OFS) > no_extension(FILENAME)".csv"
+        printf "%s",$i (i == NF ? ORS : OFS)
     }
 }        
