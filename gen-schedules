@@ -20,18 +20,21 @@ schedule_it() {
     # $1 = rounds
     # $2 = alliance size
     # $3 = team count
-
     if [ "$3" -ge "$(($2 * 2))" ]; then
         set -x
-        outfile_basename="${2}v${2}/${3}_${2}v${2}"
+        outfile_dir="${2}v${2}"
+        outfile_basename="${3}_${2}v${2}"
 
         echo "making schedule '${outfile_basename}.txt'..."
+        
+        rounds=$1
+        while  
+            MatchMaker -a "$2" -r "$rounds" -t "$3" -b \
+                > "$outfile_dir/${outfile_basename}.txt"
 
-        MatchMaker -a "$2" -r "$1" -t "$3" -b > "${outfile_basename}.txt"
-
-        awk -f "$AWK_STRIPPER" "${outfile_basename}.txt"
-
-        mv "${outfile_basename}.csv" out/
+            awk -F',' -f "$AWK_STRIPPER" "${outfile_basename}.txt" \
+                > "out/${outfile_basename}.csv"
+        do true; done
     else
         echo "Cannot generate a schedule with $3 ships with alliance length $2!"
         

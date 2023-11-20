@@ -15,12 +15,15 @@ BEGIN {
 }
 
 # /^Match Schedule$/      { sched_start = 1; }
-/^Schedule Statistics$/ { exit code_exit; }
+/^Schedule Statistics$/ { 
+    exit code_exit; 
+}
 
 / *[0-9]+: / {
     for (i = 2; i <= NF; i++ ) {
-        printf "%s",$i (i == NF ? ORS : OFS)
-        if ($1 ~ /\*/) {
+        printf "%s",$i (i == NF ? ORS : OFS);
+
+        if ($i ~ /\*/) {
             code_exit = 2;
         }
     }
