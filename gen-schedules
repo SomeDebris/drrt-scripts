@@ -28,6 +28,11 @@ schedule_it() {
         echo "making schedule '${outfile_basename}.txt'..."
         
         rounds=$1
+        while (( ( $rounds * $3 ) % ( $2 * 2 ) != 0 )); do
+            let 'rounds=rounds+1'
+        done
+
+
         while  
             echo "trying: rounds for ${outfile_basename}: $rounds"
 
