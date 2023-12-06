@@ -250,59 +250,59 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
             continue
 
         if message_id[0] == 'START':
-            if (fields_dict['fleet'] == '0'):
+            if (fields_dict[ 'fleet' ] == '0'):
                 # It's the alliance on the RIGHT
-                red_alliance['name'] = fields_dict['name']
+                red_alliance[ 'name' ] = fields_dict[ 'name' ]
                 # TODO game should output fleet colors
             else:
-                blue_alliance['name'] = fields_dict['name']
+                blue_alliance[ 'name' ] = fields_dict[ 'name' ]
 
         elif message_id[0] == 'SHIP':
-            if (fields_dict['fleet'] == '0'):
+            if (fields_dict[ 'fleet' ] == '0'):
                 red_ships.append({ 
-                                  'name':fields_dict['ship'], 
+                                  'name':fields_dict[ 'ship' ], 
                                   'destroyed':True,
                                   'RPs':0,
                                   'destructions':0
                                   })
-                red_ship_index[fields_dict['ship']] = red_ship_index_length
+                red_ship_index[fields_dict[ 'ship' ]] = red_ship_index_length
                 red_ship_index_length += 1
             else:
                 blue_ships.append({ 
-                                  'name':fields_dict['ship'], 
+                                  'name':fields_dict[ 'ship' ], 
                                   'destroyed':True,
                                   'RPs':0,
                                   'destructions':0
                                   })
-                blue_ship_index[fields_dict['ship']] = blue_ship_index_length
+                blue_ship_index[fields_dict[ 'ship' ]] = blue_ship_index_length
                 blue_ship_index_length += 1
 
         elif message_id[0] == 'DESTRUCTION':
-            if (fields_dict['fship'] == '100'):
-                if fields_dict['ship'] in red_ship_index:
-                    red_ships[ red_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
-                    red_ships[ red_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
+            if (fields_dict[ 'fship' ] == '100'):
+                if fields_dict[ 'ship' ] in red_ship_index:
+                    red_ships[ red_ship_index[ fields_dict[ 'ship' ] ] ][ 'RPs' ] += 1
+                    red_ships[ red_ship_index[ fields_dict[ 'ship' ] ] ][ 'destructions' ] += 1
             else:
-                if fields_dict['ship'] in blue_ship_index:
-                    blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['RPs'] += 1
-                    blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['destructions'] += 1
+                if fields_dict[ 'ship' ] in blue_ship_index:
+                    blue_ships[ blue_ship_index[ fields_dict[ 'ship' ] ] ][ 'RPs' ] += 1
+                    blue_ships[ blue_ship_index[ fields_dict[ 'ship' ] ] ][ 'destructions' ] += 1
 
         elif message_id[0] == 'RESULT':
             mlog_completion += 1
-            if (fields_dict['fleet'] == '0'):
-                red_alliance['damageTaken'] = int(fields_dict['DT'])
-                red_alliance['damageInflicted'] = int(fields_dict['DI'])
-                red_alliance['survivorCount'] = int(fields_dict['alive'])
+            if (fields_dict[ 'fleet' ] == '0'):
+                red_alliance[ 'damageTaken' ] = int(fields_dict[ 'DT' ])
+                red_alliance[ 'damageInflicted' ] = int(fields_dict[ 'DI' ])
+                red_alliance[ 'survivorCount' ] = int(fields_dict[ 'alive' ])
             else:
-                blue_alliance['damageTaken'] = int(fields_dict['DT'])
-                blue_alliance['damageInflicted'] = int(fields_dict['DI'])
-                blue_alliance['survivorCount'] = int(fields_dict['alive'])
+                blue_alliance[ 'damageTaken' ] = int(fields_dict[ 'DT' ])
+                blue_alliance[ 'damageInflicted' ] = int(fields_dict[ 'DI' ])
+                blue_alliance[ 'survivorCount' ] = int(fields_dict[ 'alive' ])
 
         elif message_id[0] == 'SURVIVAL':
-            if (fields_dict['fleet'] == '0'):
-                red_ships[ red_ship_index[ fields_dict['ship'] ] ]['destroyed'] = False
+            if (fields_dict[ 'fleet' ] == '0'):
+                red_ships[ red_ship_index[ fields_dict[ 'ship' ] ] ][ 'destroyed' ] = False
             else:
-                blue_ships[ blue_ship_index[ fields_dict['ship'] ] ]['destroyed'] = False
+                blue_ships[ blue_ship_index[ fields_dict[ 'ship' ] ] ][ 'destroyed' ] = False
         else:
             print_err("parse_mlog: {}'s apparently not in my list!".format(message_id[0]), True)
 
@@ -312,63 +312,63 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
         return
     
     same_name = [
-            Last_Alliance_Name['red'] == red_alliance['name'],
-            Last_Alliance_Name['blue'] == blue_alliance['name']
+            Last_Alliance_Name[ 'red' ] == red_alliance[ 'name' ],
+            Last_Alliance_Name[ 'blue' ] == blue_alliance[ 'name' ]
             ]
     if (same_name[0] and same_name[1]):
         print_err("parse_mlog: Both Alliance names Match!", True)
-        print_err("parse_mlog: RED: '{}'".format(Last_Alliance_Name['red']), True)
-        print_err("parse_mlog: BLUE: '{}'".format(Last_Alliance_Name['blue']), True)
+        print_err("parse_mlog: RED: '{}'".format(Last_Alliance_Name[ 'red' ]), True)
+        print_err("parse_mlog: BLUE: '{}'".format(Last_Alliance_Name[ 'blue' ]), True)
         print_err("parse_mlog: mlog filename: '{}'".format(filename), True)
         if (check_duplicates):
             print_err("parse_mlog: Not counting match.", True)
             return
     else:
-        Last_Alliance_Name['red'] = red_alliance['name']
-        Last_Alliance_Name['blue'] = blue_alliance['name']
+        Last_Alliance_Name[ 'red' ] = red_alliance[ 'name' ]
+        Last_Alliance_Name[ 'blue' ] = blue_alliance[ 'name' ]
 
-    red_score = red_alliance['damageTaken']
-    blue_score = blue_alliance['damageTaken']
+    red_score = red_alliance[ 'damageTaken' ]
+    blue_score = blue_alliance[ 'damageTaken' ]
 
     if (red_score >= blue_score):
-        match_info['winner'] = 'red'
+        match_info[ 'winner' ] = 'red'
         for red_ship in red_ships:
-            red_ship['RPs'] += 2
+            red_ship[ 'RPs' ] += 2
         for blue_ship in blue_ships:
-            blue_ship['deltaL'] = 1
+            blue_ship[ 'deltaL' ] = 1
     else:
-        match_info['winner'] = 'blue'
+        match_info[ 'winner' ] = 'blue'
         for blue_ship in blue_ships:
-            blue_ship['RPs'] += 2
+            blue_ship[ 'RPs' ] += 2
         for red_ship in red_ships:
-            red_ship['deltaL'] = 1
+            red_ship[ 'deltaL' ] = 1
 
     if (red_score == 0):
         for blue_ship in blue_ships:
-            blue_ship['deltaD'] = 1
+            blue_ship[ 'deltaD' ] = 1
     elif (blue_score == 0):
         for red_ship in red_ships:
-            red_ship['deltaD'] = 1
+            red_ship[ 'deltaD' ] = 1
 
-    elif (match_info['winner'] == 'red'):
+    elif (match_info[ 'winner' ] == 'red'):
         for red_ship in red_ships:
-            red_ship['deltaP'] = 1
+            red_ship[ 'deltaP' ] = 1
     else: 
         for blue_ship in blue_ships:
-            blue_ship['deltaP'] = 1
+            blue_ship[ 'deltaP' ] = 1
         
     for ship in blue_ships + red_ships:
-        if (not ship['destroyed']):
-            ship['deltaS'] = 1
+        if (not ship[ 'destroyed' ]):
+            ship[ 'deltaS' ] = 1
 
     for ship in red_ships:
-        ship['fleet_name'] = red_alliance['name']
-        ship['enemy_fleet_name'] = blue_alliance['name']
-        ship['mlog_filename'] = filename
+        ship[ 'fleet_name' ] = red_alliance[ 'name' ]
+        ship[ 'enemy_fleet_name' ] = blue_alliance[ 'name' ]
+        ship[ 'mlog_filename' ] = filename
     for ship in blue_ships:
-        ship['fleet_name'] = blue_alliance['name']
-        ship['enemy_fleet_name'] = red_alliance['name']
-        ship['mlog_filename'] = filename
+        ship[ 'fleet_name' ] = blue_alliance[ 'name' ]
+        ship[ 'enemy_fleet_name' ] = red_alliance[ 'name' ]
+        ship[ 'mlog_filename' ] = filename
 
     # all ship's rank and ranking score is calced
     # distribute_points(red_ships + blue_ships)
@@ -381,8 +381,8 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
     # what check do I do to ensure that the ranking score is not freaking duplicated
     # APPEND A THING TO EACH 
 
-    red_alliance['ships'] = red_ships
-    blue_alliance['ships'] = blue_ships
+    red_alliance[ 'ships' ] = red_ships
+    blue_alliance[ 'ships' ] = blue_ships
 
     alliances = (red_alliance, blue_alliance)
     return red_ships + blue_ships
@@ -397,41 +397,41 @@ def distribute_points(alliance):
 
     for participant in ALL_SHIPS:
         for ship in alliance:
-            if (participant['name'] == ship['name']):
-                participant['RPs'] += ship['RPs']
+            if (participant[ 'name' ] == ship[ 'name' ]):
+                participant[ 'RPs' ] += ship[ 'RPs' ]
                 if ('deltaD' in ship):
-                    participant['D'] += ship['deltaD']
+                    participant[ 'D' ] += ship[ 'deltaD' ]
                 if ('deltaP' in ship):
-                    participant['P'] += ship['deltaP']
+                    participant[ 'P' ] += ship[ 'deltaP' ]
                 if ('deltaL' in ship):
-                    participant['L'] += ship['deltaL']
+                    participant[ 'L' ] += ship[ 'deltaL' ]
                 if ('deltaS' in ship):
-                    participant['S'] += ship['deltaS']
-                matches_played = participant['D'] + participant['P'] + participant['L']
-                participant['ranking_score'] = participant['RPs'] / matches_played
+                    participant[ 'S' ] += ship[ 'deltaS' ]
+                matches_played = participant[ 'D' ] + participant[ 'P' ] + participant[ 'L' ]
+                participant[ 'ranking_score' ] = participant[ 'RPs' ] / matches_played
 
 def recalculated_ranks(ship_array):
-    return sorted(ship_array, key=lambda d: d['ranking_score'], reverse=True) 
+    return sorted(ship_array, key=lambda d: d[ 'ranking_score' ], reverse=True) 
 
 def datasheet_update_ships(ships, sheet_range):
     values = []
 
     for ship in ships:
         if (not 'deltaD' in ship):
-            ship['deltaD'] = 0
+            ship[ 'deltaD' ] = 0
         if (not 'deltaP' in ship):
-            ship['deltaP'] = 0
+            ship[ 'deltaP' ] = 0
         if (not 'deltaL' in ship):
-            ship['deltaL'] = 0
+            ship[ 'deltaL' ] = 0
         if (not 'deltaS' in ship):
-            ship['deltaS'] = 0
+            ship[ 'deltaS' ] = 0
         if (not 'mlog_filename' in ship):
-            ship['mlog_filename'] = 'match_log_latest.txt'
+            ship[ 'mlog_filename' ] = 'match_log_latest.txt'
         if (not 'fleet_name' in ship):
-            ship['fleet_name'] = 'NONE'
+            ship[ 'fleet_name' ] = 'NONE'
         if (not 'enemy_fleet_name' in ship):
-            ship['enemy_fleet_name'] = 'NONE'
-        values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'], ship['fleet_name'], ship['enemy_fleet_name'], ship['mlog_filename']])
+            ship[ 'enemy_fleet_name' ] = 'NONE'
+        values.append([ ship[ 'name' ], ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
 
     update_sheet(values, sheet_range)
 
@@ -440,20 +440,20 @@ def datasheet_append_ships(ships):
 
     for ship in ships:
         if (not 'deltaD' in ship):
-            ship['deltaD'] = 0
+            ship[ 'deltaD' ] = 0
         if (not 'deltaP' in ship):
-            ship['deltaP'] = 0
+            ship[ 'deltaP' ] = 0
         if (not 'deltaL' in ship):
-            ship['deltaL'] = 0
+            ship[ 'deltaL' ] = 0
         if (not 'deltaS' in ship):
-            ship['deltaS'] = 0
+            ship[ 'deltaS' ] = 0
         if (not 'mlog_filename' in ship):
-            ship['mlog_filename'] = 'match_log_latest.txt'
+            ship[ 'mlog_filename' ] = 'match_log_latest.txt'
         if (not 'fleet_name' in ship):
-            ship['fleet_name'] = 'NONE'
+            ship[ 'fleet_name' ] = 'NONE'
         if (not 'enemy_fleet_name' in ship):
-            ship['enemy_fleet_name'] = 'NONE'
-        values.append([ ship['name'], ship['destructions'], ship['RPs'], ship['deltaD'], ship['deltaP'], ship['deltaL'], ship['deltaS'], ship['fleet_name'], ship['enemy_fleet_name'], ship['mlog_filename']])
+            ship[ 'enemy_fleet_name' ] = 'NONE'
+        values.append([ ship[ 'name' ], ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
 
     append_to_sheet(values, 'DATA_ENTRY!A1')
     
