@@ -45,7 +45,7 @@ def main(args):
         shutil.rmtree(quals_path)
 
     # Create directory structure
-    for folder in ('Qualifications', 'Playoffs', 'Old-Ships'):
+    for folder in ('Qualifications', 'Playoffs'):
         path = os.path.join(DATA_DIR, folder)
         if not os.path.exists(path):
             os.makedirs(path, exist_ok=True)
