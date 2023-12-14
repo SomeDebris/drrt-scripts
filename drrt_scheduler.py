@@ -162,7 +162,7 @@ def get_ship_path_list(check):
             continue
         ship_info = line.split("|")
         ship_list.append({ 'name':ship_info[0],'author':ship_info[1],'filename':ship_info[2],
-                          'D':0, 'P':0, 'L':0, 'S':0, 'rank':0, 'RPs':0, 'ranking_score':0.0})
+                          'D':0, 'P':0, 'L':0, 'K':0, 'rank':0, 'RPs':0, 'ranking_score':0.0})
     ship_index_file.close()
 
     if check:
@@ -172,14 +172,14 @@ def get_ship_path_list(check):
     abs_paths = []
     ships_notfound = False
     for ship in ship_list:
-        ship_path = os.path.join(SCRIPT_DIR, 'ships', ship['filename'])
+        ship_path = os.path.join(DATA_DIR, 'Ships', ship['filename'])
         if not os.path.exists(ship_path):
             print_err("get_ship_list: Ship file \'{}\' not found!".format(ship['filename']), True)
             ships_notfound = True
         else:
             abs_paths.append(ship_path)
     if ships_notfound:
-        print_err("Some ship files could not be found. Locate them and put them in the `ships` directory.")
+        print_err("Some ship files could not be found. Locate them and put them in the 'Ships' directory.")
     else:
         print("All ship files found!")
 
