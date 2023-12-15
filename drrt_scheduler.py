@@ -210,9 +210,13 @@ def _assemble(ship_filenames, red_name='Red Alliance', blue_name='Blue Alliance'
         # type of it
         if 'blueprints' in ship_full:
             # This means: THIS IS A FLEET FILE
+            # And therefore: it has a 'blueprints' for an array where all the
+            # ships are stored
             ships.append( ship_full[ 'blueprints' ][0] )
         else:
             # This means: THIS IS A SHIP FILE
+            # and therefore: it is literally just a ship and can be put in
+            # without issue as is
             ships.append( ship_full )
     
     # Red is the first half of the schedule, blue is the second half
