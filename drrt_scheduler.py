@@ -21,23 +21,20 @@ ILLEGAL_BLOCK_IDS = [ 854, 863, 838, 833, 273, 927, 928, 929, 930, 931, 932,
                      933, 934, 935, 936, 937, 938, 939, 940, 941, 942, 943,
                      953, 954, 955, 956, 320, 11104, 12130, 15010, 15142,
                      15144, 15146 ] 
-MATCH_TEMPLATE = """{{     -- Created with DRRTscheduler {0}
-  color0={3},
-  color1={4},
-  color2={5},
-  name=\"{1}\",
-  faction=8,
-  currentChild=0,
-  blueprint={{}},
-  children={{}},
-  blueprints={{
-    {2}
-  }},
-  playerprint={{}}
-}}
-"""
-RED_ALLIANCE_COLORS = [0xbaa01e, 0x681818, 0x000000]
-BLUE_ALLIANCE_COLORS = [0x0aa879, 0x222d84, 0x000000]
+FLEET_HEADER = {'color0': '#000000', 
+                'color1': '#000000', 
+                'color2': '#000000',
+                'name':'Unnamed Alliance',
+                'faction':8,
+                'currentChild':0,
+                'blueprint': {},
+                'children': [],
+                'blueprints': [],
+                'playerprint':{}
+                }
+
+RED_ALLIANCE_COLORS =  [ '#baa01e', '#681818', '#000000' ]
+BLUE_ALLIANCE_COLORS = [ '#0aa879', '#222d84', '#000000' ]
 
 
 def main(args):
