@@ -235,15 +235,14 @@ def _assemble_alliance(ships_alliance, name, colors):
     """Creates a match file for one ALLIANCE."""
     # Create output file data/Qualifications/<name>.json
 
-    alliance = dict( FLEET_HEADER )
-    alliance.update
+    alliance = dict( colors )
+    alliance.update( FLEET_HEADER ) 
 
     for member in ships_alliance:
         alliance[ 'blueprints' ].append( member )
     
-    with gzip.open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.json.gz'), 'wb') as match_file:
-        # Write match template to file filled out with version, name, and ship data
-        #   Also join each ship (data field) in the match together with a comma and newline
+    with gzip.open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.json.gz'), 'wb', encoding='utf-8') as match_file:
+        json.dump( alliance, match_file )
 
 
 
