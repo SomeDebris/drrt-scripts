@@ -192,24 +192,31 @@ def get_ship_path_list(check):
     return abs_paths
 
 
-def _assemble(ships, red_name='Red Alliance', blue_name='Blue Alliance'):
+# Send this a list of ship files
+def _assemble(ship_filenames, red_name='Red Alliance', blue_name='Blue Alliance'):
     """Creates a RED ALLIANCE fleet file and a BLUE ALLIANCE fleet file for a specific match."""
-    ship_data = []
-    for ship in ships:
+    ships = []
+    for ship_filename in ship_filenames:
         # Check that each ship file exists
-        if not os.path.exists(ship):
-            print_err(f'File {ship} not found!')
-        # Open gzipped lua ship file (.lua.gz)
-        # Read file and decode to single string
-        with gzip.open(ship, 'r') as ship_file:
-            raw_ship_data = ''.join([b.decode('utf-8') for b in ship_file.readlines()])
-            if re.match(ILLEGAL_SHIP_REGEX, raw_ship_data):
-                print_err(f'Ship {ship} contains ILLEGAL BLOCKS')
-        # Parse ship data out of file content and append to list
-        ship_data.append(_parse_ship_data(raw_ship_data))
+        if not os.path.exists( ship_filename ):
+            print_err(f'File {ship_filename} not found!')
+        
+        with open( ship_filename ) as ship_file:
+            ship_file_contents = ship_file.read()
+        
+        ship_full = json.loads( ship_file_contents )
+
+        # check whether ship is a FLEET FILE or a SHIP FILE, and add the right
+        # type of it
+        if 'blueprints' in ship_full:
+            # This means: THIS IS A FLEET FILE
+            ships.append( ship_full[ 'blueprints' ][0] )
+        else:
+            # This means: THIS IS A SHIP FILE
+            ships.append( ship_full )
     
     # Red is the first half of the schedule, blue is the second half
-    half_idx = len(ship_data) // 2
+    half_idx = len(ships) // 2
     _assemble_alliance(ship_data[:half_idx], red_name, RED_ALLIANCE_COLORS)
     _assemble_alliance(ship_data[half_idx:], blue_name, BLUE_ALLIANCE_COLORS)
 
