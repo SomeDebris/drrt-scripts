@@ -17,7 +17,10 @@ import sys
 from drrt_common import VERSION, DATA_DIR, SCRIPT_DIR, print_err, wait_yn
 
 
-ILLEGAL_SHIP_REGEX = '({854,|{863,|{838,|{833,|{273,|{927,|{928,|{929,|{930,|{931,|{932,|{933,|{934,|{935,|{936,|{937,|{938,|{939,|{940,|{941,|{942,|{943,|{953,|{954,|{955,|{956,|{320,|{11104,|{12130,|{15010,|{15142,|{15144,|{15146,)'
+ILLEGAL_BLOCK_IDS = [ 854, 863, 838, 833, 273, 927, 928, 929, 930, 931, 932,
+                     933, 934, 935, 936, 937, 938, 939, 940, 941, 942, 943,
+                     953, 954, 955, 956, 320, 11104, 12130, 15010, 15142,
+                     15144, 15146 ] 
 MATCH_TEMPLATE = """{{     -- Created with DRRTscheduler {0}
   color0={3},
   color1={4},
@@ -40,6 +43,7 @@ BLUE_ALLIANCE_COLORS = [0x0aa879, 0x222d84, 0x000000]
 def main(args):
     # Delete files in quals folder if there are any
     quals_path = os.path.join(DATA_DIR, 'Qualifications')
+
     if os.path.exists(quals_path) and len(os.listdir(quals_path)) > 0:
         print('Deleting contents of \'Qualifications/\' . . .')
         shutil.rmtree(quals_path)
