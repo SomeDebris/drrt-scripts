@@ -220,19 +220,25 @@ def _assemble(ship_filenames, red_name='Red Alliance', blue_name='Blue Alliance'
             ships.append( ship_full )
     
     # Red is the first half of the schedule, blue is the second half
-    half_idx = len(ships) // 2
-    _assemble_alliance(ship_data[:half_idx], red_name, RED_ALLIANCE_COLORS)
-    _assemble_alliance(ship_data[half_idx:], blue_name, BLUE_ALLIANCE_COLORS)
+    length_alliance = len(ships) // 2
+    _assemble_alliance(ships[:length_alliance], red_name, RED_ALLIANCE_COLORS)
+    _assemble_alliance(ships[length_alliance:], blue_name, BLUE_ALLIANCE_COLORS)
 
 
-def _assemble_alliance(ship_data, name, colors):
+def _assemble_alliance(ships_alliance, name, colors):
     """Creates a match file for one ALLIANCE."""
-    # Create output file data/Qualifications/<name>.lua
-    with gzip.open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.lua.gz'), 'wb') as match_file:
+    # Create output file data/Qualifications/<name>.json
+
+    alliance = dict( FLEET_HEADER )
+    alliance.update
+
+    for member in ships_alliance:
+        alliance[ 'blueprints' ].append( member )
+    
+    with gzip.open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.json.gz'), 'wb') as match_file:
         # Write match template to file filled out with version, name, and ship data
-        # Ship data has escaped \\n in it, replace with \n for newlines
         #   Also join each ship (data field) in the match together with a comma and newline
-        match_file.write(MATCH_TEMPLATE.format(VERSION, name, ',\n  '.join(ship_data).replace('\\n', '\n'), colors[0], colors[1], colors[2]).encode("utf-8"))
+
 
 
 def _parse_ship_data(raw_data):
