@@ -245,56 +245,6 @@ def _assemble_alliance(ships_alliance, name, colors):
         json.dump( alliance, match_file )
 
 
-
-def _parse_ship_data(raw_data):
-    """Parse and return a ship .lua file for its data field."""
-    # raw_data is a string of the ship's data
-    data_sense = 0
-    start_idx = None
-    # Loop through all characters in the ship's data and search for "data="
-    for idx, char in enumerate(raw_data):
-        # This checks for the characters 'd', 'a', 't', 'a' sequentially
-        # Works because data_sense is incremented each letter
-        # If a character not in the sequence is found, data_sense is reset to 0
-        # So the sequence needs to be found and *then* an '=' character,
-        #   which denotes the start of the data block
-        if (char == 'd' and data_sense == 0) or \
-                (char == 'a' and data_sense == 1) or \
-                (char == 't' and data_sense == 2) or \
-                (char == 'a' and data_sense == 3):
-            data_sense += 1
-        elif char == '=' and data_sense == 4:
-            delim_ctr = 1
-            start_idx = idx
-            break
-        else:
-            data_sense = 0
-    # If "data=" is not found, error
-    if start_idx is None:
-        print_err('Invalid lua ship data file! Cannot find where data starts.')
-
-    end_idx = None
-    # If "data=" is found, start at the found index and search for the closing } delimeter
-    for idx, char in enumerate(raw_data[start_idx:]):
-        # If a { is found, add one to the count
-        # If a } is found, subtract one
-        # When the count reaches 0, we've closed the data block
-        #  (this is because we start at 1 opening brace)
-        if char == '{':
-            delim_ctr += 1
-        elif char == '}':
-            delim_ctr -= 1
-            if delim_ctr == 0:
-                end_idx = idx + start_idx
-                break
-    # If the delimeter counter never reaches 0, the file is invalid - error
-    if end_idx is None:
-        print_err('Invalid lua ship data file! Cannot find where data ends.')
-
-    # Return the data found between the two delimiter indices found
-    return raw_data[start_idx-len('data='):end_idx+1]
-    
-
 def _get_script_path(filename, check=True):
     """Get an OS filepath within the script directory from a filename."""
     filepath = os.path.join(SCRIPT_DIR, filename)
