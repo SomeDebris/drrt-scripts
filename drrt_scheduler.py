@@ -37,24 +37,24 @@ RED_ALLIANCE_COLORS =  [ '#baa01e', '#681818', '#000000' ]
 BLUE_ALLIANCE_COLORS = [ '#0aa879', '#222d84', '#000000' ]
 
 
-def main(args):
+def main( args ):
     # Delete files in quals folder if there are any
-    quals_path = os.path.join(DATA_DIR, 'Qualifications')
+    quals_path = os.path.join( DATA_DIR, 'Qualifications' )
 
-    if os.path.exists(quals_path) and len(os.listdir(quals_path)) > 0:
-        print('Deleting contents of \'Qualifications/\' . . .')
-        shutil.rmtree(quals_path)
+    if os.path.exists( quals_path ) and len( os.listdir( quals_path ) ) > 0:
+        print( 'Deleting contents of \'Qualifications/\' . . .' )
+        shutil.rmtree( quals_path )
 
     # Create directory structure
-    for folder in ('Qualifications', 'Playoffs'):
-        path = os.path.join(DATA_DIR, folder)
-        if not os.path.exists(path):
-            os.makedirs(path, exist_ok=True)
+    for folder in ( 'Qualifications', 'Playoffs', 'Ships', 'Staging' ):
+        path = os.path.join( DATA_DIR, folder )
+        if not os.path.exists( path ):
+            os.makedirs( path, exist_ok=True )
 
     # Get list of ship/participant filepaths from ship_index.json
     # Also may check if those files exist
-    ships = get_ship_path_list(not args.no_check)
-    print(f'Found {len(ships)} ships in ship_index.json.')
+    ships = get_ship_path_list( not args.no_check )
+    print( f'Found { len( ships ) } ships in ship index.')
 
     # Checks if there are enough ships to fill both alliances at least once
     if len(ships) < (args.alliances * 2):
@@ -66,19 +66,24 @@ def main(args):
     sch_out_filepath = _get_script_path('selected_schedule.csv', False)
     sch_noasterisk_filepath = _get_script_path('.no_asterisks', False)
 
-    with open(sch_in_filepath, 'r') as schedule_in, \
-            open(sch_out_filepath, 'w') as schedule_out, \
-            open(sch_noasterisk_filepath, 'w') as sch_out_noasterisk:
+    with open( sch_in_filepath, 'r' ) as schedule_in, \
+            open( sch_out_filepath, 'w' ) as schedule_out, \
+            open( sch_noasterisk_filepath, 'w' ) as sch_out_noasterisk:
         # Read all lines of input schedule
         sch_in_lines = schedule_in.readlines()
+
         # Seek back to beginning of file
         schedule_in.seek(0)
+
         # Re-read input schedule with CSV reader (to get indexed rows)
         schedule = [row for row in csv.reader(schedule_in)]
+
         # Number of matches (not rounds) = number of lines in the schedule
         num_matches = len(sch_in_lines)
+
         # Copy input schedule lines to output schedule file
         schedule_out.writelines(sch_in_lines)
+
         # Write input schedule lines to output noasterisk file, 
         #   but replace all asterisks with nothing
         sch_out_noasterisk.writelines([line.replace('*', '') for line in sch_in_lines])
