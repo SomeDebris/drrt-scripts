@@ -21,10 +21,7 @@ ILLEGAL_BLOCK_IDS = [ 854, 863, 838, 833, 273, 927, 928, 929, 930, 931, 932,
                      933, 934, 935, 936, 937, 938, 939, 940, 941, 942, 943,
                      953, 954, 955, 956, 320, 11104, 12130, 15010, 15142,
                      15144, 15146 ] 
-FLEET_HEADER = {'color0': '#000000', 
-                'color1': '#000000', 
-                'color2': '#000000',
-                'name':'Unnamed Alliance',
+FLEET_HEADER = {'name':'Unnamed Alliance',
                 'faction':8,
                 'currentChild':0,
                 'blueprint': {},
@@ -33,8 +30,17 @@ FLEET_HEADER = {'color0': '#000000',
                 'playerprint':{}
                 }
 
-RED_ALLIANCE_COLORS =  [ '#baa01e', '#681818', '#000000' ]
-BLUE_ALLIANCE_COLORS = [ '#0aa879', '#222d84', '#000000' ]
+RED_ALLIANCE_COLORS =  { 
+'color0': '#baa01e',
+'color1': '#681818', 
+'color2': '#000000' 
+}
+
+BLUE_ALLIANCE_COLORS =  { 
+'color0': '#0aa879',
+'color1': '#222d84', 
+'color2': '#000000' 
+}
 
 
 def main( args ):
