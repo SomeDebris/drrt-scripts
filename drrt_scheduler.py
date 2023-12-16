@@ -59,7 +59,7 @@ def main( args ):
 
     # Get list of ship/participant filepaths from ship_index.json
     # Also may check if those files exist
-    ships = get_ship_path_list()
+    ships = get_inspected_ship_paths()
     print( f'Found { len( ships ) } ships in ship index.')
 
     # Checks if there are enough ships to fill both alliances at least once
@@ -95,7 +95,7 @@ def main( args ):
         sch_out_noasterisk.writelines([line.replace('*', '') for line in sch_in_lines])
     print(f'Schedule has {num_matches} matches.')
 
-    print('Beginning ALLIANCE generation.')
+    print(f'Assembling Alliances. . .')
     match_num = 1
     while match_num <= num_matches:
         # Add ship files found in the current match schedule
@@ -130,77 +130,8 @@ def main( args ):
         print('Stop.')
 
 
-def _get_participants(check):
-    """Read list of all absolute file paths of all participant/ships."""
-    # Load json file listing of all ships
-    with open('ship_index.json', 'r') as ship_fh:
-        participants = json.load(ship_fh)['participants']
-        if check:
-            # Check that there are one or more ships in the config json
-            if len(participants) <= 0:
-                print_err(f'check_participants: No ship files found!')
 
-            # If validation, check to make sure each listing is a file that exists
-            abs_paths = []
-            ships_notfound = False
-            for ship in participants:
-                ship_path = os.path.join(SCRIPT_DIR, 'ships', ship)
-                if not os.path.exists(ship_path):
-                    print_err(f'check_participants: Ship file \'{ship}\' not found!', True)
-                    ships_notfound = True
-                else:
-                    abs_paths.append(ship_path)
-
-            # Allows printing of all not found ship files
-            if ships_notfound:
-                print_err("Some ship files could not be found. Locate them and put them in the `ships/` directory.")
-            else:
-                print('check_participants: all ship files found!')
-                return abs_paths
-        else:
-            # If no validation, find the absolute path for all given files
-            return [os.path.join(TOURMAMENT_DIRECTORY, ship) for ship in participants]
-
-def get_ship_path_list():
-    """
-    load all ships from ship_index.txt into set of objects
-    """
-    ship_list = []
-    ship_index_file = open(os.path.join(SCRIPT_DIR, "ship_index.txt"), 'r')
-    ship_index_content = ship_index_file.read()
-
-    for line in ship_index_content.splitlines():
-        if not line:
-            continue
-        ship_info = line.split("|")
-        ship_list.append({ 'name':ship_info[0],'author':ship_info[1],'filename':ship_info[2],
-                          'D':0, 'P':0, 'L':0, 'K':0, 'rank':0, 'RPs':0, 'ranking_score':0.0})
-
-    ship_index_file.close()
-
-    if len(ship_list) <= 0:
-        print_err(f'get_ship_list: No ship files found!')
-
-    abs_paths = []
-    ships_notfound = False
-
-    for ship in ship_list:
-        ship_path = os.path.join(TOURMAMENT_DIRECTORY, 'Ships', ship['filename'])
-
-        if not os.path.exists(ship_path):
-            print_err("get_ship_list: Ship file \'{}\' not found!".format(ship['filename']), True)
-            ships_notfound = True
-        else:
-            abs_paths.append(ship_path)
-
-    if ships_notfound:
-        print_err("Some ship files could not be found. Locate them and put them in the 'Ships' directory.")
-    else:
-        print("All ship files found!")
-
-    return abs_paths
-
-def get_ship_paths():
+def get_inspected_ship_paths():
     """
     Goal: read all json files from list of arguments or directory and return a
     sorted list of absolute paths based on modification date
