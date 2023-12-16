@@ -191,7 +191,7 @@ def _assemble_alliance(ships_alliance, name, colors):
     # Create output file data/Qualifications/<name>.json
 
     alliance = dict( colors )
-    alliance.update( FLEET_HEADER.deepcopy() )
+    alliance.update( copy.deepcopy(FLEET_HEADER) )
 
     for member in ships_alliance:
         alliance[ 'blueprints' ].append( member )
