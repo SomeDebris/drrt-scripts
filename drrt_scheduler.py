@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import sys
 
-from drrt_common import VERSION, DATA_DIR, SCRIPT_DIR, print_err, wait_yn
+from drrt_common import VERSION, TOURMAMENT_DIRECTORY, SCRIPT_DIR, print_err, wait_yn
 
 
 ILLEGAL_BLOCK_IDS = [ 854, 863, 838, 833, 273, 927, 928, 929, 930, 931, 932,
@@ -45,7 +45,7 @@ BLUE_ALLIANCE_COLORS =  {
 
 def main( args ):
     # Delete files in quals folder if there are any
-    quals_path = os.path.join( DATA_DIR, 'Qualifications' )
+    quals_path = os.path.join( TOURMAMENT_DIRECTORY, 'Qualifications' )
 
     if os.path.exists( quals_path ) and len( os.listdir( quals_path ) ) > 0:
         print( 'Deleting contents of \'Qualifications/\' . . .' )
@@ -53,7 +53,7 @@ def main( args ):
 
     # Create directory structure
     for folder in ( 'Qualifications', 'Playoffs', 'Ships', 'Staging' ):
-        path = os.path.join( DATA_DIR, folder )
+        path = os.path.join( TOURMAMENT_DIRECTORY, folder )
         if not os.path.exists( path ):
             os.makedirs( path, exist_ok=True )
 
@@ -159,7 +159,7 @@ def _get_participants(check):
                 return abs_paths
         else:
             # If no validation, find the absolute path for all given files
-            return [os.path.join(DATA_DIR, ship) for ship in participants]
+            return [os.path.join(TOURMAMENT_DIRECTORY, ship) for ship in participants]
 
 def get_ship_path_list():
     """
@@ -175,6 +175,7 @@ def get_ship_path_list():
         ship_info = line.split("|")
         ship_list.append({ 'name':ship_info[0],'author':ship_info[1],'filename':ship_info[2],
                           'D':0, 'P':0, 'L':0, 'K':0, 'rank':0, 'RPs':0, 'ranking_score':0.0})
+
     ship_index_file.close()
 
     if len(ship_list) <= 0:
@@ -182,19 +183,33 @@ def get_ship_path_list():
 
     abs_paths = []
     ships_notfound = False
+
     for ship in ship_list:
-        ship_path = os.path.join(DATA_DIR, 'Ships', ship['filename'])
+        ship_path = os.path.join(TOURMAMENT_DIRECTORY, 'Ships', ship['filename'])
+
         if not os.path.exists(ship_path):
             print_err("get_ship_list: Ship file \'{}\' not found!".format(ship['filename']), True)
             ships_notfound = True
         else:
             abs_paths.append(ship_path)
+
     if ships_notfound:
         print_err("Some ship files could not be found. Locate them and put them in the 'Ships' directory.")
     else:
         print("All ship files found!")
 
     return abs_paths
+
+def get_ship_paths():
+    """
+    Goal: read all json files from list of arguments or directory and return a
+    sorted list of absolute paths based on modification date
+    """
+    ships_directory = os.path.join
+    
+
+
+
 
 
 # Send this a list of ship files
@@ -240,7 +255,7 @@ def _assemble_alliance(ships_alliance, name, colors):
     for member in ships_alliance:
         alliance[ 'blueprints' ].append( member )
     
-    with gzip.open(os.path.join(DATA_DIR, 'Qualifications', f'{name}.json.gz'), 'wb', encoding='utf-8') as match_file:
+    with gzip.open(os.path.join(TOURMAMENT_DIRECTORY, 'Qualifications', f'{name}.json.gz'), 'wb', encoding='utf-8') as match_file:
         json.dump( alliance, match_file )
 
 
