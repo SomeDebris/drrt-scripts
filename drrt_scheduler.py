@@ -59,7 +59,7 @@ def main( args ):
 
     # Get list of ship/participant filepaths from ship_index.json
     # Also may check if those files exist
-    ships = get_ship_path_list( not args.no_check )
+    ships = get_ship_path_list()
     print( f'Found { len( ships ) } ships in ship index.')
 
     # Checks if there are enough ships to fill both alliances at least once
@@ -161,7 +161,7 @@ def _get_participants(check):
             # If no validation, find the absolute path for all given files
             return [os.path.join(DATA_DIR, ship) for ship in participants]
 
-def get_ship_path_list(check):
+def get_ship_path_list():
     """
     load all ships from ship_index.txt into set of objects
     """
@@ -177,9 +177,8 @@ def get_ship_path_list(check):
                           'D':0, 'P':0, 'L':0, 'K':0, 'rank':0, 'RPs':0, 'ranking_score':0.0})
     ship_index_file.close()
 
-    if check:
-        if len(ship_list) <= 0:
-            print_err(f'get_ship_list: No ship files found!')
+    if len(ship_list) <= 0:
+        print_err(f'get_ship_list: No ship files found!')
 
     abs_paths = []
     ships_notfound = False
