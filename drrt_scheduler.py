@@ -188,10 +188,11 @@ def _assemble(ship_filenames, red_name='Red Alliance', blue_name='Blue Alliance'
 def _assemble_alliance(ships_alliance, name, colors):
     """Creates a match file for one ALLIANCE."""
     # Create output file data/Qualifications/<name>.json
-    header = dict( FLEET_HEADER )
 
     alliance = dict( colors )
-    alliance.update( header ) 
+    
+    for key in FLEET_HEADER.keys():
+        alliance[ key ] = FLEET_HEADER[ key ]
 
     for member in ships_alliance:
         alliance[ 'blueprints' ].append( member )
