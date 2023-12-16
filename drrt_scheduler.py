@@ -8,6 +8,7 @@ import argparse
 import csv
 import gzip
 import json
+import copy
 import os
 import re
 import shutil
