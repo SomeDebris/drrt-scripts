@@ -116,21 +116,6 @@ def main( args ):
     print('Lets get this tournament started!')
     print('Now import selected_schedule.csv into the DRRT Datasheet.')
 
-    # Open the directory containing selected_schedule.csv in the file browser
-    # (only if the user requests that it is opened) - cross-platform
-    if wait_yn('Open the drrt-scripts directory in the file browser?'):
-        if sys.platform == 'win32':
-            retval = subprocess.Popen(['start', SCRIPT_DIR], shell=True).wait()
-        elif sys.platform == 'darwin':
-            retval = subprocess.Popen(['open', SCRIPT_DIR]).wait()
-        else:
-            retval = subprocess.Popen(['xdg-open', SCRIPT_DIR]).wait()
-        if retval:
-            print
-    else:
-        print('Stop.')
-
-
 
 def get_inspected_ship_paths():
     """
