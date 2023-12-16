@@ -136,7 +136,7 @@ def get_inspected_ship_paths():
     Goal: read all json files from list of arguments or directory and return a
     sorted list of absolute paths based on modification date
     """
-    ships_directory = os.path.join( TOURMAMENT_DIRECTORY, 'Ships' )
+    ships_directory = os.path.abspath( os.path.join( TOURMAMENT_DIRECTORY, 'Ships' ) )
 
     ship_files = []
 
