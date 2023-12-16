@@ -142,7 +142,8 @@ def get_inspected_ship_paths():
 
     for file in os.listdir( ships_directory ):
         if file.endswith( '.json' ):
-            ship_files.append( os.path.abspath( file ) )
+            filepath = os.path.join( ships_directory, file )
+            ship_files.append( filepath )
 
     # Return a sorted list of files in that directory
     return sorted( ship_files, key = lambda t: os.stat(t).st_mtime )
