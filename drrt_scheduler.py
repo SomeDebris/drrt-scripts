@@ -193,6 +193,8 @@ def _assemble_alliance(ships_alliance, name, colors):
     alliance = dict( colors )
     alliance.update( copy.deepcopy(FLEET_HEADER) )
 
+    alliance[ 'name' ] = name
+
     for member in ships_alliance:
         alliance[ 'blueprints' ].append( member )
     
