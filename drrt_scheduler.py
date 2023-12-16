@@ -195,7 +195,7 @@ def _assemble_alliance(ships_alliance, name, colors):
     for member in ships_alliance:
         alliance[ 'blueprints' ].append( member )
     
-    with open(os.path.join(TOURMAMENT_DIRECTORY, 'Qualifications', f'{name}.json'), 'w', encoding=utf-8 ) as match_file:
+    with open(os.path.join(TOURMAMENT_DIRECTORY, 'Qualifications', f'{name}.json'), 'w', encoding='utf-8' ) as match_file:
         json.dump( alliance, match_file )
 
 
