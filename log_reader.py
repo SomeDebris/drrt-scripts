@@ -19,6 +19,7 @@ LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
 
 RED_ALLIANCE_TITLE_COLORS = [0xbaa01e, 0x681818, 0x000000]
 BLUE_ALLIANCE_TITLE_COLORS = [0x0aa879, 0x222d84, 0x000000]
+SHIPS_DIRECTORY = os.path.abspath( os.path.join( TOURMAMENT_DIRECTORY, 'Ships' ) )
 
 Current_Match_ID = 0
 
@@ -136,22 +137,39 @@ def read_latest_mlog(previous_known_mlogs):
 
     return current_known_mlogs
 
+def get_ship_dict( ship_file_path ):
+    with open( ship_file_path ) as ship_file:
+        if not file.endswith( '.json' ):
+            print_err( f"'{ship_file_path}' is NOT a json ship file!" )
+        
+        ship_dict = json.loads( ship_file.read() )
+
+        # check whether fleet file or ship file
+        if 'blueprints' in ship_dict:
+            # This means: THIS IS A FLEET FILE
+            # And therefore: it has a 'blueprints' for an array where all the
+            # ships are stored
+            #ships.append( ship_full[ 'blueprints' ][0] )
+            return ship_dict[ 'blueprints' ][0]
+        else:
+            # This means: THIS IS A SHIP FILE
+            # and therefore: it is literally just a ship and can be put in
+            # without issue as is
+            #ships.append( ship_full )
+            return ship_dict
+
+
+
 def get_ship_list():
     """
     load all ships from ship_index.txt into set of objects
     """
     ship_list = []
-    ship_index_file = open(os.path.join(SCRIPT_DIR, "ship_index.txt"), 'r')
-    ship_index_content = ship_index_file.read()
-
-    for line in ship_index_content.splitlines():
-        if not line:
-            continue
-        ship_info = line.split("|")
-        ship_list.append({ 'name':ship_info[0],'author':ship_info[1],'filename':ship_info[2],
-                          'D':0, 'P':0, 'L':0, 'S':0, 'rank':0, 'RPs':0, 'ranking_score':0.0})
     
-    ship_index_file.close()
+    for file in os.listdir( SHIPS_DIRECTORY ):
+        if file.endswith( '.json' ):
+            with open( file ) as ship_file:
+    
 
     return ship_list
 
