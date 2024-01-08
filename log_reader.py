@@ -19,7 +19,7 @@ LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
 
 RED_ALLIANCE_TITLE_COLORS = [0xbaa01e, 0x681818, 0x000000]
 BLUE_ALLIANCE_TITLE_COLORS = [0x0aa879, 0x222d84, 0x000000]
-SHIPS_DIRECTORY = os.path.abspath( os.path.join( TOURMAMENT_DIRECTORY, 'Ships' ) )
+SHIPS_DIRECTORY = os.path.abspath( os.path.join( TOURNAMENT_DIRECTORY, 'Ships' ) )
 
 Current_Match_ID = 0
 
