@@ -165,11 +165,17 @@ def get_ship_list():
     load all ships from ship_index.txt into set of objects
     """
     ship_list = []
+    required_fields = ['name', 'author']
     
     for file in os.listdir( SHIPS_DIRECTORY ):
-        if file.endswith( '.json' ):
-            with open( file ) as ship_file:
-    
+        ship = get_ship_dict( file )
+        
+        # Grabs ONLY the 'required_fields' from the ship dict
+        ship_required_information = {x:ship[x] for x in required_fields}
+
+        ship_required_information[ 'filename' ] = file
+
+        ship_list.append( ship_required_information )
 
     return ship_list
 
