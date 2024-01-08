@@ -183,7 +183,7 @@ def get_ship_list():
 
             ship_list.append( ship_required_information )
         else:
-            print( "Well, THAT's not a ship file!")
+            print( f"Well, THAT ({file}) is not a ship file!")
 
     return ship_list
 
