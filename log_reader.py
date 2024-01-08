@@ -141,9 +141,10 @@ def get_ship_dict( ship_file_path ):
     if not os.path.exists( ship_file_path ):
         print_err(f'File {ship_file_path} not found!')
 
+    if not ship_file_path.endswith( '.json' ):
+        print_err( f"'{ship_file_path}' is NOT a json ship file!" )
+
     with open( ship_file_path ) as ship_file:
-        if not file.endswith( '.json' ):
-            print_err( f"'{ship_file_path}' is NOT a json ship file!" )
         
         ship_dict = json.loads( ship_file.read() )
 
