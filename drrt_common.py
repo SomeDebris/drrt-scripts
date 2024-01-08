@@ -13,7 +13,7 @@ VERSION = 'v1.3.0'
 MM_NAME = 'MatchMaker_1_5_0_b1'
 
 SCRIPT_DIR = os.path.dirname(__file__)
-TOURMAMENT_DIRECTORY = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))
+TOURNAMENT_DIRECTORY = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))
 DRRT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir, os.pardir))
 
 RED = '\033[0;31m'
