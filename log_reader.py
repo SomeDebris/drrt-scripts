@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python3
+#!/usr/bin/env python3
 """
 DRRT MLOG READER
 Reads the latest MLOG produced by Reassembly and pipes json to CasparCG
@@ -11,7 +11,7 @@ import sys
 import errno
 import re
 
-from drrt_common import DATA_DIR, SCRIPT_DIR, print_err
+from drrt_common import TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err
 from drrt_datasheet import append_to_sheet, replace_ships, replace_match_schedule, update_sheet
 
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
