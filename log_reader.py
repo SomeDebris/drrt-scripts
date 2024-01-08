@@ -168,14 +168,17 @@ def get_ship_list():
     required_fields = ['name', 'author']
     
     for file in os.listdir( SHIPS_DIRECTORY ):
-        ship = get_ship_dict( file )
-        
-        # Grabs ONLY the 'required_fields' from the ship dict
-        ship_required_information = {x:ship[x] for x in required_fields}
+        if file.endswith( '.json' ):
+            ship = get_ship_dict( file )
+            
+            # Grabs ONLY the 'required_fields' from the ship dict
+            ship_required_information = {x:ship[x] for x in required_fields}
 
-        ship_required_information[ 'filename' ] = file
+            ship_required_information[ 'filename' ] = file
 
-        ship_list.append( ship_required_information )
+            ship_list.append( ship_required_information )
+        else:
+            print( "Well, THAT's not a ship file!")
 
     return ship_list
 
