@@ -174,7 +174,7 @@ def get_ship_list():
     for file in os.listdir( SHIPS_DIRECTORY ):
         if file.endswith( '.json' ):
             absolute_ship_filepath = os.path.join( SHIPS_DIRECTORY, file )
-            ship = get_ship_dict( absolute_ship_filepath )
+            ship = get_ship_dict( absolute_ship_filepath )[ 'data' ]
             
             # Grabs ONLY the 'required_fields' from the ship dict
             ship_required_information = {x:ship[x] for x in required_fields}
