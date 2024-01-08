@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import sys
 
-from drrt_common import VERSION, DATA_DIR, SCRIPT_DIR, print_err, wait_yn
+from drrt_common import VERSION, TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err, wait_yn
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
