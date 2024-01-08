@@ -138,6 +138,9 @@ def read_latest_mlog(previous_known_mlogs):
     return current_known_mlogs
 
 def get_ship_dict( ship_file_path ):
+    if not os.path.exists( ship_file_path ):
+        print_err(f'File {ship_file_path} not found!')
+
     with open( ship_file_path ) as ship_file:
         if not file.endswith( '.json' ):
             print_err( f"'{ship_file_path}' is NOT a json ship file!" )
@@ -169,7 +172,8 @@ def get_ship_list():
     
     for file in os.listdir( SHIPS_DIRECTORY ):
         if file.endswith( '.json' ):
-            ship = get_ship_dict( file )
+            absolute_ship_filepath = os.path.join( SHIPS_DIRECTORY, file )
+            ship = get_ship_dict( absolute_ship_filepath )
             
             # Grabs ONLY the 'required_fields' from the ship dict
             ship_required_information = {x:ship[x] for x in required_fields}
