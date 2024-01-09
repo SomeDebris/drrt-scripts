@@ -475,7 +475,7 @@ def datasheet_update_ships(ships, sheet_range):
             ship[ 'fleet_name' ] = 'NONE'
         if (not 'enemy_fleet_name' in ship):
             ship[ 'enemy_fleet_name' ] = 'NONE'
-        values.append([ ship[ 'name' ], ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
+        values.append([ SHIP_NAME_REGEX.search( ship[ 'name' ] ).group(1), ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
 
     update_sheet(values, sheet_range)
 
