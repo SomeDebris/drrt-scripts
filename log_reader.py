@@ -226,7 +226,7 @@ def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs
         else:
             sheet_location = PLAYOFFS_SHEET_SELECTION[0]
     else:
-        sheet_location = None
+        sheet_location = r'DATA_ENTRY!A2:L'
 
     datasheet_update_ships(all_ship_match_performances, sheet_location)
 
