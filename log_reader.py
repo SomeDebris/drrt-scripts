@@ -23,6 +23,8 @@ SHIPS_DIRECTORY = os.path.abspath( os.path.join( TOURNAMENT_DIRECTORY, 'Ships' )
 
 Current_Match_ID = 0
 
+SHIP_NAME_REGEX = re.compile( r'(.*?) \[.*\]' )
+
 Last_Alliance_Name = {'red':None,'blue':None}
 
 PLAYOFFS_SHEET_SELECTION = [
@@ -171,8 +173,6 @@ def get_ship_list():
     ship_list = []
     required_fields = ['name', 'author']
 
-    ship_name_regex = re.compile( r'(.*?) \[.*\]' )
-
     ship_files = []
 
     for file in os.listdir( SHIPS_DIRECTORY ):
@@ -193,7 +193,7 @@ def get_ship_list():
         # The 0th (blank) group is the whole phrase. 
         # The 1st group is the first thing in parentheses. simple!
         ship_required_information[ 'name' ] = \
-            ship_name_regex.search( ship_required_information[ 'name' ] ).group(1)
+            SHIP_NAME_REGEX.search( ship_required_information[ 'name' ] ).group(1)
 
         ship_list.append( ship_required_information )
 
@@ -497,7 +497,7 @@ def datasheet_append_ships(ships):
             ship[ 'fleet_name' ] = 'NONE'
         if (not 'enemy_fleet_name' in ship):
             ship[ 'enemy_fleet_name' ] = 'NONE'
-        values.append([ ship[ 'name' ], ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
+        values.append([ SHIP_NAME_REGEX.search( ship[ 'name' ] ).group(1), ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
 
     append_to_sheet(values, 'DATA_ENTRY!A1')
     
