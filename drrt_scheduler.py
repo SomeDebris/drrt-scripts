@@ -15,7 +15,7 @@ import shutil
 import subprocess
 import sys
 
-from drrt_common import VERSION, TOURMAMENT_DIRECTORY, SCRIPT_DIR, print_err, wait_yn
+from drrt_common import VERSION, TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err, wait_yn
 
 
 ILLEGAL_BLOCK_IDS = [ 854, 863, 838, 833, 273, 927, 928, 929, 930, 931, 932,
@@ -46,7 +46,7 @@ BLUE_ALLIANCE_COLORS =  {
 
 def main( args ):
     # Delete files in quals folder if there are any
-    quals_path = os.path.join( TOURMAMENT_DIRECTORY, 'Qualifications' )
+    quals_path = os.path.join( TOURNAMENT_DIRECTORY, 'Qualifications' )
 
     if os.path.exists( quals_path ) and len( os.listdir( quals_path ) ) > 0:
         print( 'Deleting contents of \'Qualifications/\' . . .' )
@@ -54,7 +54,7 @@ def main( args ):
 
     # Create directory structure
     for folder in ( 'Qualifications', 'Playoffs', 'Ships', 'Staging' ):
-        path = os.path.join( TOURMAMENT_DIRECTORY, folder )
+        path = os.path.join( TOURNAMENT_DIRECTORY, folder )
         if not os.path.exists( path ):
             os.makedirs( path, exist_ok=True )
 
@@ -122,7 +122,7 @@ def get_inspected_ship_paths():
     Goal: read all json files from list of arguments or directory and return a
     sorted list of absolute paths based on modification date
     """
-    ships_directory = os.path.abspath( os.path.join( TOURMAMENT_DIRECTORY, 'Ships' ) )
+    ships_directory = os.path.abspath( os.path.join( TOURNAMENT_DIRECTORY, 'Ships' ) )
 
     ship_files = []
 
@@ -183,7 +183,7 @@ def _assemble_alliance(ships_alliance, name, colors):
     for member in ships_alliance:
         alliance[ 'blueprints' ].append( member )
     
-    with gzip.open(os.path.join(TOURMAMENT_DIRECTORY, 'Qualifications', f'{name}.json.gz'), mode='wt', encoding='utf-8' ) as match_file:
+    with gzip.open(os.path.join(TOURNAMENT_DIRECTORY, 'Qualifications', f'{name}.json.gz'), mode='wt', encoding='utf-8' ) as match_file:
         json.dump( alliance, match_file )
 
 
