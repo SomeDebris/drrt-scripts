@@ -294,7 +294,7 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
             continue
 
         if message_id[0] == 'START':
-            if (fields_dict[ 'fleet' ] == '0'):
+            if (fields_dict[ 'faction' ] == '100'):
                 # It's the alliance on the RIGHT
                 red_alliance[ 'name' ] = fields_dict[ 'name' ]
                 # TODO game should output fleet colors
