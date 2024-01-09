@@ -171,7 +171,7 @@ def get_ship_list():
     ship_list = []
     required_fields = ['name', 'author']
 
-    ship_name_regex = re.compile( r'(.*) \[.*\]' )
+    ship_name_regex = re.compile( r'(.*?) \[.*\]' )
 
     ship_files = []
 
@@ -190,8 +190,12 @@ def get_ship_list():
 
         ship_required_information[ 'filename' ] = file
 
+        # The 0th (blank) group is the whole phrase. 
+        # The 1st group is the first thing in parentheses. simple!
         ship_required_information[ 'name' ] = \
-            ship_name_regex.search( ship_required_information[ 'name' ] ).group()
+            ship_name_regex.search( ship_required_information[ 'name' ] ).group(1)
+
+        print( ship_required_information[ 'name' ] )
 
         ship_list.append( ship_required_information )
 
