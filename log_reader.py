@@ -333,7 +333,7 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
 
         elif message_id[0] == 'RESULT':
             mlog_completion += 1
-            if (fields_dict[ 'fleet' ] == '0'):
+            if (fields_dict[ 'faction' ] == '100'):
                 red_alliance[ 'damageTaken' ] = int(fields_dict[ 'DT' ])
                 red_alliance[ 'damageInflicted' ] = int(fields_dict[ 'DI' ])
                 red_alliance[ 'survivorCount' ] = int(fields_dict[ 'alive' ])
