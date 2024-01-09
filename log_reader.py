@@ -181,8 +181,7 @@ def get_ship_list():
             print( f"Well, THAT ({file}) is not a ship file!")
     
     for file in sorted( ship_files, key = lambda t: os.stat(t).st_mtime ):
-        absolute_ship_filepath = os.path.join( SHIPS_DIRECTORY, file )
-        ship = get_ship_dict( absolute_ship_filepath )[ 'data' ]
+        ship = get_ship_dict( file )[ 'data' ]
         
         # Grabs ONLY the 'required_fields' from the ship dict
         ship_required_information = {x:ship[x] for x in required_fields}
