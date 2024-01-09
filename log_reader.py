@@ -171,6 +171,8 @@ def get_ship_list():
     ship_list = []
     required_fields = ['name', 'author']
 
+    ship_name_regex = re.compile( r'(.*) \[.*\]' )
+
     ship_files = []
 
     for file in os.listdir( SHIPS_DIRECTORY ):
@@ -187,6 +189,9 @@ def get_ship_list():
         ship_required_information = {x:ship[x] for x in required_fields}
 
         ship_required_information[ 'filename' ] = file
+
+        ship_required_information[ 'name' ] = 
+            ship_name_regex.search( ship_required_information[ 'name' ] ).group()
 
         ship_list.append( ship_required_information )
 
