@@ -195,8 +195,6 @@ def get_ship_list():
         ship_required_information[ 'name' ] = \
             ship_name_regex.search( ship_required_information[ 'name' ] ).group(1)
 
-        print( ship_required_information[ 'name' ] )
-
         ship_list.append( ship_required_information )
 
     return ship_list
