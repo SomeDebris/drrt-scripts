@@ -218,7 +218,7 @@ def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs
                 if (alliances):
                     all_ship_match_performances += alliances
                     Current_Match_ID += 1
-                    println("Processing match {Current_Match_ID}")
+                    print("Processing match {Current_Match_ID}")
                 else:
                     print_err("calculate_all_mlogs: For some reason, nothing was returned.", True)
         else:
