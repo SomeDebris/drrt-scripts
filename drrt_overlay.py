@@ -45,5 +45,25 @@ def print_ships_at_match( number_match, ship_list, output_suffix ):
 
         ships_in_match.append( ship_list[ ship_int ] )
     
-    for ship in ships_in_match:
-        print( TEMPLATE.format(ship[ 'name' ], ship[ 'author' ]) )
+    red_filename = os.path.join( SCRIPT_DIR, f"red_{output_suffix}.txt" )
+    blue_filename = os.path.join( SCRIPT_DIR, f"blue_{output_suffix}.txt" )
+
+    if os.path.exists( red_filename ):
+        os.remove(red_filename)
+    if os.path.exists( blue_filename ):
+        os.remove(blue_filename)
+
+    with open( red_filename, 'a' ) red_file, open( blue_filename, 'a') as blue_file:
+        idx = 0
+        
+        for ship in ships_in_match:
+            output_string = TEMPLATE.format( ship[ 'name' ], ship[ 'author' ] )
+
+            if (idx < 3):
+                red_file.write(output_string)
+            else:
+                blue_file.write(output_string)
+
+    print( "check my work, boss!")
+
+
