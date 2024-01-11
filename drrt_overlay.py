@@ -17,8 +17,7 @@ import sys
 from drrt_common import VERSION, TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err, wait_yn
 
 TEMPLATE = """<span size=\"xx-large\">{0}</span>
-{1}
-"""
+{1}"""
 
 """
 function that creates two text files when called with 
