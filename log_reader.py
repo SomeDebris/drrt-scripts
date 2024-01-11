@@ -204,8 +204,11 @@ def get_mlog_list():
 
 
 def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs_losers=False):
+    global Current_Match_ID
     # array of ships, data taken from match log and not
     # cognizant of full match record
+    Current_Match_ID = 0
+
     all_ship_match_performances = []
     for filename in filenames:
         file_path = os.path.join(REASSEMBLY_DATA, filename)
@@ -214,6 +217,8 @@ def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs
                 alliances = parse_mlog(mlog.read(), check_duplicates, filename)
                 if (alliances):
                     all_ship_match_performances += alliances
+                    Current_Match_ID += 1
+                    println("Processing match {Current_Match_ID}")
                 else:
                     print_err("calculate_all_mlogs: For some reason, nothing was returned.", True)
         else:
