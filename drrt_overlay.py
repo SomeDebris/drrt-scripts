@@ -31,8 +31,7 @@ def print_ships_at_match( number_match ):
     with open( filepath_selected_schedule ) as file_schedule:
         schedule_reader = csv.reader( file_schedule )
 
-        for row in schedule_reader:
-            print( row[ number_match ] )
+        print( schedule_reader[ number_match ] )
 
 
 
