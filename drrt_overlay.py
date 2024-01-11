@@ -27,11 +27,14 @@ def print_ships_at_match( number_match ):
 
     if ( not os.path.exists( filepath_selected_schedule ) ):
         print_err( f"drrt_overlay: I can't find the selected_schedule.csv file!" )
+    
+    target_match = []
 
     with open( filepath_selected_schedule ) as file_schedule:
         schedule_reader = csv.reader( file_schedule )
-
-        print( schedule_reader[ number_match ] )
+        
+        target_match = [ row for idx, row in enumerate( schedule_reader ) if idx in (number_match - 1) ]
+        
 
 
 
