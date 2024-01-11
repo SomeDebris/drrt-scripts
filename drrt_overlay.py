@@ -45,4 +45,6 @@ def print_ships_at_match( number_match, ship_list, output_suffix ):
         ship_int = int(ship_number) - 1
 
         ships_in_match.append( ship_list[ ship_int ] )
-    print( ships_in_match)
+    
+    for ship in ships_in_match:
+        print( TEMPLATE.format(ship[ 'name' ], ship[ 'author' ]) )
