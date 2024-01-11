@@ -33,7 +33,7 @@ def print_ships_at_match( number_match ):
     with open( filepath_selected_schedule ) as file_schedule:
         schedule_reader = csv.reader( file_schedule )
         
-        target_match = [ row for idx, row in enumerate( schedule_reader ) if idx in (number_match - 1) ]
+        target_match = [ row for idx, row in enumerate( schedule_reader ) if idx == number_match - 1 ]
 
     print(target_match)
         
