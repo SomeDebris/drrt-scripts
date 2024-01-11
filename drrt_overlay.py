@@ -32,7 +32,7 @@ def print_ships_at_match( number_match ):
         schedule_reader = csv.reader( file_schedule )
 
         for row in schedule_reader:
-            print( row )
+            print( row[ number_match ] )
 
 
 
