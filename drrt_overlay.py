@@ -34,6 +34,8 @@ def print_ships_at_match( number_match ):
         schedule_reader = csv.reader( file_schedule )
         
         target_match = [ row for idx, row in enumerate( schedule_reader ) if idx in (number_match - 1) ]
+
+    print(target_match)
         
 
 
