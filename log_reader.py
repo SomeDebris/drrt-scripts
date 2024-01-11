@@ -13,6 +13,7 @@ import re
 
 from drrt_common import TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err
 from drrt_datasheet import append_to_sheet, replace_ships, replace_match_schedule, update_sheet
+from drrt_overlay import print_ships_at_match
 
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
 LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
@@ -232,7 +233,8 @@ def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs
             sheet_location = PLAYOFFS_SHEET_SELECTION[0]
     else:
         sheet_location = r'DATA_ENTRY!A2:L'
-
+    
+    print_ships_at_match( Current_Match_ID )
     datasheet_update_ships(all_ship_match_performances, sheet_location)
 
 
