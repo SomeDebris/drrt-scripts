@@ -53,7 +53,7 @@ def print_ships_at_match( number_match, ship_list, output_suffix ):
     if os.path.exists( blue_filename ):
         os.remove(blue_filename)
 
-    with open( red_filename, 'a' ) red_file, open( blue_filename, 'a') as blue_file:
+    with open( red_filename, 'a' ) as red_file, open( blue_filename, 'a') as blue_file:
         idx = 0
         
         for ship in ships_in_match:
