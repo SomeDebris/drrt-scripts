@@ -10,14 +10,13 @@ inotifywait -m "$WATCHME" -e create |
 
         case "$file" in
             (*.mkv)
-            if [ "$KERCHUNK" -eq "yes" ]; then
-                KERCHUNK=''
+            # if [ "$KERCHUNK" -eq "yes" ]; then
+            #     KERCHUNK=''
 
-                sleep 1
+            #     sleep 1
 
-                continue
-            fi
-                 
+            #     continue
+            # fi
             if [ 3500 -gt $(du "$file" | awk '{ print $1 }') ]; then
                 mv "$file" "$REPLAY_DIR"
                 
