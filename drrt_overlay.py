@@ -38,11 +38,11 @@ def print_ships_at_match( number_match, ship_list, output_suffix ):
         schedule_reader = csv.reader( file_schedule )
         
         target_match = [ row for idx, row in enumerate( schedule_reader ) if idx == number_match - 1 ][0]
+    
+    ships_in_match = []
 
-    print(target_match)
+    for ship_number in target_match:
+        ship_int = int(ship_number) - 1
 
-
-        
-
-
-
+        ships_in_match.append( ship_list[ ship_int ] )
+    print( ships_in_match)
