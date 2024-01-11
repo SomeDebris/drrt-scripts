@@ -65,7 +65,7 @@ def print_ships_at_match( number_match, ship_list, output_suffix ):
             else:
                 blue_file.write(output_string)
 
-        idx += 1
+            idx += 1
 
     print( "check my work, boss!")
 
