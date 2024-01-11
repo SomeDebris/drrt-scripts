@@ -234,10 +234,10 @@ def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs
     else:
         sheet_location = r'DATA_ENTRY!A2:L'
     
-    print_ships_at_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS')
+    # print_ships_at_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS')
     print_ships_at_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT')
 
-    print_ships_at_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS_SMALL', "{0}\n")
+    # print_ships_at_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS_SMALL', "{0}\n")
     print_ships_at_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT_SMALL', "{0}\n")
 
     datasheet_update_ships(all_ship_match_performances, sheet_location)
