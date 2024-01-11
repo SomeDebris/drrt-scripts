@@ -26,7 +26,7 @@ a match number:
     RED ALLIANCE NAME
     BLUE ALLIANCE NAME
 """
-def print_ships_at_match( number_match, ship_list, output_suffix ):
+def print_ships_at_match( number_match, ship_list, output_suffix, template=TEMPLATE ):
     filepath_selected_schedule = os.path.join( SCRIPT_DIR, 'selected_schedule.csv' )
 
     if ( not os.path.exists( filepath_selected_schedule ) ):
@@ -58,7 +58,7 @@ def print_ships_at_match( number_match, ship_list, output_suffix ):
         idx = 0
         
         for ship in ships_in_match:
-            output_string = TEMPLATE.format( ship[ 'name' ], ship[ 'author' ] )
+            output_string = template.format( ship[ 'name' ], ship[ 'author' ] )
 
             if (idx < 3):
                 red_file.write(output_string)
