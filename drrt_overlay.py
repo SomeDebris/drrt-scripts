@@ -15,7 +15,6 @@ import subprocess
 import sys
 
 from drrt_common import VERSION, TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err, wait_yn
-from log_reader import get_ship_list
 
 """
 function that creates two text files when called with 
