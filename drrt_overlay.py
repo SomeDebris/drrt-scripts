@@ -22,7 +22,7 @@ a match number:
     RED ALLIANCE NAME
     BLUE ALLIANCE NAME
 """
-def print_ships_at_match( number_match, ship_list ):
+def print_ships_at_match( number_match, ship_list, output_suffix ):
     filepath_selected_schedule = os.path.join( SCRIPT_DIR, 'selected_schedule.csv' )
 
     if ( not os.path.exists( filepath_selected_schedule ) ):
@@ -33,7 +33,7 @@ def print_ships_at_match( number_match, ship_list ):
     with open( filepath_selected_schedule ) as file_schedule:
         schedule_reader = csv.reader( file_schedule )
         
-        target_match = [ row for idx, row in enumerate( schedule_reader ) if idx == number_match - 1 ]
+        target_match = [ row for idx, row in enumerate( schedule_reader ) if idx == number_match - 1 ][0]
 
     print(target_match)
 
