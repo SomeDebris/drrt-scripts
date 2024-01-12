@@ -60,7 +60,7 @@ def print_ships_at_match( number_match, ship_list, output_suffix, template=TEMPL
         for ship in ships_in_match:
             ship_name = ship[ 'name' ]
 
-            if ship_name.length > 25:
+            if len( ship_name ) > 25:
                 ship_name = ship_name[:22] + '...'
 
             output_string = template.format( ship_name, ship[ 'author' ] )
