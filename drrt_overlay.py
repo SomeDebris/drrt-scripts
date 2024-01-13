@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-DRRT DATASHEET CONNECTION
-Connects to the DRRT Datasheet and does stuff.
+DRRT overlay
+Update the DRRT overlay text files from sheet data.
 """
 
 import argparse
@@ -26,7 +26,7 @@ a match number:
     RED ALLIANCE NAME
     BLUE ALLIANCE NAME
 """
-def print_ships_at_match( number_match, ship_list, output_suffix, template=TEMPLATE ):
+def print_ships_at_qualification_match( number_match, ship_list, output_suffix, template=TEMPLATE ):
     filepath_selected_schedule = os.path.join( SCRIPT_DIR, 'selected_schedule.csv' )
 
     if ( not os.path.exists( filepath_selected_schedule ) ):
