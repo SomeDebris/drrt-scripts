@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 DRRT MLOG READER
-Reads the latest MLOG produced by Reassembly and pipes json to CasparCG
+Reads the latest MLOG produced by Reassembly
 """
 import gzip
 import json
