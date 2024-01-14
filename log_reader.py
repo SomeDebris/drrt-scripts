@@ -11,7 +11,7 @@ import sys
 import errno
 import re
 
-from drrt_common import TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err, SHIP_NAME_REGEX
+from drrt_common import TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err, strip_author_from_ship_name
 from drrt_datasheet import append_to_sheet, replace_ships, replace_match_schedule, update_sheet
 from drrt_overlay import print_ships_at_qualification_match
 
@@ -130,8 +130,6 @@ def pipe_read(named_pipe=MLOG_SIGNAL_PIPE):
             print('\tRead: "{0}"'.format(data))
             return data
     
-def strip_author_from_ship_name( name )
-    return SHIP_NAME_REGEX.search( name ).group(1)
     
 
 def read_latest_mlog(previous_known_mlogs):

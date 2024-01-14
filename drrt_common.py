@@ -33,6 +33,8 @@ def print_err(message, is_warning=False):
         sys.exit(1)
 
 
+def strip_author_from_ship_name( name )
+    return SHIP_NAME_REGEX.search( name ).group(1)
 
 def wait_yn(prompt):
     """Wait for the user to enter Y or n to a given prompt."""
