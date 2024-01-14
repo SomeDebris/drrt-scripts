@@ -11,7 +11,7 @@ import sys
 import errno
 import re
 
-from drrt_common import TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err
+from drrt_common import TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err, SHIP_NAME_REGEX
 from drrt_datasheet import append_to_sheet, replace_ships, replace_match_schedule, update_sheet
 from drrt_overlay import print_ships_at_qualification_match
 
@@ -24,7 +24,6 @@ SHIPS_DIRECTORY = os.path.abspath( os.path.join( TOURNAMENT_DIRECTORY, 'Ships' )
 
 Current_Match_ID = 0
 
-SHIP_NAME_REGEX = re.compile( r'(.*?) \[.*\]' )
 
 Last_Alliance_Name = {'red':None,'blue':None}
 
@@ -131,6 +130,8 @@ def pipe_read(named_pipe=MLOG_SIGNAL_PIPE):
             print('\tRead: "{0}"'.format(data))
             return data
     
+def strip_author_from_ship_name( name )
+    return SHIP_NAME_REGEX.search( name ).group(1)
     
 
 def read_latest_mlog(previous_known_mlogs):
@@ -194,7 +195,7 @@ def get_ship_list():
         # The 0th (blank) group is the whole phrase. 
         # The 1st group is the first thing in parentheses. simple!
         ship_required_information[ 'name' ] = \
-            SHIP_NAME_REGEX.search( ship_required_information[ 'name' ] ).group(1)
+            strip_author_from_ship_name( ship_required_information[ 'name' ] )
 
         ship_list.append( ship_required_information )
 
@@ -234,11 +235,11 @@ def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs
     else:
         sheet_location = r'DATA_ENTRY!A2:L'
     
-    # print_ships_at_qualification_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS')
-    print_ships_at_qualification_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT')
+        # print_ships_at_qualification_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS')
+        print_ships_at_qualification_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT')
 
-    # print_ships_at_qualification_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS_SMALL', "{0}\n")
-    print_ships_at_qualification_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT_SMALL', "{0}\n")
+        # print_ships_at_qualification_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS_SMALL', "{0}\n")
+        print_ships_at_qualification_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT_SMALL', "{0}\n")
 
     datasheet_update_ships(all_ship_match_performances, sheet_location)
 
@@ -487,7 +488,7 @@ def datasheet_update_ships(ships, sheet_range):
             ship[ 'fleet_name' ] = 'NONE'
         if (not 'enemy_fleet_name' in ship):
             ship[ 'enemy_fleet_name' ] = 'NONE'
-        values.append([ SHIP_NAME_REGEX.search( ship[ 'name' ] ).group(1), ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
+        values.append([ strip_author_from_ship_name( ship[ 'name' ] ), ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
 
     update_sheet(values, sheet_range)
 
@@ -509,7 +510,7 @@ def datasheet_append_ships(ships):
             ship[ 'fleet_name' ] = 'NONE'
         if (not 'enemy_fleet_name' in ship):
             ship[ 'enemy_fleet_name' ] = 'NONE'
-        values.append([ SHIP_NAME_REGEX.search( ship[ 'name' ] ).group(1), ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
+        values.append([ strip_author_from_ship_name( ship[ 'name' ] ), ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
 
     append_to_sheet(values, 'DATA_ENTRY!A1')
     
