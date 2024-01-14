@@ -16,6 +16,8 @@ SCRIPT_DIR = os.path.dirname(__file__)
 TOURNAMENT_DIRECTORY = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))
 DRRT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir, os.pardir))
 
+SHIP_NAME_REGEX = re.compile( r'(.*?) \[.*\]' )
+
 RED = '\033[0;31m'
 YELLOW = '\033[0;33m'
 NOCOLOR = '\033[0m'
@@ -29,6 +31,7 @@ def print_err(message, is_warning=False):
         print(f'{RED}ERROR:{NOCOLOR} {message}')
         print('Stop.')
         sys.exit(1)
+
 
 
 def wait_yn(prompt):
