@@ -1,5 +1,3 @@
-#!/bin/sh
-
-exec tclsh "$0" ${1+$@}
+#!/usr/bin/env tclsh
 
 puts "Heyy this worked!"
