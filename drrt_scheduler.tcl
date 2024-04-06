@@ -4,6 +4,8 @@ source drrt_common.tcl
 
 puts "Heyy this worked!"
 
+set Block_Keys_To_Keep [list ident offset angle bindingId faction command ident]
+
 # What does this script need to accomplish in order to truly function as the 
 # DRRT Scheduler?
 # - Create correct folder structure. This should likely be in a specified 
@@ -74,5 +76,18 @@ proc makeShipsIntoFleet {ships} {
 
 }
 
-proc removeBlockDataFromShip {ship_json} {
+proc removeBlockDataFromShip {ship_json_varname \
+    {keys_to_keep Block_Keys_To_Keep} } {
+    upvar 1 $ship_json_varname ship_json
+
+    set new_blocks_array [::rl_json::json array]
+
+    ::rl_json::json foreach block [::rl_json::json extract $ship_json "blocks"] {
+        ::rl_json::json foreach key $block {
+            if {[lsearch -exact $keys_to_keep $key] < 0} {
+                ::rl_json::json unset block $key
+            }
+        }
+        puts $block
+    }
 }
