@@ -46,7 +46,6 @@ proc makeShipDictFromFile {filename} {
             return $filecontents
         }
         jsongz {
-            puts "I'm going to try to read the binary"
             set filehandle [open "$filename" r]
             zlib push gunzip $filehandle
             set filecontents [read $filehandle]
