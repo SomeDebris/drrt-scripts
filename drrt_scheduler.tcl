@@ -37,21 +37,20 @@ proc checkShipFileExtension {filename} {
 proc makeShipDictFromFile {filename} {
     set shipfiletype [checkShipFileExtension $filename]
 
+    set filecontents {}
+
     switch $shipfiletype {
         json {
             set filehandle [open "$filename" r]
             set filecontents [read $filehandle]
             close $filehandle
             # I can do this because we operate DIRECTLY on json (pretty cool)
-            return $filecontents
         }
         jsongz {
             set filehandle [open "$filename" r]
             zlib push gunzip $filehandle
             set filecontents [read $filehandle]
             close $filehandle
-
-            return $filecontents
         }
         lua {
             error "Lua ship files cannot be parsed yet. Please re-export your ships as JSON."
@@ -63,6 +62,8 @@ proc makeShipDictFromFile {filename} {
             error "Ship file \"$filename\" type found to be \"$shipfiletype\", but \"$shipfiletype\" has no dict creation procedure defined."
         }
     }
+
+    return $filecontents
 }
 
 proc saveFleetToFile {filename fleet} {
