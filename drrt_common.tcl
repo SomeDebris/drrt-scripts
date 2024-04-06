@@ -44,6 +44,37 @@ proc dict2json {dict_to_encode spec {indent false}} {
     return [::json::write object {*}$accumulator]
 }
 
+proc list2jsonarray {list_to_encode type {meta {}}} {
+    set accumulator [list]
+
+    switch $type {
+        object {
+            foreach element $list_to_encode {
+                lappend accumulator [dict2json $element $meta false]
+            }
+        }
+        array {
+            lassign $meta subtype submeta
+            foreach element $list_to_encode {
+                lappend accumulator \
+                        [list2jsonarray $element $subtype $submeta]
+            }
+        }
+        string {
+            foreach element $list_to_encode {
+                lappend accumulator [::json::write string $element]
+            }
+        }
+        bare {
+            set accumulator $list_to_encode
+        }
+        default {
+            return -code error "Invalid array element type: $type"
+        }
+    }
+    return [::json::write array {*}$accumulator]
+}
+
 proc waitYN {prompt_string} {
     while {true} {
         puts "$prompt_string \[y/n\]: "
