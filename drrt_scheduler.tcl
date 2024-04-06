@@ -1,6 +1,6 @@
 #!/usr/bin/env tclsh
 
-package require rl_json
+source drrt_common.tcl
 
 puts "Heyy this worked!"
 
@@ -10,10 +10,15 @@ puts "Heyy this worked!"
 #   location
 # - Reference a match schedule file and index the array based on it
 # - alliance assembler function
+proc makeShipDictFromFile {filename} {
+}
 
 proc saveFleetToFile {filename fleet} {
 }
 
 proc makeShipsIntoFleet {ships} {
 
+}
+
+proc removeBlockDataFromShip {ship_dict} {
 }
