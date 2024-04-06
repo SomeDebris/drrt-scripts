@@ -83,7 +83,7 @@ proc removeBlockDataFromShip {ship_json_varname \
     set new_blocks_array [::rl_json::json array]
 
     ::rl_json::json foreach block [::rl_json::json extract $ship_json "blocks"] {
-        ::rl_json::json foreach key $block {
+        ::rl_json::json foreach {key value} $block {
             if {[lsearch -exact $keys_to_keep $key] < 0} {
                 ::rl_json::json unset block $key
             }
