@@ -17,12 +17,19 @@ proc makeShipDictFromFile {filename} {
 
     switch -glob -nocase -- "$filename" {
         *.json {
-            makeShipDictFromJson 
+            return -code 0 [makeShipDictFromJson filecontents]
+        }
+        *.lua {
+            error "Lua ship files cannot be parsed yet. Please re-export your ships as JSON."
+        }
+        default {
+            error "File extension of $filename should be either .lua or .json, but was neither!"
+        }
     }
 }
 
 proc makeShipDictFromJson {varname} {
-    upvar $varname jsonstring
+    upvar 1 $varname jsonstring
 
     set shipdict {[::json::json2dict $jsonstring]}
 
