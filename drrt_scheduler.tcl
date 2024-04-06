@@ -74,5 +74,5 @@ proc makeShipsIntoFleet {ships} {
 
 }
 
-proc removeBlockDataFromShip {ship_dict} {
+proc removeBlockDataFromShip {ship_json} {
 }
