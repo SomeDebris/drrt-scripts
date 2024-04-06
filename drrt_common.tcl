@@ -17,7 +17,7 @@ proc waitYN {prompt_string} {
 
         gets stdin response
 
-        switch "$response" {
+        switch -nocase "$response" {
             y { return 1 }
             n { return 0 }
         }
