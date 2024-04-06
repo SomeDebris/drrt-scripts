@@ -50,7 +50,7 @@ proc makeShipDictFromFile {filename} {
             set filecontents [read $filehandle]
             close $filehandle
 
-            set filecontents_uncompressed [zlib decompress $filecontents]
+            set filecontents_uncompressed [zlib inflate $filecontents]
 
             return $filecontents_uncompressed
         }
