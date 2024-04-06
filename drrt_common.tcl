@@ -18,8 +18,8 @@ proc waitYN {prompt_string} {
         gets stdin response
 
         switch "$response" {
-            [yY] { return true }
-            [nN] { return false }
+            y { return 1 }
+            n { return 0 }
         }
     }
 }
