@@ -77,7 +77,7 @@ proc makeShipsIntoFleet {ships} {
 }
 
 proc removeBlockDataFromShip {ship_json_varname \
-    {keys_to_keep [list ident offset angle bindingId faction command ident]} } {
+    {keys_to_keep {ident offset angle bindingId faction command ident}} } {
     upvar 1 $ship_json_varname ship_json
 
     set new_blocks_array [::rl_json::json array]
