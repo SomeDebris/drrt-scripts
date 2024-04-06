@@ -33,16 +33,22 @@ proc checkShipFileExtension {filename} {
 proc makeShipDictFromFile {filename} {
     set shipfiletype [checkShipFileExtension $filename]
 
-    set filehandle [open "$filename" r]
-    set filecontents [read $filehandle]
-    close $filehandle
-
     switch $shipfiletype {
         json {
-            return -code 0 [makeShipDictFromJson filecontents]
+            set filehandle [open "$filename" r]
+            set filecontents [read $filehandle]
+            close $filehandle
+            # I can do this because we operate DIRECTLY on json (pretty cool)
+            return $filecontents
         }
         jsongz {
-            error "gzipped JSON files cannot be parsed yet. Please gunzip them."
+            set filehandle [open "$filename" rb]
+            set filecontents [read $filehandle]
+            close $filehandle
+
+            set filecontents_uncompressed [zlib decompress $filecontents]
+
+            return $filecontents_uncompressed
         }
         lua {
             error "Lua ship files cannot be parsed yet. Please re-export your ships as JSON."
@@ -56,16 +62,9 @@ proc makeShipDictFromFile {filename} {
     }
 }
 
-proc makeShipDictFromJson {varname} {
-    upvar 1 $varname jsonstring
-
-    set shipdict {[::json::json2dict $jsonstring]}
-
-    return $shipdict
-}
-
 proc saveFleetToFile {filename fleet} {
 }
+    
 
 proc makeShipsIntoFleet {ships} {
 
