@@ -11,6 +11,10 @@ puts "Heyy this worked!"
 # - Reference a match schedule file and index the array based on it
 # - alliance assembler function
 proc checkShipFileExtension {filename} {
+    if {![file exists $filename]} {
+        error "File \"$filename\" cannot be found!"
+    }
+
     switch -glob -nocase -- "$filename" {
         *.json {
             return {json}
@@ -25,7 +29,7 @@ proc checkShipFileExtension {filename} {
             return {luagz}
         }
         default {
-            error "File extension of $filename should be legal for a ship file, but wasn't!"
+            error "File extension of $filename should be that of a ship file."
         }
     }
 }
