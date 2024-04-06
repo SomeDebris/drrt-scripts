@@ -46,13 +46,13 @@ proc makeShipDictFromFile {filename} {
             return $filecontents
         }
         jsongz {
-            set filehandle [open "$filename" rb]
+            puts "I'm going to try to read the binary"
+            set filehandle [open "$filename" r]
+            zlib push gunzip $filehandle
             set filecontents [read $filehandle]
             close $filehandle
 
-            set filecontents_uncompressed [zlib inflate $filecontents]
-
-            return $filecontents_uncompressed
+            return $filecontents
         }
         lua {
             error "Lua ship files cannot be parsed yet. Please re-export your ships as JSON."
