@@ -105,7 +105,17 @@ proc sanitizeShipJSON {ship_json_varname {keys_to_keep_varname Block_Keys_To_Kee
     upvar 1 $ship_json_varname ship_json
     upvar 1 $keys_to_keep_varname keys_to_keep
 
+<<<<<<< HEAD
     set new_blocks_array [::rl_json::json amap block [::rl_json::json extract $ship_json "blocks"] {
+=======
+    if {![info exists ship_json]} {
+        error "Variable with name $ship_json_varname does not exist!"
+    }
+
+    set new_blocks_array [::rl_json::json array]
+
+    ::rl_json::json foreach block [::rl_json::json extract $ship_json "blocks"] {
+>>>>>>> 688db09 (add check for if variable ship_json actually exists)
         ::rl_json::json foreach {key value} $block {
             if {[lsearch -exact $keys_to_keep $key] < 0} {
                 ::rl_json::json unset block $key
