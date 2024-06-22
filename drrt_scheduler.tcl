@@ -4,7 +4,7 @@ source drrt_common.tcl
 
 puts "Heyy this worked!"
 
-set Block_Keys_To_Keep [list ident offset angle bindingId faction command ident]
+set Block_Keys_To_Keep [list ident offset angle bindingId faction command]
 
 # What does this script need to accomplish in order to truly function as the 
 # DRRT Scheduler?
@@ -77,7 +77,7 @@ proc makeShipsIntoFleet {ships} {
 }
 
 proc removeBlockDataFromShip {ship_json_varname \
-    {keys_to_keep {ident offset angle bindingId faction command ident}} } {
+    {keys_to_keep {ident offset angle bindingId faction command}} } {
     upvar 1 $ship_json_varname ship_json
 
     set new_blocks_array [::rl_json::json array]
@@ -91,3 +91,19 @@ proc removeBlockDataFromShip {ship_json_varname \
         puts $block
     }
 }
+
+proc getShipsFromFleetJSON {fleet_json_varname} {
+    upvar 1 $fleet_json_varname fleet_json
+
+    if {[::rl_json::json exists $fleet_json "data"]} {
+        error "Ship [::rl_json::json get $fleet_json "data" "name"] is a ship file, but was passed to a proc expecting fleet files!"
+    }
+
+    set fleet_overview [::rl_json::json get $fleet_json "name"]
+    
+    set new_ships_array [::rl_json::json array]
+}
+    
+
+    
+
