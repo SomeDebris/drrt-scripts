@@ -68,6 +68,13 @@ proc makeShipDictFromFile {filename} {
     return $filecontents
 }
 
+proc isShipJSON {ship_json_varname} {
+    upvar 1 $ship_json_varname ship_json
+
+    return [::rl_json::json exists $ship_json "data"]
+}
+
+
 proc saveFleetToFile {filename fleet} {
 }
     
@@ -96,7 +103,8 @@ proc getShipsFromFleetJSON {fleet_json_varname} {
     upvar 1 $fleet_json_varname fleet_json
 
     if {[::rl_json::json exists $fleet_json "data"]} {
-        error "Ship [::rl_json::json get $fleet_json "data" "name"] is a ship file, but was passed to a proc expecting fleet files!"
+        error "Ship [::rl_json::json get $fleet_json "data" "name"] is a ship [
+                ]file, but was passed to a proc expecting fleet files!"
     }
 
     set fleet_overview [::rl_json::json get $fleet_json "name"]
