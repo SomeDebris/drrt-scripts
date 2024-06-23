@@ -149,3 +149,15 @@ proc getShipsArrayFromJSON {ships_json_varname} {
 
     return $output
 }
+
+proc shipName {ship_json_varname} {
+    upvar 1 $ship_json_varname ship_json
+
+    return [::rl_json::json get $ship_json_varname "data" "name"]
+}
+
+proc shipAuthor {ship_json_varname} {
+    upvar 1 $ship_json_varname ship_json
+
+    return [::rl_json::json get $ship_json_varname "data" "author"]
+}
