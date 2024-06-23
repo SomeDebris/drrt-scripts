@@ -45,15 +45,15 @@ grid .c.browse_button -column 1 -row 5
 
 grid .c.new_fleet  -column 1 -row 1
 grid .c.edit_fleet -column 1 -row 2
-grid .c.remove_fleet -column 1 -row 3
+grid .c.remove_fleet -column 1 -row 3 -sticky s
 
 grid columnconfigure . 0 -weight 1
 grid rowconfigure . 0 -weight 1
 
 grid columnconfigure .c 0 -weight 3
 
-grid rowconfigure .c 1 -weight 1
-grid rowconfigure .c 2 -weight 1
+grid rowconfigure .c 1 -weight 0
+grid rowconfigure .c 2 -weight 0
 grid rowconfigure .c 3 -weight 1
 
 wm geometry . "400x200"
