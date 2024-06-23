@@ -153,11 +153,11 @@ proc getShipsArrayFromJSON {ships_json_varname} {
 proc shipName {ship_json_varname {default_name "Unnamed Spaceship"}} {
     upvar 1 $ship_json_varname ship_json
 
-    return [::rl_json::json get -default $default_name $ship_json_varname "data" "name"]
+    return [::rl_json::json get -default $default_name $ship_json "data" "name"]
 }
 
 proc shipAuthor {ship_json_varname {default_name "Unknown Author"}} {
     upvar 1 $ship_json_varname ship_json
 
-    return [::rl_json::json get -default $default_name $ship_json_varname "data" "author"]
+    return [::rl_json::json get -default $default_name $ship_json "data" "author"]
 }
