@@ -1,10 +1,29 @@
 #!/usr/bin/env tclsh
 
-source drrt_common.tcl
+package require rl_json
 
-puts "Heyy this worked!"
-
+# Converts a dict object to a json object
+# Taken from the tcl docs
+# proc dict2json {dict_to_encode} {
+#     set accumulator {}
+#     ::json::write object {*}[dict map {k v} $dict_to_encode {
+#         set v [::json::write string $v]
+#     }]
+# }
 set Block_Keys_To_Keep [list ident offset angle bindingId faction command]
+
+proc waitYN {prompt_string} {
+    while {true} {
+        puts "$prompt_string \[y/n\]: "
+
+        gets stdin response
+
+        switch -nocase "$response" {
+            y { return 1 }
+            n { return 0 }
+        }
+    }
+}
 
 # What does this script need to accomplish in order to truly function as the 
 # DRRT Scheduler?
@@ -36,7 +55,7 @@ proc checkShipFileExtension {filename} {
     }
 }
 
-proc makeShipDictFromFile {filename} {
+proc makeShipJSONFromFile {filename} {
     set shipfiletype [checkShipFileExtension $filename]
 
     set filecontents {}
@@ -77,7 +96,6 @@ proc isShipJSON {ship_json_varname} {
 
 proc saveFleetToFile {filename fleet} {
 }
-    
 
 proc makeShipsIntoFleet {ships} {
 
@@ -87,31 +105,26 @@ proc removeBlockDataFromShip {ship_json_varname \
     {keys_to_keep {ident offset angle bindingId faction command}} } {
     upvar 1 $ship_json_varname ship_json
 
-    set new_blocks_array [::rl_json::json array]
-
-    ::rl_json::json foreach block [::rl_json::json extract $ship_json "blocks"] {
+    set new_blocks_array [::rl_json::json lmap block [::rl_json::json extract $ship_json "blocks"] {
         ::rl_json::json foreach {key value} $block {
             if {[lsearch -exact $keys_to_keep $key] < 0} {
                 ::rl_json::json unset block $key
             }
         }
         puts $block
-    }
+    }]
+
+    return $new_blocks_array
 }
 
-proc getShipsFromFleetJSON {fleet_json_varname} {
-    upvar 1 $fleet_json_varname fleet_json
+# Returns all ships from the json file.
+# If this is a single ship file, it will return just the ship.
+# If this is a fleet file, it will return an array of each ship.
+proc getShipsArrayFromJSON {ships_json_varname} {
+    upvar 1 $ships_json_varname ships_json
 
-    if {[::rl_json::json exists $fleet_json "data"]} {
-        error "Ship [::rl_json::json get $fleet_json "data" "name"] is a ship [
-                ]file, but was passed to a proc expecting fleet files!"
+    switch {isShipJSON ships_json} {
+        1 {}
+        0 {}
     }
-
-    set fleet_overview [::rl_json::json get $fleet_json "name"]
-    
-    set new_ships_array [::rl_json::json array]
 }
-    
-
-    
-
