@@ -111,6 +111,8 @@ proc removeBlockDataFromShip {ship_json_varname \
                 ::rl_json::json unset block $key
             }
         }
+
+        set block
     }]
 
     return $new_blocks_array
