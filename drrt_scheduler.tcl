@@ -1,6 +1,7 @@
 #!/usr/bin/env tclsh
 
 package require rl_json
+package require Tk
 
 # Converts a dict object to a json object
 # Taken from the tcl docs
@@ -10,6 +11,40 @@ package require rl_json
 #         set v [::json::write string $v]
 #     }]
 # }
+
+### User interface
+
+wm title . "DRRT Alliance Assembler"
+
+grid [ttk::labelframe .c -padding "3 3 12 12"] -column 0 -row 0 -sticky nsew
+
+grid columnconfigure . 0 -weight 1
+grid rowconfigure . 0 -weight 1
+
+grid [ttk::entry .c.directory_entry -textvariable export_directory] \
+    -column 0 -row 5 -columnspan 2 
+
+grid [ttk::button .c.export_button -text "Export Fleets" -command exportFleetsFromGui] \
+    -column 1 -row 6
+
+grid [ttk::label .c.directory_label -text "Export directory:"] \
+    -column 0 -row 4 -sticky sw
+
+grid [ttk::label .c.fleetlist_label -text "Fleets:"] \
+    -column 0 -row 0 -sticky sw
+
+grid [ttk::treeview .c.fleetlist_tree] -column 0 -row 1 -rowspan 3
+
+grid [ttk::button .c.new_fleet -text "New" -command createNewFleetGui] \
+    -column 1 -row 1
+grid [ttk::button .c.edit_fleet -text "Edit" -command editSelectedFleetGui] \
+    -column 1 -row 2
+grid [ttk::button .c.edit_fleet -text "Remove" -command removeSelectedFleetGui] \
+    -column 1 -row 3
+
+
+
+### Constants
 set Block_Keys_To_Keep [list ident offset angle bindingId faction command]
 
 proc waitYN {prompt_string} {
@@ -171,3 +206,4 @@ proc shipAuthor {ship_json_varname} {
 
     return [::rl_json::json get $ship_json "data" "author"]
 }
+
