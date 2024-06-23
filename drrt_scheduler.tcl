@@ -111,7 +111,6 @@ proc sanitizeShipJSON {ship_json_varname {keys_to_keep_varname Block_Keys_To_Kee
                 ::rl_json::json unset block $key
             }
         }
-        puts $keys_to_keep
         set block
     }]
 
