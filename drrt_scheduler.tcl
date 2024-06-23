@@ -74,6 +74,10 @@ proc waitYN {prompt_string} {
     }
 }
 
+proc browseForExportDirectoryGui {} {
+    set ::export_directory [tk_chooseDirectory]
+}
+
 # What does this script need to accomplish in order to truly function as the 
 # DRRT Scheduler?
 # - Create correct folder structure. This should likely be in a specified 
