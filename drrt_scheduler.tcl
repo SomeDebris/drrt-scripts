@@ -133,7 +133,11 @@ proc getShipsArrayFromJSON {ships_json_varname} {
     upvar 1 $ships_json_varname ships_json
 
     return [switch {isShipJSON ships_json} {
-        1 {}
-        0 {puts }
+        1 {
+            ::rl_json::json array $ships_json
+        }
+        0 {
+            ::rl_json::json extract $ships_json "blueprints"
+        }
     }]
 }
