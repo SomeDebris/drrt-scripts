@@ -132,12 +132,16 @@ proc getSanitizedShipJSON {ship_json_varname {keys_to_keep_varname Block_Keys_To
 proc getShipsArrayFromJSON {ships_json_varname} {
     upvar 1 $ships_json_varname ships_json
 
-    return [switch {isShipJSON ships_json} {
+    set output [::rl_json::json array]
+
+    switch {isShipJSON ships_json} {
         1 {
-            ::rl_json::json array $ships_json
+            ::rl_json::json set output 0 $ships_json
         }
         0 {
-            ::rl_json::json extract $ships_json "blueprints"
+            ::rl_json::json set output [::rl_json::json extract $ships_json "blueprints"]
         }
-    }]
+    }
+
+    return $output
 }
