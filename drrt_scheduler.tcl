@@ -13,36 +13,50 @@ package require Tk
 # }
 
 ### User interface
+set padthick 5
 
 wm title . "DRRT Alliance Assembler"
 
-grid [ttk::labelframe .c -padding "3 3 12 12"] -column 0 -row 0 -sticky nsew
+ttk::frame .c -padding "5 5 5 5"
+
+
+ttk::entry .c.directory_entry -textvariable export_directory
+ttk::button .c.export_button -text "Export Fleets" -command exportFleetsFromGui
+ttk::label .c.directory_label -text "Export directory:"
+ttk::label .c.fleetlist_label -text "Fleets:"
+ttk::treeview .c.fleetlist_tree
+
+ttk::button .c.browse_button -text "Browse" -command browseForExportDirectoryGui
+
+ttk::button .c.new_fleet -text "New" -command createNewFleetGui
+ttk::button .c.edit_fleet -text "Edit" -command editSelectedFleetGui
+ttk::button .c.remove_fleet -text "Remove" -command removeSelectedFleetGui
+
+
+grid .c -column 0 -row 0 -sticky nsew
+
+grid .c.directory_entry -column 0 -row 5 -sticky we 
+grid .c.export_button -column 1 -row 6 -pady "$padthick 0"
+grid .c.directory_label -column 0 -row 4 -sticky swe -pady "$padthick 0"
+grid .c.fleetlist_label -column 0 -row 0 -sticky swe
+grid .c.fleetlist_tree  -column 0 -row 1 -rowspan 3 -sticky nsew
+
+grid .c.browse_button -column 1 -row 5
+
+grid .c.new_fleet  -column 1 -row 1
+grid .c.edit_fleet -column 1 -row 2
+grid .c.remove_fleet -column 1 -row 3
 
 grid columnconfigure . 0 -weight 1
 grid rowconfigure . 0 -weight 1
 
-grid [ttk::entry .c.directory_entry -textvariable export_directory] \
-    -column 0 -row 5 -columnspan 2 
+grid columnconfigure .c 0 -weight 3
 
-grid [ttk::button .c.export_button -text "Export Fleets" -command exportFleetsFromGui] \
-    -column 1 -row 6
+grid rowconfigure .c 1 -weight 1
+grid rowconfigure .c 2 -weight 1
+grid rowconfigure .c 3 -weight 1
 
-grid [ttk::label .c.directory_label -text "Export directory:"] \
-    -column 0 -row 4 -sticky sw
-
-grid [ttk::label .c.fleetlist_label -text "Fleets:"] \
-    -column 0 -row 0 -sticky sw
-
-grid [ttk::treeview .c.fleetlist_tree] -column 0 -row 1 -rowspan 3
-
-grid [ttk::button .c.new_fleet -text "New" -command createNewFleetGui] \
-    -column 1 -row 1
-grid [ttk::button .c.edit_fleet -text "Edit" -command editSelectedFleetGui] \
-    -column 1 -row 2
-grid [ttk::button .c.edit_fleet -text "Remove" -command removeSelectedFleetGui] \
-    -column 1 -row 3
-
-
+wm geometry . "400x200"
 
 ### Constants
 set Block_Keys_To_Keep [list ident offset angle bindingId faction command]
