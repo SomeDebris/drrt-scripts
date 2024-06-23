@@ -111,7 +111,6 @@ proc removeBlockDataFromShip {ship_json_varname \
                 ::rl_json::json unset block $key
             }
         }
-        puts $block
     }]
 
     return $new_blocks_array
@@ -123,8 +122,8 @@ proc removeBlockDataFromShip {ship_json_varname \
 proc getShipsArrayFromJSON {ships_json_varname} {
     upvar 1 $ships_json_varname ships_json
 
-    switch {isShipJSON ships_json} {
+    return [switch {isShipJSON ships_json} {
         1 {}
-        0 {}
-    }
+        0 {puts }
+    }]
 }
