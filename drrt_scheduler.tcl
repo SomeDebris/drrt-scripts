@@ -101,7 +101,7 @@ proc makeShipsIntoFleet {ships} {
 
 }
 
-proc sanitizeShipJSON {ship_json_varname keys_to_keep_varname} } {
+proc sanitizeShipJSON {ship_json_varname keys_to_keep_varname} {
     upvar 1 $ship_json_varname ship_json
     upvar 1 $keys_to_keep_varname keys_to_keep
 
@@ -118,7 +118,7 @@ proc sanitizeShipJSON {ship_json_varname keys_to_keep_varname} } {
     return [::rl_json::json set ship_json blocks $new_blocks_array]
 }
 
-proc getSanitizedShipJSON {ship_json_varname keys_to_keep_varname} } {
+proc getSanitizedShipJSON {ship_json_varname keys_to_keep_varname} {
     upvar 1 $ship_json_varname ship_json
     upvar 1 $keys_to_keep_varname keys_to_keep
 
