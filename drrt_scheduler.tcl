@@ -19,8 +19,9 @@ wm title . "DRRT Alliance Assembler"
 
 ttk::frame .c -padding "5 5 5 5"
 
+set past_export_directories [list {}]
 
-ttk::entry .c.directory_entry -textvariable export_directory
+ttk::combobox .c.directory_entry -textvariable export_directory
 ttk::button .c.export_button -text "Export Fleets" -command exportFleetsFromGui
 ttk::label .c.directory_label -text "Export directory:"
 ttk::label .c.fleetlist_label -text "Fleets:"
@@ -76,7 +77,18 @@ proc waitYN {prompt_string} {
 
 proc browseForExportDirectoryGui {} {
     set ::export_directory [tk_chooseDirectory]
+
+    appendToExportCombobox $::export_directory
 }
+
+proc appendToExportCombobox {input} {
+    lappend ::past_export_directories $input
+
+    set ::past_export_directories [lsearch -all -inline -not -exact $::past_export_directories {}]
+
+    ::.c.directory_entry configure -values $::past_export_directories
+}
+
 
 # What does this script need to accomplish in order to truly function as the 
 # DRRT Scheduler?
