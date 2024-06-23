@@ -105,7 +105,7 @@ proc removeBlockDataFromShip {ship_json_varname \
     {keys_to_keep {ident offset angle bindingId faction command}} } {
     upvar 1 $ship_json_varname ship_json
 
-    set new_blocks_array [::rl_json::json lmap block [::rl_json::json extract $ship_json "blocks"] {
+    set new_blocks_array [::rl_json::json amap block [::rl_json::json extract $ship_json "blocks"] {
         ::rl_json::json foreach {key value} $block {
             if {[lsearch -exact $keys_to_keep $key] < 0} {
                 ::rl_json::json unset block $key
@@ -115,7 +115,7 @@ proc removeBlockDataFromShip {ship_json_varname \
         set block
     }]
 
-    return $new_blocks_array
+    return [::rl_json::json set ship_json blocks $new_blocks_array]
 }
 
 # Returns all ships from the json file.
