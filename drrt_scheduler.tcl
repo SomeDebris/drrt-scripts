@@ -130,6 +130,8 @@ proc getSanitizedShipJSON {ship_json_varname {keys_to_keep_varname Block_Keys_To
 # If this is a single ship file, it will return just the ship.
 # If this is a fleet file, it will return an array of each ship.
 proc getShipsArrayFromJSON {ships_json_varname} {
+    global Block_Keys_To_Keep
+
     upvar 1 $ships_json_varname ships_json
 
     set output [::rl_json::json array]
