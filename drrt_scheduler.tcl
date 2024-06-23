@@ -101,7 +101,7 @@ proc makeShipsIntoFleet {ships} {
 
 }
 
-proc getSanitizedShipJSON {ship_json_varname \
+proc sanitizeShipJSON {ship_json_varname \
     {keys_to_keep {ident offset angle bindingId faction command}} } {
     upvar 1 $ship_json_varname ship_json
 
@@ -116,6 +116,14 @@ proc getSanitizedShipJSON {ship_json_varname \
     }]
 
     return [::rl_json::json set ship_json blocks $new_blocks_array]
+}
+
+proc getSanitizedShipJSON {ship_json_varname keys_to_keep} {
+    upvar 1 $ship_json_varname ship_json
+
+    set modified_json $ship_json
+
+    return [sanitizeShipJSON modified_json $keys_to_keep]
 }
 
 # Returns all ships from the json file.
