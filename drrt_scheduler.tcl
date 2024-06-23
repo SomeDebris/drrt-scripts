@@ -101,8 +101,9 @@ proc makeShipsIntoFleet {ships} {
 
 }
 
-proc sanitizeShipJSON {ship_json_varname {keys_to_keep $Block_Keys_To_Keep} } {
+proc sanitizeShipJSON {ship_json_varname keys_to_keep_varname} } {
     upvar 1 $ship_json_varname ship_json
+    upvar 1 $keys_to_keep_varname keys_to_keep
 
     set new_blocks_array [::rl_json::json amap block [::rl_json::json extract $ship_json "blocks"] {
         ::rl_json::json foreach {key value} $block {
@@ -110,19 +111,20 @@ proc sanitizeShipJSON {ship_json_varname {keys_to_keep $Block_Keys_To_Keep} } {
                 ::rl_json::json unset block $key
             }
         }
-
+        puts $keys_to_keep
         set block
     }]
 
     return [::rl_json::json set ship_json blocks $new_blocks_array]
 }
 
-proc getSanitizedShipJSON {ship_json_varname {keys_to_keep $Block_Keys_To_Keep} } {
+proc getSanitizedShipJSON {ship_json_varname keys_to_keep_varname} } {
     upvar 1 $ship_json_varname ship_json
+    upvar 1 $keys_to_keep_varname keys_to_keep
 
     set modified_json $ship_json
 
-    return [sanitizeShipJSON modified_json $keys_to_keep]
+    return [sanitizeShipJSON modified_json keys_to_keep]
 }
 
 # Returns all ships from the json file.
