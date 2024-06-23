@@ -101,7 +101,7 @@ proc makeShipsIntoFleet {ships} {
 
 }
 
-proc removeBlockDataFromShip {ship_json_varname \
+proc getSanitizedShipJSON {ship_json_varname \
     {keys_to_keep {ident offset angle bindingId faction command}} } {
     upvar 1 $ship_json_varname ship_json
 
