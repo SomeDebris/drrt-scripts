@@ -136,10 +136,12 @@ proc getShipsArrayFromJSON {ships_json_varname} {
 
     switch [isShipJSON ships_json] {
         1 {
-            ::rl_json::json set output 0 $ships_json
+            ::rl_json::json set output 0 [getSanitizedShipJSON ships_json]
         }
         0 {
-            set output [::rl_json::json extract $ships_json "blueprints"]
+            set output [::rl_json::json amap ship [::rl_json::json extract $ships_json "blueprints"] {
+                sanitizeShipJSON ship
+            }]
         }
     }
 
