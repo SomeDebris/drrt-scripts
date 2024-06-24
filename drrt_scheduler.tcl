@@ -27,12 +27,11 @@ ttk::label .c.directory_label -text "Export directory:"
 ttk::label .c.fleetlist_label -text "Fleets:"
 ttk::treeview .c.fleetlist_tree
 
-ttk::button .c.browse_button -text "Browse" -command browseForExportDirectoryGui
+ttk::button .c.browse_button -text "Browse..." -command browseForExportDirectoryGui
 
 ttk::button .c.new_fleet -text "New" -command createNewFleetGui
 ttk::button .c.edit_fleet -text "Edit" -command editSelectedFleetGui
 ttk::button .c.remove_fleet -text "Remove" -command removeSelectedFleetGui
-
 
 grid .c -column 0 -row 0 -sticky nsew
 
@@ -51,7 +50,7 @@ grid .c.remove_fleet -column 1 -row 3 -sticky s
 grid columnconfigure . 0 -weight 1
 grid rowconfigure . 0 -weight 1
 
-grid columnconfigure .c 0 -weight 3
+grid columnconfigure .c 0 -weight 3 -pad $padthick
 
 grid rowconfigure .c 1 -weight 0
 grid rowconfigure .c 2 -weight 0
@@ -89,6 +88,10 @@ proc appendToExportCombobox {input} {
     ::.c.directory_entry configure -values $::past_export_directories
 }
 
+proc createNewFleetGui {} {
+    .c.fleetlist_tree insert 
+    # TODO: Complete me!
+}
 
 # What does this script need to accomplish in order to truly function as the 
 # DRRT Scheduler?
