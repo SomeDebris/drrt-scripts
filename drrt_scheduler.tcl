@@ -79,9 +79,13 @@ proc waitYN {prompt_string} {
 }
 
 proc browseForExportDirectoryGui {} {
-    set ::export_directory [tk_chooseDirectory]
+    set dir [tk_chooseDirectory]
 
-    appendToExportCombobox $::export_directory
+    if {$dir neq ""} {
+        set ::export_directory $dir
+
+        appendToExportCombobox $::export_directory
+    }
 }
 
 proc appendToExportCombobox {input} {
@@ -93,8 +97,15 @@ proc appendToExportCombobox {input} {
 }
 
 proc createNewFleetGui {} {
-    lappend ::fleets_in_export_list [.c.fleetlist_tree insert {} end -text "Unnamed Fleet"]
-    puts [lindex $::fleets_in_export_list end]
+    set id [.c.fleetlist_tree insert {} end -text "Unnamed Fleet" \
+        -values [list "Unknown Author" 0]]
+
+    # TODO: This list gets appended to every time we add a fleet; this may want
+    # to be a dictionary. It may also just be possible to use the list of stuff
+    # in the tree as the actual variable!
+    lappend ::fleets_in_export_list $id
+
+    puts $id
 }
 
 # What does this script need to accomplish in order to truly function as the 
