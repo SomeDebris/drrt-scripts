@@ -81,7 +81,7 @@ proc waitYN {prompt_string} {
 proc browseForExportDirectoryGui {} {
     set dir [tk_chooseDirectory]
 
-    if {$dir neq ""} {
+    if {$dir ne ""} {
         set ::export_directory $dir
 
         appendToExportCombobox $::export_directory
