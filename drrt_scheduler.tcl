@@ -19,13 +19,17 @@ wm title . "DRRT Alliance Assembler"
 
 ttk::frame .c -padding "5 5 5 5"
 
-set past_export_directories [list {}]
+set past_export_directories [list]
+set fleets_in_export_list [list]
 
 ttk::combobox .c.directory_entry -textvariable export_directory
 ttk::button .c.export_button -text "Export Fleets" -command exportFleetsFromGui
 ttk::label .c.directory_label -text "Export directory:"
 ttk::label .c.fleetlist_label -text "Fleets:"
-ttk::treeview .c.fleetlist_tree
+
+ttk::treeview .c.fleetlist_tree -columns {author points}
+.c.fleetlist_tree heading author -text "Author Name"
+.c.fleetlist_tree heading points -text "P Total"
 
 ttk::button .c.browse_button -text "Browse..." -command browseForExportDirectoryGui
 
@@ -89,8 +93,8 @@ proc appendToExportCombobox {input} {
 }
 
 proc createNewFleetGui {} {
-    .c.fleetlist_tree insert 
-    # TODO: Complete me!
+    lappend ::fleets_in_export_list [.c.fleetlist_tree insert {} end -text "Unnamed Fleet"]
+    puts [lindex $::fleets_in_export_list end]
 }
 
 # What does this script need to accomplish in order to truly function as the 
