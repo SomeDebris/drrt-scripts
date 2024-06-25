@@ -23,7 +23,7 @@ set past_export_directories [list]
 set fleets_in_export_list [list]
 
 ttk::combobox .c.directory_entry -textvariable export_directory
-ttk::button .c.export_button -text "Export Fleets" -command exportFleetsFromGui
+ttk::button .c.export_button -text "Export Alliances" -command exportFleetsFromGui
 ttk::label .c.directory_label -text "Export directory:"
 ttk::label .c.fleetlist_label -text "Fleets:"
 
@@ -97,7 +97,7 @@ proc appendToExportCombobox {input} {
 }
 
 proc createNewFleetGui {} {
-    set id [.c.fleetlist_tree insert {} end -text "Unnamed Fleet" \
+    set id [.c.fleetlist_tree insert {} end -text "Unnamed Alliance" \
         -values [list "Unknown Author" 0]]
 
     # TODO: This list gets appended to every time we add a fleet; this may want
@@ -106,6 +106,52 @@ proc createNewFleetGui {} {
     lappend ::fleets_in_export_list $id
 
     puts $id
+
+    tk::toplevel .new
+
+    wm title .new "Create New Alliance"
+
+    ttk::frame .new.c -padding "$::padthick $::padthick $::padthick $::padthick"
+
+    ttk::label .new.c.dirlabel -text "Look for ships here:"
+    ttk::combobox .new.c.dir -textvariable ::ship_import_directory
+    ttk::button .new.c.dir_browse -text "Browse..." -command browseForImportDirectoryGui
+    ttk::label .new.c.ships_label -text "Visible Ships:"
+    ttk::treeview .new.c.ships_tree -columns {author points filename}
+    .new.c.ships_tree heading author -text "Author Name"
+    .new.c.ships_tree heading points -text "P Total"
+    .new.c.ships_tree heading filename -text "File name"
+
+    ttk::button .new.c.add_ship -text "->" -command addShipToAlliance
+
+    ttk::label .new.c.allylabel -text "Ships in Alliance:"
+    ttk::treeview .new.c.ally_tree -columns {author points filename}
+    .new.c.ally_tree heading author -text "Author Name"
+    .new.c.ally_tree heading points -text "P Total"
+    .new.c.ally_tree heading filename -text "File name"
+
+    ttk::label .new.c.name_label -text "Alliance name:"
+    ttk::combobox .new.c.name -textvariable ::new_alliance_name
+
+    ttk::button .new.c.finish -text "Finish" -command finishNewFleet
+
+    grid .new.c -column 0 -row 0 -sticky nsew
+
+    grid .new.c.dirlabel    -column 0 -row 0 -columnspan 2 -sticky sw
+    grid .new.c.dir         -column 0 -row 1 -sticky swe
+    grid .new.c.dir_browse  -column 1 -row 1
+    grid .new.c.ships_label -column 0 -row 2 -sticky sw
+    grid .new.c.ships_tree  -column 0 -row 3 -sticky nsew -columnspan 2
+
+    grid .new.c.add_ship    -column 2 -row 3
+
+    grid .new.c.allylabel   -column 3 -row 0 -sticky sw
+    grid .new.c.ally_tree   -column 3 -row 1 -columnspan 2
+
+    grid .new.c.name_label  -column 0 -row 4 -sticky sw
+    grid .new.c.name        -column 1 -row 4 -columnspan 3 -sticky ew
+
+    grid .new.c.finish      -column 4 -row 4
 }
 
 # What does this script need to accomplish in order to truly function as the 
