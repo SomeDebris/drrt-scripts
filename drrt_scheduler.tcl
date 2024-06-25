@@ -135,23 +135,32 @@ proc createNewFleetGui {} {
 
     ttk::button .new.c.finish -text "Finish" -command finishNewFleet
 
+    # Widget placement
     grid .new.c -column 0 -row 0 -sticky nsew
 
     grid .new.c.dirlabel    -column 0 -row 0 -columnspan 2 -sticky sw
     grid .new.c.dir         -column 0 -row 1 -sticky swe
     grid .new.c.dir_browse  -column 1 -row 1
     grid .new.c.ships_label -column 0 -row 2 -sticky sw
-    grid .new.c.ships_tree  -column 0 -row 3 -sticky nsew -columnspan 2
+    grid .new.c.ships_tree  -column 0 -row 3 -sticky nsew -columnspan 3
 
-    grid .new.c.add_ship    -column 2 -row 3
+    grid .new.c.add_ship    -column 3 -row 3
 
-    grid .new.c.allylabel   -column 3 -row 2 -sticky sw
-    grid .new.c.ally_tree   -column 3 -row 3 -columnspan 2 -rowspan 1
+    grid .new.c.allylabel   -column 4 -row 2 -sticky sw
+    grid .new.c.ally_tree   -column 4 -row 3 -columnspan 2 -rowspan 1
 
     grid .new.c.name_label  -column 0 -row 4 -sticky sw
-    grid .new.c.name        -column 1 -row 4 -columnspan 3 -sticky ew
+    grid .new.c.name        -column 1 -row 4 -columnspan 4 -sticky ew
 
-    grid .new.c.finish      -column 4 -row 4
+    grid .new.c.finish      -column 5 -row 4
+
+    # Grid configuration
+    grid columnconfigure .new 0 -weight 1
+    grid rowconfigure    .new 0 -weight 1
+
+    grid columnconfigure .new.c 1 -weight 1
+    grid columnconfigure .new.c 4 -weight 1
+    grid rowconfigure    .new.c 3 -weight 1
 }
 
 # What does this script need to accomplish in order to truly function as the 
