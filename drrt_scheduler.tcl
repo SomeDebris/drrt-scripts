@@ -23,7 +23,7 @@ set past_export_directories [list]
 set fleets_in_export_list [list]
 
 ttk::combobox .c.directory_entry -textvariable export_directory
-ttk::button .c.export_button -text "Export Alliances" -command exportFleetsFromGui
+ttk::button .c.export_button -text "Export" -command exportFleetsFromGui
 ttk::label .c.directory_label -text "Export directory:"
 ttk::label .c.fleetlist_label -text "Fleets:"
 
@@ -138,19 +138,19 @@ proc createNewFleetGui {} {
     # Widget placement
     grid .new.c -column 0 -row 0 -sticky nsew
 
-    grid .new.c.dirlabel    -column 0 -row 0 -columnspan 2 -sticky sw
-    grid .new.c.dir         -column 0 -row 1 -sticky swe
-    grid .new.c.dir_browse  -column 1 -row 1
-    grid .new.c.ships_label -column 0 -row 2 -sticky sw
+    grid .new.c.dirlabel    -column 0 -row 0 -columnspan 3 -sticky sw
+    grid .new.c.dir         -column 0 -row 1 -columnspan 2 -sticky we
+    grid .new.c.dir_browse  -column 2 -row 1
+    grid .new.c.ships_label -column 0 -row 2 -sticky sw -pady "$::padthick 0"
     grid .new.c.ships_tree  -column 0 -row 3 -sticky nsew -columnspan 3
 
     grid .new.c.add_ship    -column 3 -row 3
 
-    grid .new.c.allylabel   -column 4 -row 2 -sticky sw
-    grid .new.c.ally_tree   -column 4 -row 3 -columnspan 2 -rowspan 1
+    grid .new.c.allylabel   -column 4 -row 2 -columnspan 2 -sticky sw
+    grid .new.c.ally_tree   -column 4 -row 3 -sticky nsew -columnspan 2
 
-    grid .new.c.name_label  -column 0 -row 4 -sticky sw
-    grid .new.c.name        -column 1 -row 4 -columnspan 4 -sticky ew
+    grid .new.c.name_label  -column 0 -row 4 -sticky w
+    grid .new.c.name        -column 1 -row 4 -columnspan 4 -sticky ew -pady 10
 
     grid .new.c.finish      -column 5 -row 4
 
