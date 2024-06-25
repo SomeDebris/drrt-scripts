@@ -145,8 +145,8 @@ proc createNewFleetGui {} {
 
     grid .new.c.add_ship    -column 2 -row 3
 
-    grid .new.c.allylabel   -column 3 -row 0 -sticky sw
-    grid .new.c.ally_tree   -column 3 -row 1 -columnspan 2
+    grid .new.c.allylabel   -column 3 -row 2 -sticky sw
+    grid .new.c.ally_tree   -column 3 -row 3 -columnspan 2 -rowspan 1
 
     grid .new.c.name_label  -column 0 -row 4 -sticky sw
     grid .new.c.name        -column 1 -row 4 -columnspan 3 -sticky ew
