@@ -7,6 +7,7 @@ General functions which are useful for multiple script files.
 import fnmatch
 import os
 import sys
+import re
 
 
 VERSION = 'v1.3.0'
@@ -33,7 +34,7 @@ def print_err(message, is_warning=False):
         sys.exit(1)
 
 
-def strip_author_from_ship_name( name )
+def strip_author_from_ship_name( name ):
     return SHIP_NAME_REGEX.search( name ).group(1)
 
 def wait_yn(prompt):
