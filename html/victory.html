@@ -9,35 +9,21 @@
 <style>
 
 @keyframes red-alliance-keyframes {
-    0% {
-        left: 0px;
-    }
-
-    38.88888% {
-        left: 0px;
-        color:white;
-    }
-
-    50% {
-        left: 1000px;
-        color: black;
-    }
-
-    88.88% {
-        left: 1000px;
-        color: black;
-    }
-
-    100% {
-        left: 0px;
+    0%, 38.88888%, 100% {
+        left: 1500px;
         color: white;
+    }
+
+    50%, 88.88% {
+        left: 1920px;
+        color: rgba(0, 0, 0, 0);
     }
 }
 
 .alliance {
     position: absolute;
     top: 0px;
-    left: 0px;
+    left: 1500px;
 
     animation-name: red-alliance-keyframes;
     animation-duration: 15s;
@@ -56,7 +42,7 @@ body {
     font-family: "Helvetica LT Std", sans-serif;
     background: black;
     color: white;
-    margin: 0pt;
+    margin: 0px;
 }
 
 div {
@@ -64,10 +50,10 @@ div {
 }
 
 h1 {
-    margin: 0pt;
+    margin: 0px;
     font-stretch: condensed;
     font-style: oblique;
-    font-size: 36pt;
+    font-size: 36px;
 }
 
 .alliance h1 {
@@ -88,7 +74,7 @@ h1 {
 }*/
 
 .ship {
-    font-size: 24pt;
+    font-size: 24px;
 
     display: grid;
     grid-template-columns: 400px 38px;
@@ -99,14 +85,14 @@ h1 {
 
 
 .author {
-    font-size: 12pt;
+    font-size: 12px;
 
     font-style: normal;
     font-weight: bold;
 }
 
 .rank {
-    font-size: 24pt;
+    font-size: 24px;
 
     display: flex;
     align-items: center;
