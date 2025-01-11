@@ -8,8 +8,59 @@
 <!-- } -->
 <style>
 
+@keyframes red-alliance-keyframes {
+    0% {
+        left: 0px;
+    }
+
+    38.88888% {
+        left: 0px;
+        color:white;
+    }
+
+    50% {
+        left: 1000px;
+        color: black;
+    }
+
+    88.88% {
+        left: 1000px;
+        color: black;
+    }
+
+    100% {
+        left: 0px;
+        color: white;
+    }
+}
+
+.alliance {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    animation-name: red-alliance-keyframes;
+    animation-duration: 15s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+}
+
+.red-alliance {
+    animation-delay: 0s;
+}
+.blue-alliance {
+    animation-delay: -7.5s;
+}
+
 body {
     font-family: "Helvetica LT Std", sans-serif;
+    background: black;
+    color: white;
+    margin: 0pt;
+}
+
+div {
+    white-space: nowrap;
 }
 
 h1 {
@@ -25,35 +76,54 @@ h1 {
 }
 
 .alliance {
+    // width: 400px;
+
     display: grid;
-    grid-template-columns: 40px auto;
+    grid-template-columns: 60px auto;
 }
 
+/*.red-alliance {
+    position: absolute;
+    top: 0; left: 0;
+}*/
+
 .ship {
+    font-size: 24pt;
+
+    display: grid;
+    grid-template-columns: 400px 38px;
     font-stretch: condensed;
     font-style: oblique;
     font-weight: bold;
+}
+
+
+.author {
+    font-size: 12pt;
+
+    font-style: normal;
+    font-weight: bold;
+}
+
+.rank {
     font-size: 24pt;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    font-weight: bold;
+    font-stretch: condensed;
+}
+
+.rps {
+    font-style: normal;
+    display: flex;
+    justify-content: end;
 }
 
 .member {
     margin-bottom: 5px;
-}
-
-.author {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 12pt;
-}
-
-.rank {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24pt;
-    font-style: normal;
-    font-weight: bold;
-    font-stretch: condensed;
 }
 </style>
 <!-- <script type="text/javascript" src="http://livejs.com/live.js"></script> -->
@@ -66,19 +136,42 @@ h1 {
 
         <div class="rank">1</div>
         <div class="member">
-            <div class="ship">Maya v1.5</div>
+            <div class="ship"><div class="name">Maya v1.5</div> <div class="rps">+3</div></div>
             <div class="author">Debris Field</div>
         </div>
 
         <div class="rank">2</div>
         <div class="member">
-            <div class="ship">Infinitely Lethal Decisions</div>
+            <div class="ship"><div class="name">Infinitely Lethal Decisions, and his friend bob, joseph</div> <div class="rps">+3</div></div>
             <div class="author">Bluefish1818</div>
         </div>
 
         <div class="rank">3</div>
         <div class="member">
-            <div class="ship">DSF "Dark-Star" Dreadnought</div>
+            <div class="ship"><div class="name">DSF "Dark-Star" Dreadnought</div> <div class="rps"> 0</div></div>
+            <div class="author">Dukeslayer</div>
+        </div>
+
+    </div>
+
+    <div class="blue-alliance alliance">
+        <h1>BLUE ALLIANCE LOSS!</h1>
+
+        <div class="rank">1</div>
+        <div class="member">
+            <div class="ship"><div class="name">Maya v1.5</div> <div class="rps">+3</div></div>
+            <div class="author">Debris Field</div>
+        </div>
+
+        <div class="rank">2</div>
+        <div class="member">
+            <div class="ship"><div class="name">Infinitely Lethal Decisions, and his friend bob, joseph</div> <div class="rps">+3</div></div>
+            <div class="author">Bluefish1818</div>
+        </div>
+
+        <div class="rank">3</div>
+        <div class="member">
+            <div class="ship"><div class="name">DSF "Dark-Star" Dreadnought</div> <div class="rps"> 0</div></div>
             <div class="author">Dukeslayer</div>
         </div>
 
