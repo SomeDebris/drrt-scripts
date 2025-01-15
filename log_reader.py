@@ -492,7 +492,12 @@ def recalculated_ranks(ship_array):
 
 def datasheet_update_ships(alliances, sheet_range):
     values = []
-    ships = alliances[0]['ships'] + alliances[1]['ships'] 
+
+    ships = []
+
+    for curr in alliances: 
+        ships += curr['ships']
+
     for ship in ships:
         if (not 'deltaD' in ship):
             ship[ 'deltaD' ] = 0
@@ -509,7 +514,8 @@ def datasheet_update_ships(alliances, sheet_range):
         if (not 'enemy_fleet_name' in ship):
             ship[ 'enemy_fleet_name' ] = 'NONE'
         values.append([ strip_author_from_ship_name( ship[ 'name' ] ), ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
-
+    
+    print(values)
     update_sheet(values, sheet_range)
 
 def datasheet_append_ships(ships):
