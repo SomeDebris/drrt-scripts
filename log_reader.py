@@ -13,7 +13,7 @@ import re
 
 from drrt_common import TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err, strip_author_from_ship_name
 from drrt_datasheet import append_to_sheet, replace_ships, replace_match_schedule, update_sheet
-from drrt_overlay import print_victory_html, print_next_html
+from drrt_overlay import print_victory_html, print_next_html, print_game_html
 
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
 LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
@@ -108,6 +108,7 @@ def main():
             ALL_MATCHES = calculate_all_mlogs(get_mlog_list(), False, is_playoffs, playoffs_losers)
             ALL_SHIPS = recalculated_ranks(ALL_SHIPS)
             print_next_html(ALL_SHIPS, len(ALL_MATCHES) )
+            print_game_html(ALL_SHIPS, len(ALL_MATCHES) )
             print_victory_html( (ALL_MATCHES[-2], ALL_MATCHES[-1]), ALL_SHIPS )
         elif data == 'append':
             parse_mlog(read_latest_mlog_symlink(), True)

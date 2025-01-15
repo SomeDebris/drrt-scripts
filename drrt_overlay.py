@@ -85,6 +85,9 @@ def print_next_html( all_ships, match_number ):
     with open( filepath_selected_schedule ) as file_schedule:
         schedule_reader = csv.reader( file_schedule )
         
+        if match_number == 0:
+            match_number = 1
+
         target_match = [ row for idx, row in enumerate( schedule_reader ) if idx == match_number - 1 ][0]
         
     ships_in_match = []
@@ -144,6 +147,9 @@ def print_game_html( all_ships, match_number ):
     with open( filepath_selected_schedule ) as file_schedule:
         schedule_reader = csv.reader( file_schedule )
         
+        if match_number == 0:
+            match_number = 1
+
         target_match = [ row for idx, row in enumerate( schedule_reader ) if idx == match_number - 1 ][0]
         
     ships_in_match = []
