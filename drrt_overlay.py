@@ -22,6 +22,7 @@ TEMPLATE = """<span size=\"xx-large\">{0}</span>
 
 VICTORY_TEMPLATE_PATH = os.path.join( SCRIPT_DIR, 'html', 'victory_TEMPLATE.html')
 GAME_TEMPLATE_PATH = os.path.join( SCRIPT_DIR, 'html', 'game_TEMPLATE.html')
+NEXT_TEMPLATE_PATH = os.path.join( SCRIPT_DIR, 'html', 'next_TEMPLATE.html')
 
 """
 function that creates two text files when called with 
@@ -69,8 +70,66 @@ a match number:
 #         f.write(output_string)
 
 #     print( "check my work, boss!")
-
 def print_next_html( all_ships, match_number ):
+    template = ''
+    with open( NEXT_TEMPLATE_PATH, 'r' ) as vic:
+        template = vic.read()
+
+    filepath_selected_schedule = os.path.join( SCRIPT_DIR, 'selected_schedule.csv' )
+
+    if ( not os.path.exists( filepath_selected_schedule ) ):
+        print_err( f"drrt_overlay: I can't find the selected_schedule.csv file!" )
+    
+    target_match = []
+
+    with open( filepath_selected_schedule ) as file_schedule:
+        schedule_reader = csv.reader( file_schedule )
+        
+        target_match = [ row for idx, row in enumerate( schedule_reader ) if idx == match_number - 1 ][0]
+        
+    ships_in_match = []
+
+    for ship_number in target_match:
+        for rank, ship1 in enumerate(all_ships):
+            if (ship1[ 'sub_order' ] + 1 == int(ship_number)):
+                ship1[ 'rank' ] = rank + 1
+                ships_in_match.append( ship1 )
+    
+    content = template.format( matchnumber = match_number,
+                    rank_red1 = ships_in_match[0]['rank'],
+                      rank_red1_box = 'rank_neutral_captain' if ships_in_match[0]['rank'] <= 8 else 'rank_neutral',
+                      name_red1 = ships_in_match[0]['name'],
+                      author_red1 = ships_in_match[0]['author'],
+
+                      rank_red2 = ships_in_match[1]['rank'],
+                      rank_red2_box = 'rank_neutral_captain' if ships_in_match[1]['rank'] <= 8 else 'rank_neutral',
+                      name_red2 = ships_in_match[1]['name'],
+                      author_red2 = ships_in_match[1]['author'],
+
+                      rank_red3 = ships_in_match[2]['rank'],
+                      rank_red3_box = 'rank_neutral_captain' if ships_in_match[2]['rank'] <= 8 else 'rank_neutral',
+                      name_red3 = ships_in_match[2]['name'],
+                      author_red3 = ships_in_match[2]['author'],
+
+                      rank_blue1 = ships_in_match[3]['rank'],
+                      rank_blue1_box = 'rank_neutral_captain' if ships_in_match[3]['rank'] <= 8 else 'rank_neutral',
+                      name_blue1 = ships_in_match[3]['name'],
+                      author_blue1 = ships_in_match[3]['author'],
+
+                      rank_blue2 = ships_in_match[4]['rank'],
+                      rank_blue2_box = 'rank_neutral_captain' if ships_in_match[4]['rank'] <= 8 else 'rank_neutral',
+                      name_blue2 = ships_in_match[4]['name'],
+                      author_blue2 = ships_in_match[4]['author'],
+
+                      rank_blue3 = ships_in_match[5]['rank'],
+                      rank_blue3_box = 'rank_neutral_captain' if ships_in_match[5]['rank'] <= 8 else 'rank_neutral',
+                      name_blue3 = ships_in_match[5]['name'],
+                      author_blue3 = ships_in_match[5]['author'])
+
+    with open( os.path.join(SCRIPT_DIR, 'html', 'next_filled.html'), 'w') as f:
+        f.write(content)
+
+def print_game_html( all_ships, match_number ):
     template = ''
     with open( GAME_TEMPLATE_PATH, 'r' ) as vic:
         template = vic.read()
