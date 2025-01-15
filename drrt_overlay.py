@@ -81,7 +81,6 @@ def print_victory_html( match_info, all_ships ):
     with open( VICTORY_TEMPLATE_PATH, 'r' ) as vic:
         temp = vic.read()
     
-    print(match_info)
     winner = 0
     if match_info[0]['damageTaken'] < match_info[1]['damageTaken']:
         winner = 1
@@ -126,14 +125,7 @@ def print_victory_html( match_info, all_ships ):
             match_info[1]['ships'][2]['author'] = ship1['author']
             match_info[1]['ships'][2]['ranking_score'] = ship1['ranking_score']
             match_info[1]['ships'][2]['rank'] = rank + 1
-
-
-            
     
-    print(match_info)
-    print(match_info[0]['ships'][0])
-
-    print(all_ships)
     content = temp.format(red_victory_txt = red_vic_txt,
                       blue_victory_txt = blue_vic_txt,
                       rank_red1 = match_info[0]['ships'][0]['rank'],
