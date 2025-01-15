@@ -185,8 +185,8 @@ def get_ship_list():
             ship_files.append( filepath )
         else:
             print( f"Well, THAT ({file}) is not a ship file!")
-    
-    for file in sorted( ship_files, key = lambda t: os.stat(t).st_mtime ):
+    idx = 0 
+    for  file in sorted( ship_files, key = lambda t: os.stat(t).st_mtime ):
         ship = get_ship_dict( file )[ 'data' ]
         
         # Grabs ONLY the 'required_fields' from the ship dict
@@ -201,6 +201,7 @@ def get_ship_list():
         ship_required_information[ 'S' ] = 0
         ship_required_information[ 'ranking_score' ] = 0
         ship_required_information[ 'destructions' ] = 0
+        ship_required_information[ 'sub_order' ] = idx
 
         # The 0th (blank) group is the whole phrase. 
         # The 1st group is the first thing in parentheses. simple!
@@ -210,6 +211,7 @@ def get_ship_list():
         
         
         ship_list.append( ship_required_information )
+        idx += 1
     return ship_list
 
 def get_mlog_list():
@@ -488,7 +490,8 @@ def distribute_points(alliance):
                 participant[ 'ranking_score' ] = participant[ 'RPs' ] / matches_played
 
 def recalculated_ranks(ship_array):
-    return sorted(ship_array, key=lambda d: d[ 'ranking_score' ], reverse=True) 
+    return sorted(sorted(sorted(ship_array, key = lambda d: -d['P']), key=lambda d: -d['D']), key=lambda d: -d['ranking_score'])
+    # return sorted(ship_array, key=lambda d: (d[ 'ranking_score' ], d[ 'D' ], d[ 'P' ], -d[ 'sub_order' ]), reverse=True) 
 
 def datasheet_update_ships(alliances, sheet_range):
     values = []
