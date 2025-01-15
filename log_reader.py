@@ -200,6 +200,7 @@ def get_ship_list():
         ship_required_information[ 'L' ] = 0
         ship_required_information[ 'S' ] = 0
         ship_required_information[ 'ranking_score' ] = 0
+        ship_required_information[ 'destructions' ] = 0
 
         # The 0th (blank) group is the whole phrase. 
         # The 1st group is the first thing in parentheses. simple!
@@ -482,6 +483,8 @@ def distribute_points(alliance):
                     participant[ 'L' ] += ship[ 'deltaL' ]
                 if ('deltaS' in ship):
                     participant[ 'S' ] += ship[ 'deltaS' ]
+                if ('destructions' in participant):
+                    participant['destructions'] += ship['destructions']
                 matches_played = participant[ 'D' ] + participant[ 'P' ] + participant[ 'L' ]
                 participant[ 'ranking_score' ] = participant[ 'RPs' ] / matches_played
 
