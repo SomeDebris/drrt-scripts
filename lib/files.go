@@ -5,7 +5,7 @@ import (
     "path/filepath"
 )
 
-func path_exists(path string) bool {
+func Path_exists(path string) bool {
     _, err := os.Stat(path)
 
     if err != nil {
@@ -20,7 +20,7 @@ func path_exists(path string) bool {
     return true
 }
 
-func remove_contents(directory string) error {
+func Remove_contents(directory string) error {
     d, err := os.Open(directory)
     if err != nil {
         return err
