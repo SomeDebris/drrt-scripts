@@ -199,6 +199,7 @@ def get_ship_list():
         ship_required_information[ 'P' ] = 0
         ship_required_information[ 'L' ] = 0
         ship_required_information[ 'S' ] = 0
+        ship_required_information[ 'ranking_score' ] = 0
 
         # The 0th (blank) group is the whole phrase. 
         # The 1st group is the first thing in parentheses. simple!
@@ -442,8 +443,6 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
 
     # all ship's rank and ranking score is calced
     distribute_points(red_ships + blue_ships)
-    print (red_ships + blue_ships) 
-    print(ALL_SHIPS)
 
     # datasheet_append_ships(red_ships + blue_ships)
 
@@ -457,7 +456,8 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
 
     alliances = (red_alliance, blue_alliance)
     print(alliances)
-    return red_ships + blue_ships
+    return alliances
+    # return red_ships + blue_ships
 
 
     # print(json.dumps(red_alliance, indent=4))
