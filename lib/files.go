@@ -1,8 +1,8 @@
 package lib
 
 import (
-    "os"
-    "path/filepath"
+	"os"
+	"path/filepath"
 )
 
 func Path_exists(path string) bool {
@@ -20,7 +20,7 @@ func Path_exists(path string) bool {
     return true
 }
 
-func Remove_contents(directory string) error {
+func Remove_directory_contents(directory string) error {
     d, err := os.Open(directory)
     if err != nil {
         return err
