@@ -13,7 +13,7 @@ import re
 
 from drrt_common import TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err, strip_author_from_ship_name
 from drrt_datasheet import append_to_sheet, replace_ships, replace_match_schedule, update_sheet
-from drrt_overlay import print_ships_at_qualification_match, print_victory_html
+from drrt_overlay import print_victory_html, print_next_html
 
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
 LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
@@ -106,6 +106,8 @@ def main():
         if data == 'reload':
             ALL_SHIPS = get_ship_list()
             ALL_MATCHES = calculate_all_mlogs(get_mlog_list(), False, is_playoffs, playoffs_losers)
+            ALL_SHIPS = recalculated_ranks(ALL_SHIPS)
+            print_next_html(ALL_SHIPS, len(ALL_MATCHES) )
             print_victory_html( (ALL_MATCHES[-2], ALL_MATCHES[-1]), ALL_SHIPS )
         elif data == 'append':
             parse_mlog(read_latest_mlog_symlink(), True)
@@ -249,11 +251,11 @@ def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs
     else:
         sheet_location = r'DATA_ENTRY!A2:L'
     
-        # print_ships_at_qualification_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS')
-        print_ships_at_qualification_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT')
+        # # print_ships_at_qualification_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS')
+        # print_ships_at_qualification_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT')
 
-        # print_ships_at_qualification_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS_SMALL', "{0}\n")
-        print_ships_at_qualification_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT_SMALL', "{0}\n")
+        # # print_ships_at_qualification_match( Current_Match_ID, ALL_SHIPS, 'PREVIOUS_SMALL', "{0}\n")
+        # print_ships_at_qualification_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT_SMALL', "{0}\n")
 
     datasheet_update_ships(all_ship_match_performances, sheet_location)
 
@@ -449,7 +451,6 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
 
     # datasheet_append_ships(red_ships + blue_ships)
 
-    ALL_SHIPS = recalculated_ranks(ALL_SHIPS)
 
     # what check do I do to ensure that the ranking score is not freaking duplicated
     # APPEND A THING TO EACH 
@@ -518,7 +519,6 @@ def datasheet_update_ships(alliances, sheet_range):
             ship[ 'enemy_fleet_name' ] = 'NONE'
         values.append([ strip_author_from_ship_name( ship[ 'name' ] ), ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
     
-    print(values)
     update_sheet(values, sheet_range)
 
 def datasheet_append_ships(ships):
