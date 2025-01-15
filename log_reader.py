@@ -13,7 +13,7 @@ import re
 
 from drrt_common import TOURNAMENT_DIRECTORY, SCRIPT_DIR, print_err, strip_author_from_ship_name
 from drrt_datasheet import append_to_sheet, replace_ships, replace_match_schedule, update_sheet
-from drrt_overlay import print_ships_at_qualification_match
+from drrt_overlay import print_ships_at_qualification_match, print_victory_html
 
 REASSEMBLY_DATA = os.path.join(os.path.expanduser('~'), '.local', 'share', 'Reassembly', 'data')
 LATEST_MLOG = os.path.join(REASSEMBLY_DATA, 'match_log_latest.txt')
@@ -33,6 +33,7 @@ PLAYOFFS_SHEET_SELECTION = [
 ]
 
 ALL_SHIPS = {}
+ALL_MATCHES = []
 
 class bcolors:
     HEADER = '\033[95m'
@@ -56,11 +57,13 @@ MLOG_SIGNAL_PIPE = '/tmp/drrt_mlog_signal_pipe'
 
 def main():
     global ALL_SHIPS
+    global ALL_MATCHES
 
     mlogs = get_mlog_list()
     mlog_initial_count = len(mlogs)
 
     ALL_SHIPS = get_ship_list()
+
 
     try:
         os.mkfifo(MLOG_SIGNAL_PIPE)
@@ -102,7 +105,8 @@ def main():
             break
         if data == 'reload':
             ALL_SHIPS = get_ship_list()
-            calculate_all_mlogs(get_mlog_list(), False, is_playoffs, playoffs_losers)
+            ALL_MATCHES = calculate_all_mlogs(get_mlog_list(), False, is_playoffs, playoffs_losers)
+            print_victory_html( ALL_MATCHES[-1], ALL_SHIPS )
         elif data == 'append':
             parse_mlog(read_latest_mlog_symlink(), True)
         elif data == 'review match':
@@ -190,10 +194,18 @@ def get_ship_list():
 
         ship_required_information[ 'filename' ] = file
 
+        ship_required_information[ 'RPs' ] = 0
+        ship_required_information[ 'D' ] = 0
+        ship_required_information[ 'P' ] = 0
+        ship_required_information[ 'L' ] = 0
+        ship_required_information[ 'S' ] = 0
+
         # The 0th (blank) group is the whole phrase. 
         # The 1st group is the first thing in parentheses. simple!
         ship_required_information[ 'name' ] = \
             strip_author_from_ship_name( ship_required_information[ 'name' ] )
+
+        
 
         ship_list.append( ship_required_information )
 
@@ -240,6 +252,8 @@ def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs
         print_ships_at_qualification_match( Current_Match_ID + 1, ALL_SHIPS, 'NEXT_SMALL', "{0}\n")
 
     datasheet_update_ships(all_ship_match_performances, sheet_location)
+
+    return all_ship_match_performances
 
 
 def read_latest_mlog_symlink():
@@ -427,12 +441,13 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
         ship[ 'mlog_filename' ] = filename
 
     # all ship's rank and ranking score is calced
-    # distribute_points(red_ships + blue_ships)
-
+    distribute_points(red_ships + blue_ships)
+    print (red_ships + blue_ships) 
+    print(ALL_SHIPS)
 
     # datasheet_append_ships(red_ships + blue_ships)
 
-    # ALL_SHIPS = recalculated_ranks(ALL_SHIPS)
+    ALL_SHIPS = recalculated_ranks(ALL_SHIPS)
 
     # what check do I do to ensure that the ranking score is not freaking duplicated
     # APPEND A THING TO EACH 
@@ -441,7 +456,9 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
     blue_alliance[ 'ships' ] = blue_ships
 
     alliances = (red_alliance, blue_alliance)
+    print(alliances)
     return red_ships + blue_ships
+
 
     # print(json.dumps(red_alliance, indent=4))
     # print(json.dumps(blue_alliance, indent=4))
@@ -453,7 +470,9 @@ def distribute_points(alliance):
 
     for participant in ALL_SHIPS:
         for ship in alliance:
-            if (participant[ 'name' ] == ship[ 'name' ]):
+            if (participant[ 'name' ] == strip_author_from_ship_name(ship[ 'name' ])):
+                if (not 'RPs' in participant):
+                    participant[ 'RPs' ] = 0
                 participant[ 'RPs' ] += ship[ 'RPs' ]
                 if ('deltaD' in ship):
                     participant[ 'D' ] += ship[ 'deltaD' ]

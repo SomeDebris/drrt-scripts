@@ -20,6 +20,8 @@ TEMPLATE = """<span size=\"xx-large\">{0}</span>
 {1}
 """
 
+VICTORY_TEMPLATE_PATH = os.path.join( SCRIPT_DIR, 'html', 'victory_TEMPLATE.html')
+
 """
 function that creates two text files when called with 
 a match number: 
@@ -73,5 +75,34 @@ def print_ships_at_qualification_match( number_match, ship_list, output_suffix, 
             idx += 1
 
     print( "check my work, boss!")
+
+def print_victory_html( match_info, all_ships ):
+    temp = ''
+    with open( VICTORY_TEMPLATE_PATH, 'r' ) as vic:
+        temp = vic.read()
+    
+    winner = 0
+    if match_info[0]['damageTaken'] < match_info[1]['damageTaken']:
+        winner = 1
+    
+    red_vic_txt  = 'VICTORY!'
+    blue_vic_txt = 'LOSES!'
+    if not winner == 0:
+        red_vic_txt = 'LOSES!'
+        blue_vic_txt = 'VICTORY!'
+    
+    print(all_ships)
+
+    # print(temp.format(red_victory_txt = red_vic_txt,
+    #                   blue_victory_txt = blue_vic_txt,
+    #                   rank_red1 = 1,
+    #                   rank_red1_box = 'rank_neutral',
+    #                   name_red1 = strip_author_from_ship_name(match_info[0]['ships'][0]['name']),
+    #                   author_red1 = match_info[0]['ships'][0]['author'],
+    #                   rp_red1 = '+' + string(match_info[0]['ships'][0]['RPs']),
+                      
+
+
+
 
 
