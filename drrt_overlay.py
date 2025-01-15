@@ -46,8 +46,8 @@ def print_ships_at_qualification_match( number_match, ship_list, output_suffix, 
 
         ships_in_match.append( ship_list[ ship_int ] )
     
-    red_filename = os.path.join( SCRIPT_DIR, f"red_{output_suffix}.txt" )
-    blue_filename = os.path.join( SCRIPT_DIR, f"blue_{output_suffix}.txt" )
+    red_filename = os.path.join( SCRIPT_DIR, 'html', f"red_{output_suffix}.html" )
+    blue_filename = os.path.join( SCRIPT_DIR, 'html', f"blue_{output_suffix}.html" )
 
     if os.path.exists( red_filename ):
         os.remove(red_filename)

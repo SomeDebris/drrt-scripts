@@ -24,7 +24,7 @@ from googleapiclient.errors import HttpError
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-DRRT_DATASHEET_ID = '1ErRgToz-y3ClWISZ77z-G3VB7bsQTNpcFeQzATQVyTY'
+DRRT_DATASHEET_ID = '1M7KgW7gcC1pA39ktOCYFZ4yFI2clbzMKrSPzYKQIs3g'
 DRRT_RANGE_NAME = 'PyTest1!A2:E'
 SHIP_ENTRY_RANGE = 'Ships!A2:B'
 
