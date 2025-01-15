@@ -456,7 +456,6 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
     blue_alliance[ 'ships' ] = blue_ships
 
     alliances = (red_alliance, blue_alliance)
-    print(alliances)
     return alliances
     # return red_ships + blue_ships
 
