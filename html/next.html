@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- @font-face { -->
+<!--     font-family: "Helvetica Bold Oblique"; -->
+<!--     font-weight: oblique; -->
+<!--     src: url("file://C:/Users/mags2/Downloads/HelveticaLTStd-BlkCondObl.otf"); -->
+<!-- } -->
+<style>
+
+@font-face {
+    font-family: "Helvetica LT Std CORRECTED";
+    font-style: normal;
+    font-weight: oblique;
+    src: url("file:///home/magnus/.local/share/fonts/HelveticaLTStd-BlkCond.otf");
+    ascent-override: 90%;
+}
+
+@property --initial { }
+@property --final { }
+
+.matchnumber {
+    font-family: "Helvetica LT Std Cond Blk", "Helvetica LT Std", sans-serif;
+    font-style: oblique;
+    font-weight: bold;
+    position:absolute;
+    bottom: 15px;
+    left: 1380px;
+
+    font-size: 100px;
+}
+
+.alliance {
+    position: absolute;
+    top: 310px;
+    opacity: 100%;
+
+    display: grid;
+    grid-template-columns: 80px 500px;
+}
+
+.red-alliance {
+    left: 125px;
+}
+.blue-alliance {
+    text-align:right;
+    right: 125px;
+    grid-template-columns: 500px 80px;
+}
+
+body {
+    font-family: "Helvetica LT Std", sans-serif;
+    background: black;
+    color: white;
+    margin: 0px;
+    
+    --initial: 1520px;
+    --final: 1920px;
+}
+
+div {
+    white-space: nowrap;
+}
+
+
+.alliance h1 {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+/*.red-alliance {
+    position: absolute;
+    top: 0; left: 0;
+}*/
+
+/* Font sizes may be set here*/
+.ship {
+    font-size: 32pt;
+    overflow: hidden;
+    font-family: "Helvetica LT Std Cond Blk", "Helvetica LT Std", sans-serif;
+    font-style: oblique;
+    font-weight: bold;
+}
+
+
+h1 {
+    margin: 0px;
+    margin-bottom: -4px;
+    font-family: "Helvetica LT Std Cond Blk", "Helvetica LT Std", sans-serif;
+    font-style: oblique;
+    font-size: 24pt;
+}
+.author {
+    font-size: 12pt;
+    margin-top: -4px;
+    font-style: normal;
+    font-weight: bold;
+}
+
+.rank {
+    font-size: 36pt;
+    padding: 0px;
+
+    font-family: "Helvetica LT Std Cond Blk", "Helvetica LT Std", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    font-weight: bold;
+    font-stretch: condensed;
+
+    background-image: url("White_Middle.png");
+    background-size: 72px 96px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.name {
+    white-space: nowrap;
+}
+
+.rps {
+    font-style: normal;
+    display: flex;
+    justify-content: end;
+}
+
+.member {
+    margin-top: 14px;
+    margin-bottom: 13px;
+}
+
+.scoot {
+    margin-top: 12px;
+}
+
+.name span {
+    //overflow: hidden;
+    display: inline-block;
+}
+
+.red-alliance .name .animate {
+    position: relative; 
+    animation: leftright 6s infinite normal linear;
+}
+
+.blue-alliance .name .animate {
+    position: relative; 
+    animation: rightleft 6s infinite normal linear;
+}
+@keyframes leftright {
+    0%, 15% {
+        transform: translateX(0%);
+        left: 0%;
+    }
+    85%, 100% {
+        transform: translateX(-130%);
+        left: 130%;
+    }
+}
+
+@keyframes rightleft {
+    0%, 15% {
+        transform: translateX(-100%);
+        left: 100%;
+    }
+    85%, 100% {
+        transform: translateX(10%);
+        left: 10%;
+    }
+}
+
+.fader {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 25px;
+}
+.fader.fader-left {
+  left: 0;
+  background: linear-gradient(to left, transparent, #56ab2f);
+}
+.fader.fader-right {
+  right: 0;
+  background: linear-gradient(to right, transparent, #56ab2f);
+}
+
+#rank_up_captain { background-image: url("Yellow_Up.png"); }
+#rank_down_captain { background-image: url("Yellow_Down.png"); }
+#rank_neutral_captain { background-image: url("Yellow_Middle.png"); }
+#rank_up { background-image: url("White_Up.png"); }
+#rank_down { background-image: url("White_Down.png"); }
+#rank_neutral { background-image: url("White_Middle.png"); }
+
+
+/*.wow {
+    font-family: "Helvetica LT Std CORRECTED", sans-serif;
+    border: 1px solid white;
+    text-align: center;
+    padding: 0px 0px 0px 0px;
+    width: 30px;
+}*/
+</style>
+<!-- <script type="text/javascript" src="http://livejs.com/live.js"></script> -->
+</head>
+
+<body>
+
+    <div class="red-alliance alliance">
+
+        <div id="rank_neutral_captain" class="rank">
+            <div class="scoot">
+                1
+            </div>
+        </div>
+        <div class="member">
+            <div class="ship">
+                <div class="name">
+                    <span>Maya v1.5 is an incredible ship. initiallly design</span>
+                </div>
+            </div>
+            <div class="author">Debris Field</div>
+        </div>
+
+        <div id="two" class="rank">
+            <div class="scoot">
+                10
+            </div>
+        </div>
+        <div class="member">
+            <div class="ship">
+                <div class="name">
+                    <span>Desonder Mk4-5</span>
+                </div>
+            </div>
+            <div class="author">Bluefish1818</div>
+        </div>
+
+        <div id="three" class="rank">
+            <div class="scoot">
+                1
+            </div>
+        </div>
+        <div class="member">
+            <div class="ship">
+                <div class="name">
+                    <span>DSF "Dark-Star" Dreadnought</span>
+                </div>
+            </div>
+            <div class="author">Dukeslayer</div>
+        </div>
+
+    </div>
+
+    <div class="blue-alliance alliance">
+
+        <div class="member">
+            <div class="ship">
+                <div class="name">
+                    <span>and while you sit there laughing, I am not</span>
+                </div>
+            </div>
+            <div class="author">Debris Field</div>
+        </div>
+        <div id="rank_neutral_captain" class="rank">
+            <div class="scoot">
+                1
+            </div>
+        </div>
+
+        <div class="member">
+            <div class="ship">
+                <div class="name">
+                    <span>Infinitely Lethal Decisions, and his friend bob, joseph</span>
+                </div>
+            </div>
+            <div class="author">Bluefish1818</div>
+        </div>
+        <div id="two" class="rank">
+            <div class="scoot">
+                10
+            </div>
+        </div>
+
+        <div class="member">
+            <div class="ship">
+                <div class="name">
+                    <span>DSF "Dark-Star" Dreadnought</span>
+                </div>
+            </div>
+            <div class="author">Dukeslayer</div>
+        </div>
+        <div id="three" class="rank">
+            <div class="scoot">
+                1
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="matchnumber">3</div>
+<script>
+    let container = document.querySelectorAll(".name");
+    let text = document.querySelectorAll(".name span");
+
+    for (var i = 0; i < container.length; i++) {
+        if (container[i].clientWidth < text[i].offsetWidth) {
+            text[i].classList.add("animate");
+        }
+    }
+    
+
+</script>
+</body>
