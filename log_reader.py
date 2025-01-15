@@ -490,7 +490,7 @@ def distribute_points(alliance):
                 participant[ 'ranking_score' ] = participant[ 'RPs' ] / matches_played
 
 def recalculated_ranks(ship_array):
-    return sorted(sorted(sorted(ship_array, key = lambda d: -d['P']), key=lambda d: -d['D']), key=lambda d: -d['ranking_score'])
+    return sorted(sorted(sorted(sorted(ship_array, key=lambda d: d['sub_order']), key = lambda d: -d['P']), key=lambda d: -d['D']), key=lambda d: -d['ranking_score'])
     # return sorted(ship_array, key=lambda d: (d[ 'ranking_score' ], d[ 'D' ], d[ 'P' ], -d[ 'sub_order' ]), reverse=True) 
 
 def datasheet_update_ships(alliances, sheet_range):
