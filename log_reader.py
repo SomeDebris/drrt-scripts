@@ -313,7 +313,7 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
                 blue_alliance[ 'name' ] = fields_dict[ 'name' ]
 
         elif message_id[0] == 'SHIP':
-            if (fields_dict[ 'fleet' ] == '0'):
+            if (fields_dict[ 'fleet' ] == '100'):
                 red_ships.append({ 
                                   'name':fields_dict[ 'ship' ], 
                                   'destroyed':True,
@@ -333,6 +333,7 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
                 blue_ship_index_length += 1
 
         elif message_id[0] == 'DESTRUCTION':
+            print("DESTRUCTION DETECTED!")
             if (fields_dict[ 'fship' ] == '100'):
                 if fields_dict[ 'ship' ] in red_ship_index:
                     red_ships[ red_ship_index[ fields_dict[ 'ship' ] ] ][ 'RPs' ] += 1
@@ -354,7 +355,7 @@ def parse_mlog(mlog_content, check_duplicates, filename="match_log_latest.txt"):
                 blue_alliance[ 'survivorCount' ] = int(fields_dict[ 'alive' ])
 
         elif message_id[0] == 'SURVIVAL':
-            if (fields_dict[ 'fleet' ] == '0'):
+            if (fields_dict[ 'fleet' ] == '100'):
                 red_ships[ red_ship_index[ fields_dict[ 'ship' ] ] ][ 'destroyed' ] = False
             else:
                 blue_ships[ blue_ship_index[ fields_dict[ 'ship' ] ] ][ 'destroyed' ] = False

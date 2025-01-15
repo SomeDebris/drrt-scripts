@@ -35,6 +35,8 @@ def print_err(message, is_warning=False):
 
 
 def strip_author_from_ship_name( name ):
+    if not SHIP_NAME_REGEX.match( name ):
+        return name
     return SHIP_NAME_REGEX.search( name ).group(1)
 
 def wait_yn(prompt):
