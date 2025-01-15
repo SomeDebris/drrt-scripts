@@ -94,13 +94,43 @@ def print_victory_html( match_info, all_ships ):
     
     print(all_ships)
 
-    # print(temp.format(red_victory_txt = red_vic_txt,
-    #                   blue_victory_txt = blue_vic_txt,
-    #                   rank_red1 = 1,
-    #                   rank_red1_box = 'rank_neutral',
-    #                   name_red1 = strip_author_from_ship_name(match_info[0]['ships'][0]['name']),
-    #                   author_red1 = match_info[0]['ships'][0]['author'],
-    #                   rp_red1 = '+' + string(match_info[0]['ships'][0]['RPs']),
+    print(temp.format(red_victory_txt = red_vic_txt,
+                      blue_victory_txt = blue_vic_txt,
+                      rank_red1 = 1,
+                      rank_red1_box = 'rank_neutral',
+                      name_red1 = strip_author_from_ship_name(match_info[0]['ships'][0]['name']),
+                      author_red1 = match_info[0]['ships'][0]['author'],
+                      rp_red1 = '+' + string(match_info[0]['ships'][0]['RPs']),
+
+                      rank_red2 = 1,
+                      rank_red2_box = 'rank_neutral',
+                      name_red2 = strip_author_from_ship_name(match_info[0]['ships'][1]['name']),
+                      author_red2 = match_info[0]['ships'][1]['author'],
+                      rp_red2 = '+' + string(match_info[0]['ships'][1]['RPs']),
+
+                      rank_red3 = 1,
+                      rank_red3_box = 'rank_neutral',
+                      name_red3 = strip_author_from_ship_name(match_info[0]['ships'][2]['name']),
+                      author_red3 = match_info[0]['ships'][2]['author'],
+                      rp_red3 = '+' + string(match_info[0]['ships'][2]['RPs']),
+
+                      rank_blue1 = 1,
+                      rank_blue1_box = 'rank_neutral',
+                      name_blue1 = strip_author_from_ship_name(match_info[1]['ships'][0]['name']),
+                      author_blue1 = match_info[1]['ships'][0]['author'],
+                      rp_blue1 = '+' + string(match_info[1]['ships'][0]['RPs']),
+
+                      rank_blue2 = 1,
+                      rank_blue2_box = 'rank_neutral',
+                      name_blue2 = strip_author_from_ship_name(match_info[1]['ships'][1]['name']),
+                      author_blue2 = match_info[1]['ships'][1]['author'],
+                      rp_blue2 = '+' + string(match_info[1]['ships'][1]['RPs']),
+
+                      rank_blue3 = 1,
+                      rank_blue3_box = 'rank_neutral',
+                      name_blue3 = strip_author_from_ship_name(match_info[1]['ships'][2]['name']),
+                      author_blue3 = match_info[1]['ships'][2]['author'],
+                      rp_blue3 = '+' + string(match_info[1]['ships'][2]['RPs']))
                       
 
 
