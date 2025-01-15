@@ -100,70 +100,80 @@ def print_victory_html( match_info, all_ships ):
     #                     ship['author'] = participant['authro
     
     # set the author name
-    for ship1 in all_ships:
+    for rank, ship1 in enumerate(all_ships):
         if ship1['name'] == strip_author_from_ship_name(match_info[0]['ships'][0]['name']):
             match_info[0]['ships'][0]['author'] = ship1['author']
             match_info[0]['ships'][0]['ranking_score'] = ship1['ranking_score']
+            match_info[0]['ships'][0]['rank'] = rank + 1
         if ship1['name'] == strip_author_from_ship_name(match_info[0]['ships'][1]['name']):
             match_info[0]['ships'][1]['author'] = ship1['author']
             match_info[0]['ships'][1]['ranking_score'] = ship1['ranking_score']
+            match_info[0]['ships'][1]['rank'] = rank + 1
         if ship1['name'] == strip_author_from_ship_name(match_info[0]['ships'][2]['name']):
             match_info[0]['ships'][2]['author'] = ship1['author']
             match_info[0]['ships'][2]['ranking_score'] = ship1['ranking_score']
+            match_info[0]['ships'][2]['rank'] = rank + 1
 
         if ship1['name'] == strip_author_from_ship_name(match_info[1]['ships'][0]['name']):
             match_info[1]['ships'][0]['author'] = ship1['author']
             match_info[1]['ships'][0]['ranking_score'] = ship1['ranking_score']
+            match_info[1]['ships'][0]['rank'] = rank + 1
         if ship1['name'] == strip_author_from_ship_name(match_info[1]['ships'][1]['name']):
             match_info[1]['ships'][1]['author'] = ship1['author']
             match_info[1]['ships'][1]['ranking_score'] = ship1['ranking_score']
+            match_info[1]['ships'][1]['rank'] = rank + 1
         if ship1['name'] == strip_author_from_ship_name(match_info[1]['ships'][2]['name']):
             match_info[1]['ships'][2]['author'] = ship1['author']
             match_info[1]['ships'][2]['ranking_score'] = ship1['ranking_score']
+            match_info[1]['ships'][2]['rank'] = rank + 1
+
+
             
     
     print(match_info)
     print(match_info[0]['ships'][0])
-    print(temp.format(red_victory_txt = red_vic_txt,
+
+    print(all_ships)
+    content = temp.format(red_victory_txt = red_vic_txt,
                       blue_victory_txt = blue_vic_txt,
-                      rank_red1 = 1,
-                      rank_red1_box = 'rank_neutral',
+                      rank_red1 = match_info[0]['ships'][0]['rank'],
+                      rank_red1_box = 'rank_neutral_captain' if match_info[0]['ships'][0]['rank'] <= 8 else 'rank_neutral',
                       name_red1 = strip_author_from_ship_name(match_info[0]['ships'][0]['name']),
                       author_red1 = match_info[0]['ships'][0]['author'],
                       rp_red1 = '+' + str(match_info[0]['ships'][0]['RPs']),
 
-                      rank_red2 = 1,
-                      rank_red2_box = 'rank_neutral',
+                      rank_red2 = match_info[0]['ships'][1]['rank'],
+                      rank_red2_box = 'rank_neutral_captain' if match_info[0]['ships'][1]['rank'] <= 8 else 'rank_neutral',
                       name_red2 = strip_author_from_ship_name(match_info[0]['ships'][1]['name']),
                       author_red2 = match_info[0]['ships'][1]['author'],
                       rp_red2 = '+' + str(match_info[0]['ships'][1]['RPs']),
 
-                      rank_red3 = 1,
-                      rank_red3_box = 'rank_neutral',
+                      rank_red3 = match_info[0]['ships'][2]['rank'],
+                      rank_red3_box = 'rank_neutral_captain' if match_info[0]['ships'][2]['rank'] <= 8 else 'rank_neutral',
                       name_red3 = strip_author_from_ship_name(match_info[0]['ships'][2]['name']),
                       author_red3 = match_info[0]['ships'][2]['author'],
                       rp_red3 = '+' + str(match_info[0]['ships'][2]['RPs']),
 
-                      rank_blue1 = 1,
-                      rank_blue1_box = 'rank_neutral',
+                      rank_blue1 = match_info[1]['ships'][0]['rank'],
+                      rank_blue1_box = 'rank_neutral_captain' if match_info[1]['ships'][0]['rank'] <= 8 else 'rank_neutral',
                       name_blue1 = strip_author_from_ship_name(match_info[1]['ships'][0]['name']),
                       author_blue1 = match_info[1]['ships'][0]['author'],
                       rp_blue1 = '+' + str(match_info[1]['ships'][0]['RPs']),
 
-                      rank_blue2 = 1,
-                      rank_blue2_box = 'rank_neutral',
+                      rank_blue2 = match_info[1]['ships'][1]['rank'],
+                      rank_blue2_box = 'rank_neutral_captain' if match_info[1]['ships'][1]['rank'] <= 8 else 'rank_neutral',
                       name_blue2 = strip_author_from_ship_name(match_info[1]['ships'][1]['name']),
                       author_blue2 = match_info[1]['ships'][1]['author'],
                       rp_blue2 = '+' + str(match_info[1]['ships'][1]['RPs']),
 
-                      rank_blue3 = 1,
-                      rank_blue3_box = 'rank_neutral',
+                      rank_blue3 = match_info[1]['ships'][2]['rank'],
+                      rank_blue3_box = 'rank_neutral_captain' if match_info[1]['ships'][2]['rank'] <= 8 else 'rank_neutral',
                       name_blue3 = strip_author_from_ship_name(match_info[1]['ships'][2]['name']),
                       author_blue3 = match_info[1]['ships'][2]['author'],
-                      rp_blue3 = '+' + str(match_info[1]['ships'][2]['RPs'])))
+                      rp_blue3 = '+' + str(match_info[1]['ships'][2]['RPs']))
                       
-
-
+    with open( os.path.join(SCRIPT_DIR, 'html', 'victory_filled.html'), 'w') as f:
+        f.write(content)
 
 
 
