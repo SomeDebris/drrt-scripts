@@ -81,13 +81,14 @@ def print_victory_html( match_info, all_ships ):
     with open( VICTORY_TEMPLATE_PATH, 'r' ) as vic:
         temp = vic.read()
     
+    print(match_info)
     winner = 0
     if match_info[0]['damageTaken'] < match_info[1]['damageTaken']:
         winner = 1
     
     red_vic_txt  = 'VICTORY!'
     blue_vic_txt = 'LOSES!'
-    if not winner == 0:
+    if winner == 1:
         red_vic_txt = 'LOSES!'
         blue_vic_txt = 'VICTORY!'
     

@@ -106,7 +106,7 @@ def main():
         if data == 'reload':
             ALL_SHIPS = get_ship_list()
             ALL_MATCHES = calculate_all_mlogs(get_mlog_list(), False, is_playoffs, playoffs_losers)
-            print_victory_html( ALL_MATCHES[-1], ALL_SHIPS )
+            print_victory_html( (ALL_MATCHES[-2], ALL_MATCHES[-1]), ALL_SHIPS )
         elif data == 'append':
             parse_mlog(read_latest_mlog_symlink(), True)
         elif data == 'review match':
@@ -208,9 +208,8 @@ def get_ship_list():
             strip_author_from_ship_name( ship_required_information[ 'name' ] )
 
         
-
+        
         ship_list.append( ship_required_information )
-
     return ship_list
 
 def get_mlog_list():
@@ -237,6 +236,7 @@ def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs
                     print_err("calculate_all_mlogs: For some reason, nothing was returned.", True)
         else:
             print_err("calculate_all_mlogs: can't find '{}'!".format(file_path), True)
+    print("THIS SHOULD BE SIMPLE and NOT an alliance")
     sheet_location = None
 
     if in_playoffs:
@@ -483,7 +483,7 @@ def distribute_points(alliance):
                     participant[ 'L' ] += ship[ 'deltaL' ]
                 if ('deltaS' in ship):
                     participant[ 'S' ] += ship[ 'deltaS' ]
-                if ('destructions' in participant):
+                if ('destructions' in ship):
                     participant['destructions'] += ship['destructions']
                 matches_played = participant[ 'D' ] + participant[ 'P' ] + participant[ 'L' ]
                 participant[ 'ranking_score' ] = participant[ 'RPs' ] / matches_played
@@ -491,9 +491,9 @@ def distribute_points(alliance):
 def recalculated_ranks(ship_array):
     return sorted(ship_array, key=lambda d: d[ 'ranking_score' ], reverse=True) 
 
-def datasheet_update_ships(ships, sheet_range):
+def datasheet_update_ships(alliances, sheet_range):
     values = []
-
+    ships = alliances[0]['ships'] + alliances[1]['ships'] 
     for ship in ships:
         if (not 'deltaD' in ship):
             ship[ 'deltaD' ] = 0
@@ -509,6 +509,8 @@ def datasheet_update_ships(ships, sheet_range):
             ship[ 'fleet_name' ] = 'NONE'
         if (not 'enemy_fleet_name' in ship):
             ship[ 'enemy_fleet_name' ] = 'NONE'
+        print("THIS SHOULD BE SIMPLE and NOT an alliance")
+        print(ship)
         values.append([ strip_author_from_ship_name( ship[ 'name' ] ), ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
 
     update_sheet(values, sheet_range)
