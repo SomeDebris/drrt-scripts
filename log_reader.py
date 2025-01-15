@@ -509,8 +509,6 @@ def datasheet_update_ships(alliances, sheet_range):
             ship[ 'fleet_name' ] = 'NONE'
         if (not 'enemy_fleet_name' in ship):
             ship[ 'enemy_fleet_name' ] = 'NONE'
-        print("THIS SHOULD BE SIMPLE and NOT an alliance")
-        print(ship)
         values.append([ strip_author_from_ship_name( ship[ 'name' ] ), ship[ 'destructions' ], ship[ 'RPs' ], ship[ 'deltaD' ], ship[ 'deltaP' ], ship[ 'deltaL' ], ship[ 'deltaS' ], ship[ 'fleet_name' ], ship[ 'enemy_fleet_name' ], ship[ 'mlog_filename' ]])
 
     update_sheet(values, sheet_range)
