@@ -107,10 +107,13 @@ def main():
             ALL_SHIPS = get_ship_list()
             ALL_MATCHES = calculate_all_mlogs(get_mlog_list(), False, is_playoffs, playoffs_losers)
             ALL_SHIPS = recalculated_ranks(ALL_SHIPS)
-            print_next_html(ALL_SHIPS, len(ALL_MATCHES) / 2 )
-            print_game_html(ALL_SHIPS, len(ALL_MATCHES) / 2 )
-            if len(ALL_MATCHES) > 2:
-                print_victory_html( (ALL_MATCHES[-2], ALL_MATCHES[-1]), ALL_SHIPS )
+            print_next_html(ALL_SHIPS, len(ALL_MATCHES) / 2 + 1 )
+            print_game_html(ALL_SHIPS, len(ALL_MATCHES) / 2 + 1 )
+            if len(ALL_MATCHES) >= 2:
+                print("print_victory_html()")
+                print(ALL_MATCHES[0])
+                print(ALL_MATCHES)
+                print_victory_html( (ALL_MATCHES[0], ALL_MATCHES[1]), ALL_SHIPS )
         elif data == 'append':
             parse_mlog(read_latest_mlog_symlink(), True)
         elif data == 'review match':
@@ -219,7 +222,7 @@ def get_ship_list():
     return ship_list
 
 def get_mlog_list():
-    return [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')]
+    return sorted( [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')], key = lambda t: os.stat(t).st_mtime )
 
 
 def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs_losers=False):
