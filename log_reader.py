@@ -111,8 +111,6 @@ def main():
             print_game_html(ALL_SHIPS, len(ALL_MATCHES) / 2 + 1 )
             if len(ALL_MATCHES) >= 2:
                 print("print_victory_html()")
-                print(ALL_MATCHES[0])
-                print(ALL_MATCHES)
                 print_victory_html( (ALL_MATCHES[0], ALL_MATCHES[1]), ALL_SHIPS )
         elif data == 'append':
             parse_mlog(read_latest_mlog_symlink(), True)
@@ -222,7 +220,7 @@ def get_ship_list():
     return ship_list
 
 def get_mlog_list():
-    return sorted( [filename for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')], key = lambda t: os.stat(t).st_mtime )
+    return sorted( [os.path.join(REASSEMBLY_DATA, filename) for filename in os.listdir(REASSEMBLY_DATA) if filename.startswith('MLOG')], key = lambda t: -os.stat(t).st_mtime )
 
 
 def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs_losers=False):
@@ -232,8 +230,9 @@ def calculate_all_mlogs(filenames, check_duplicates, in_playoffs=False, playoffs
     Current_Match_ID = 0
 
     all_ship_match_performances = []
-    for filename in filenames:
-        file_path = os.path.join(REASSEMBLY_DATA, filename)
+    for file_path in filenames:
+        # file_path = os.path.join(REASSEMBLY_DATA, filename)
+        filename = os.path.basename(file_path)
         if (os.path.exists(file_path)):
             with open(file_path) as mlog:
                 alliances = parse_mlog(mlog.read(), check_duplicates, filename)
