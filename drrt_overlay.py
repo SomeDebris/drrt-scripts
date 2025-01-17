@@ -98,7 +98,7 @@ def print_next_html( all_ships, match_number ):
                 ship1[ 'rank' ] = rank + 1
                 ships_in_match.append( ship1 )
     
-    content = template.format( matchnumber = match_number,
+    content = template.format( matchnumber = int(match_number),
                     rank_red1 = ships_in_match[0]['rank'],
                       rank_red1_box = 'rank_neutral_captain' if ships_in_match[0]['rank'] <= 8 else 'rank_neutral',
                       name_red1 = ships_in_match[0]['name'],
@@ -149,7 +149,8 @@ def print_game_html( all_ships, match_number ):
         
         if match_number == 0:
             match_number = 1
-
+        if match_number < 70:
+            return
         target_match = [ row for idx, row in enumerate( schedule_reader ) if idx == match_number - 1 ][0]
         
     ships_in_match = []
