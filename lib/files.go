@@ -5,19 +5,19 @@ import (
 	"path/filepath"
 )
 
-func Path_exists(path string) bool {
+func Path_exists(path string) (bool, error) {
     _, err := os.Stat(path)
 
     if err != nil {
         if os.IsNotExist(err) {
-            return false
+            return false, err
         } else {
             // It may not exist!
-            return false
+            return false, err
         }
     }
 
-    return true
+    return true, nil
 }
 
 func Remove_directory_contents(directory string) error {
