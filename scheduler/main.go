@@ -8,7 +8,8 @@ import (
 	"path/filepath"
 	"sort"
     "log"
-    "json"
+    //"json"
+    "encoding/csv"
 )
 
 func get_inspected_ship_paths(dir string) ([]string, error) {
@@ -36,6 +37,30 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
     return ship_files, nil
 }
 
+/**
+* schedule array
+* whether ship is participating as surrogate
+* any error recieved
+*/
+func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
+    schedule_bytes, err := os.ReadFile(path)
+    if err != nil {
+        log.Fatal("Cannot find schedule file: %s", err)
+    }
+
+    schedule_string := string(schedule_bytes)
+
+    r := csv.NewReader(strings.NewReader(schedule_string))
+
+    records, err := r.ReadAll()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    
+
+}
+
 func main() {
     drrt_directory_arg := flag.String("drrt-directory", ".", "Set the directory the DRRT will be run in.")
     ships_per_alliance_arg := flag.Int("n", 3, "Set the number of ships per alliance.")
@@ -45,9 +70,16 @@ func main() {
     fmt.Println("drrt_directory:     ", *drrt_directory_arg)
     fmt.Println("ships_per_alliance: ", *ships_per_alliance_arg)
 
-    drrt_subdirectories := []string{"Playoffs", "Qualifications", "Ships", "Staging"}
+    ships_directory := filepath.Join(*drrt_directory_arg, "Ships")
+    quals_directory := filepath.Join(*drrt_directory_arg, "Qualifications")
+    stags_directory := filepath.Join(*drrt_directory_arg, "Staging")
+    playf_directory := filepath.Join(*drrt_directory_arg, "Playoffs")
+    scrpt_directory := filepath.Join(*drrt_directory_arg, "drrt-scripts")
+
+    drrt_subdirectories := []string{ships_directory, quals_directory,
+            stags_directory, playf_directory, scrpt_directory}
     for _, dir := range drrt_subdirectories {
-        err := os.MkdirAll(filepath.Join(*drrt_directory_arg, dir), os.ModePerm)
+        err := os.MkdirAll(dir, os.ModePerm)
         if err != nil {
             if os.IsExist(err) {
                 fmt.Printf("Directory '%s' already exists.\n", dir)
@@ -58,11 +90,6 @@ func main() {
         }
     }
 
-    ships_directory := filepath.Join(*drrt_directory_arg, "Ships")
-    quals_directory := filepath.Join(*drrt_directory_arg, "Qualifications")
-    stags_directory := filepath.Join(*drrt_directory_arg, "Staging")
-    playf_directory := filepath.Join(*drrt_directory_arg, "Playoffs")
-    scrpt_directory := filepath.Join(*drrt_directory_arg, "drrt-scripts")
 
     // Empty the contents of the Qualifications directory
     err := lib.Remove_directory_contents(quals_directory)
@@ -84,4 +111,9 @@ func main() {
 
     sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ships), *ships_per_alliance_arg, *ships_per_alliance_arg)
     sch_in_filepath := filepath.Join(scrpt_directory, "schedules", "out", sch_in_filename)
+    sch_out_filepath := filepath.Join(scrpt_directory, "selected_schedule.csv")
+    sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
+
+    
+
 }
