@@ -1,12 +1,12 @@
 package main
 
 import (
-	"drrt-scripts/lib"
-	"flag"
-	"fmt"
-	"os"
-	"path/filepath"
-	"sort"
+    "drrt-scripts/lib"
+    "flag"
+    "fmt"
+    "os"
+    "path/filepath"
+    "sort"
     "log"
     //"json"
     "encoding/csv"
@@ -47,7 +47,7 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
 func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
     schedule_bytes, err := os.ReadFile(path)
     if err != nil {
-        log.Fatal("Cannot find schedule file: %s", err)
+        log.Fatal("Cannot find schedule file: ", err)
     }
 
     schedule_string := string(schedule_bytes)
@@ -59,8 +59,8 @@ func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
         log.Fatal(err)
     }
 
-    schedule    := make([][]int, len(records))
-    surrogates  := make([][]bool, len(records))
+    schedule    := make([][]int, 0)
+    surrogates  := make([][]bool, 0)
 
     // Parse out the strings in the schedules to integers
     for _, match := range records {
