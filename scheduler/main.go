@@ -146,7 +146,7 @@ func main() {
 
     schedule, surrogates, err := get_schedule_from_path(sch_in_filepath)  
     fmt.Printf("Schedule has %d matches.\n", len(schedule))
-    fmt.Printf("Assembling Alliances.")
+    fmt.Printf("Assembling Alliances.\n")
 
     for i, match := range schedule {
         fmt.Printf("match %d: ", i + 1)
