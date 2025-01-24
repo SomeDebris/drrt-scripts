@@ -132,7 +132,7 @@ func main() {
         log.Fatalf("Cannot get inspected ship paths: %s\n", err)
     }
     
-    fmt.Printf("Found %s ship files!\n", len(ships))
+    fmt.Printf("Found %d ship files!\n", len(ships))
 
     if len(ships) < (*ships_per_alliance_arg * 2) {
         log.Fatalf("%d is lesser than the minimum number of ships (%d).\n",
@@ -159,7 +159,7 @@ func main() {
     for i, match := range surrogates {
         fmt.Printf("match %d: ", i + 1)
         for _, surrogate := range match {
-            fmt.Printf("%d ", surrogate)
+            fmt.Printf("%t ", surrogate)
         }
         fmt.Printf("\n")
     }
