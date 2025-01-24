@@ -10,6 +10,8 @@ import (
     "log"
     //"json"
     "encoding/csv"
+    "strconv"
+    "strings"
 )
 
 func get_inspected_ship_paths(dir string) ([]string, error) {
@@ -57,8 +59,33 @@ func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
         log.Fatal(err)
     }
 
-    
+    schedule    := make([][]int, len(records))
+    surrogates  := make([][]bool, len(records))
 
+    // Parse out the strings in the schedules to integers
+    for _, match := range records {
+        ships_in_match      := make([]int, len(match))
+        surrogates_in_match := make([]bool, len(match))
+
+        for i, ship := range match {
+            if strings.ContainsAny(ship, "*") {
+                surrogates_in_match[i] = true
+            } else {
+                surrogates_in_match[i] = false
+            }
+
+            ship_noasterisk := strings.ReplaceAll(ship, "*", "")
+
+            ships_in_match[i], err = strconv.Atoi(ship_noasterisk)
+            if err != nil {
+                return nil, nil, err
+            }
+        }
+        schedule    = append(schedule, ships_in_match)
+        surrogates  = append(surrogates, surrogates_in_match)
+    }
+    
+    return schedule, surrogates, nil
 }
 
 func main() {
