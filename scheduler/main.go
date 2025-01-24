@@ -59,11 +59,11 @@ func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
         log.Fatal(err)
     }
 
-    schedule    := make([][]int, 0)
-    surrogates  := make([][]bool, 0)
+    schedule    := make([][]int, len(records))
+    surrogates  := make([][]bool, len(records))
 
     // Parse out the strings in the schedules to integers
-    for _, match := range records {
+    for j, match := range records {
         ships_in_match      := make([]int, len(match))
         surrogates_in_match := make([]bool, len(match))
 
@@ -81,8 +81,8 @@ func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
                 return nil, nil, err
             }
         }
-        schedule    = append(schedule, ships_in_match)
-        surrogates  = append(surrogates, surrogates_in_match)
+        schedule[j]    = ships_in_match
+        surrogates[j]  = surrogates_in_match
     }
     
     return schedule, surrogates, nil
