@@ -88,6 +88,9 @@ func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
     return schedule, surrogates, nil
 }
 
+// assemble alliance
+// func assemble_alliance(
+
 func main() {
     drrt_directory_arg := flag.String("drrt-directory", ".", "Set the directory the DRRT will be run in.")
     ships_per_alliance_arg := flag.Int("n", 3, "Set the number of ships per alliance.")
@@ -138,9 +141,26 @@ func main() {
 
     sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ships), *ships_per_alliance_arg, *ships_per_alliance_arg)
     sch_in_filepath := filepath.Join(scrpt_directory, "schedules", "out", sch_in_filename)
-    sch_out_filepath := filepath.Join(scrpt_directory, "selected_schedule.csv")
-    sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
+    // sch_out_filepath := filepath.Join(scrpt_directory, "selected_schedule.csv")
+    // sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
 
-    
+    schedule, surrogates, err := get_schedule_from_path(sch_in_filepath)  
+    fmt.Printf("Schedule has %d matches.\n", len(schedule))
+    fmt.Printf("Assembling Alliances.")
 
+    for i, match := range schedule {
+        fmt.Printf("match %d: ", i + 1)
+        for _, ship := range match {
+            fmt.Printf("%d ", ship)
+        }
+        fmt.Printf("\n")
+    }
+
+    for i, match := range surrogates {
+        fmt.Printf("match %d: ", i + 1)
+        for _, surrogate := range match {
+            fmt.Printf("%d ", surrogate)
+        }
+        fmt.Printf("\n")
+    }
 }
