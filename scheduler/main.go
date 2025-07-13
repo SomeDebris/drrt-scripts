@@ -8,11 +8,22 @@ import (
     "path/filepath"
     "sort"
     "log"
-    "json"
+    "encoding/json"
     "encoding/csv"
     "strconv"
     "strings"
 )
+
+type ShipDataError struct{}
+type MultipleShipsInFleetError struct{}
+
+func (m *ShipDataError) Error() string {
+    return "Ship data not found in file or formatted incorrectly."
+}
+
+func (m * MultipleShipsInFleetError) Error() string {
+    return "Fleet file has multiple ships defined. Only one ship should be defined in the file."
+}
 
 func get_inspected_ship_paths(dir string) ([]string, error) {
     var ship_files []string
@@ -48,11 +59,16 @@ func get_clean_ship_from_json_string(ship []byte) (map[string](interface{}), err
 
     ship_output := make(map[string](interface{}))
 
-    if blueprints, ok := ship_map["blueprints"]; ok {
+    if blueprints, ok := ship_map["blueprints"].([]interface{}); ok {
         if len(blueprints) != 1 {
-            err1 := errors.new("kill that fuckin thing")
+            return nil, &MultipleShipsInFleetError{}
         }
+        ship_output = blueprints[0].(map[string](interface{}))["data"].(map[string](interface{}))
+    } else {
+        ship_output = ship_map["data"].(map[string](interface{}))
     }
+
+    return ship_output, nil
 }
 
 /**
