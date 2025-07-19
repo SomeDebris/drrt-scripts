@@ -120,7 +120,7 @@ func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
 }
 
 // assemble alliance
-// func assemble_alliance(
+// func assemble_alliance(ship_filenames []string, red_name string, blue_name string)
 
 func main() {
 	drrt_directory_arg := flag.String("drrt-directory", ".", "Set the directory the DRRT will be run in.")
@@ -193,3 +193,4 @@ func main() {
 		fmt.Printf("\n")
 	}
 }
+
