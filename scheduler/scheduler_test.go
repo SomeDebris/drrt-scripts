@@ -30,3 +30,26 @@ func TestShipUnmarshal(t *testing.T) {
 
 	t.Log(string(b))
 }
+
+func TestFleetUnmarshal(t *testing.T) {
+	ship_target := filepath.Join("..", "Ships", "Debsonder_[by_Debris]_2023W.json")
+	
+	content, err := os.ReadFile(ship_target)
+	if err != nil {
+		t.Errorf("Couldn't read file: %v", err)
+	}
+
+	var debsonder lib.Fleet
+	if err := json.Unmarshal([]byte(content), &debsonder); err != nil {
+		t.Errorf("Couldn't unmarshal: %v", err)
+	}
+	
+	t.Logf("name: %s\n", debsonder.Name)
+
+	b, err := json.MarshalIndent(debsonder, "", "\t")
+	if err != nil {
+		t.Errorf("Couldn't marshal again: %v", err)
+	}
+
+	t.Log(string(b))
+}

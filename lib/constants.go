@@ -13,7 +13,7 @@ type Block struct {
 	Id      any         `json:"ident"`
 	Offset  [2]float64  `json:"offset"`
 	Angle   float64     `json:"angle"`
-	Command CommandData `json:"command"`
+	Command CommandData `json:"command,omitempty"`
 }
 
 type ShipData struct {
