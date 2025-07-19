@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"log"
 	"path/filepath"
 	"testing"
 	"drrt-scripts/lib"
@@ -10,7 +9,7 @@ import (
 )
 
 func TestShipUnmarshal(t *testing.T) {
-	ship_target := filepath.Join("..", "Ships", "CornStar_AF-75_[by_Kepler]_2023W.json")
+	ship_target := filepath.Join("..", "Ships", "Chernobyl_[by_Kaboom]_2023W.json")
 	
 	content, err := os.ReadFile(ship_target)
 	if err != nil {
@@ -22,5 +21,12 @@ func TestShipUnmarshal(t *testing.T) {
 		t.Errorf("Couldn't unmarshal: %v", err)
 	}
 	
-	log.Printf("name: %s\n", cornstar.Data.Name)
+	t.Logf("name: %s\n", cornstar.Data.Name)
+
+	b, err := json.MarshalIndent(cornstar, "", "\t")
+	if err != nil {
+		t.Errorf("Couldn't marshal again: %v", err)
+	}
+
+	t.Log(string(b))
 }
