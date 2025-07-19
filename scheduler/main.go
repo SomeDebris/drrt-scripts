@@ -128,8 +128,8 @@ func main() {
 
 	flag.Parse()
 
-	log.Println("drrt_directory: ", *drrt_directory_arg)
-	log.Println("ships_per_alliance: ", *ships_per_alliance_arg)
+	log.Printf("drrt_directory: %s\n", *drrt_directory_arg)
+	log.Printf("ships_per_alliance: %d\n", *ships_per_alliance_arg)
 
 	ships_directory := filepath.Join(*drrt_directory_arg, "Ships")
 	quals_directory := filepath.Join(*drrt_directory_arg, "Qualifications")
@@ -164,7 +164,7 @@ func main() {
 	log.Printf("Found %d ship files!\n", len(ships))
 
 	if len(ships) < (*ships_per_alliance_arg * 2) {
-		log.Fatalf("%d is lesser than the minimum number of ships (%d).\n",
+		log.Fatalf("Error: %d is lesser than the minimum number of ships (%d).\n",
 			len(ships), *ships_per_alliance_arg)
 	}
 
