@@ -135,10 +135,10 @@ func main() {
 	quals_directory := filepath.Join(*drrt_directory_arg, "Qualifications")
 	stags_directory := filepath.Join(*drrt_directory_arg, "Staging")
 	playf_directory := filepath.Join(*drrt_directory_arg, "Playoffs")
-	scrpt_directory := filepath.Join(*drrt_directory_arg, "drrt-scripts")
+	schej_directory := filepath.Join(*drrt_directory_arg, "schedules")
 
 	drrt_subdirectories := []string{ships_directory, quals_directory,
-		stags_directory, playf_directory, scrpt_directory}
+		stags_directory, playf_directory, schej_directory}
 	for _, dir := range drrt_subdirectories {
 		err := os.MkdirAll(dir, os.ModePerm)
 		if err != nil {
@@ -169,13 +169,13 @@ func main() {
 	}
 
 	sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ships), *ships_per_alliance_arg, *ships_per_alliance_arg)
-	sch_in_filepath := filepath.Join(scrpt_directory, "schedules", "out", sch_in_filename)
+	sch_in_filepath := filepath.Join(schej_directory, "out", sch_in_filename)
 	// sch_out_filepath := filepath.Join(scrpt_directory, "selected_schedule.csv")
 	// sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
 
 	schedule, surrogates, err := get_schedule_from_path(sch_in_filepath)
-	fmt.Printf("Schedule has %d matches.\n", len(schedule))
-	fmt.Printf("Assembling Alliances.\n")
+	log.Printf("Schedule has %d matches.\n", len(schedule))
+	log.Printf("Assembling Alliances.\n")
 
 	for i, match := range schedule {
 		fmt.Printf("match %d: ", i+1)
