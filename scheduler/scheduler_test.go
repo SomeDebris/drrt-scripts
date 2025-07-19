@@ -10,8 +10,8 @@ import (
 )
 
 func TestShipUnmarshal(t *testing.T) {
-	ship_target := filepath.Join("Ships", "CornStar_AF-75_[by_Kepler]_2023W.json")
-
+	ship_target := filepath.Join("..", "Ships", "CornStar_AF-75_[by_Kepler]_2023W.json")
+	
 	content, err := os.ReadFile(ship_target)
 	if err != nil {
 		t.Errorf("Couldn't read file: %v", err)
