@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"fmt"
 	"path/filepath"
 	"testing"
 	"drrt-scripts/lib"
@@ -23,16 +24,19 @@ func TestShipUnmarshal(t *testing.T) {
 	
 	t.Logf("name: %s\n", cornstar.Data.Name)
 
-	b, err := json.MarshalIndent(cornstar, "", "\t")
+	b, err := json.Marshal(cornstar)
 	if err != nil {
 		t.Errorf("Couldn't marshal again: %v", err)
 	}
-
-	t.Log(string(b))
+	
+	filename := fmt.Sprintf("%s_[by %s]_re-marshalled.json", cornstar.Data.Name, cornstar.Data.Author)
+	if err := os.WriteFile(filename, b, 0666); err != nil {
+		t.Errorf("Couldn't save file: %v", err)
+	}
 }
 
 func TestFleetUnmarshal(t *testing.T) {
-	ship_target := filepath.Join("..", "Ships", "Debsonder_[by_Debris]_2023W.json")
+	ship_target := filepath.Join("..", "Ships", "Reassembly_Point_filler_2.0_20250719_12.48.44.PM_530P.json")
 	
 	content, err := os.ReadFile(ship_target)
 	if err != nil {
@@ -46,10 +50,13 @@ func TestFleetUnmarshal(t *testing.T) {
 	
 	t.Logf("name: %s\n", debsonder.Name)
 
-	b, err := json.MarshalIndent(debsonder, "", "\t")
+	b, err := json.Marshal(debsonder)
 	if err != nil {
 		t.Errorf("Couldn't marshal again: %v", err)
 	}
 
-	t.Log(string(b))
+	filename := fmt.Sprintf("%s_[by %s]_re-marshalled.json", debsonder.Blueprints[0].Data.Name, debsonder.Blueprints[0].Data.Author)
+	if err := os.WriteFile(filename, b, 0666); err != nil {
+		t.Errorf("Couldn't save file: %v", err)
+	}
 }
