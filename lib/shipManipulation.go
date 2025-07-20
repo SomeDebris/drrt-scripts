@@ -11,11 +11,11 @@ type CommandData struct {
 }
 
 type Block struct {
-	Id        any          `json:"ident"`
-	Offset    [2]float64   `json:"offset"`
-	Angle     float64      `json:"angle"`
-	Command   *CommandData `json:"command,omitempty"`
-	BindingId int          `json:"bindingId,omitempty"`
+	Id        json.RawMessage `json:"ident"`
+	Offset    [2]float64      `json:"offset"`
+	Angle     float64         `json:"angle"`
+	Command   *CommandData    `json:"command,omitempty"`
+	BindingId int             `json:"bindingId,omitempty"`
 }
 
 type ShipData struct {
@@ -110,7 +110,7 @@ func UnmarshalFleetFromFile(path string) (Fleet, error) {
 }
 
 func MarshalFleetToFile(path string, ship Fleet) error {
-	b, err := json.Marshal(ship)
+	b, err := json.MarshalIndent(ship, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,6 @@ func MarshalFleetToFile(path string, ship Fleet) error {
 
 	return nil
 }
-
 
 func FleetFromShips(template Fleet, ships ...Ship) Fleet {
 	template.Blueprints = ships
