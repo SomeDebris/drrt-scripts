@@ -144,10 +144,40 @@ func main() {
 	}
 
 	log.Printf("Found %d ship files!\n", len(ship_paths))
+	for _, path := range ship_paths {
+		log.Printf("SHIP: %s\n", path)
+	}
 
 	if len(ship_paths) < (*ships_per_alliance_arg * 2) {
 		log.Fatalf("Error: %d is lesser than the minimum number of ships (%d).\n",
 			len(ship_paths), *ships_per_alliance_arg)
+	}
+
+	ships := make([]lib.Ship, len(ship_paths))
+	for i, path := range ship_paths {
+
+		fullpath := filepath.Join(ships_directory, path)
+
+		log.Printf("Trying to unmarshal '%s'...", path)
+
+		isfleet, err := lib.IsReassemblyJSONFileFleet(fullpath)
+		if err != nil {
+			log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err)
+		}
+		
+		if isfleet {
+			fleet, err := lib.UnmarshalFleetFromFile(fullpath)
+			if err != nil {
+				log.Fatalf("Could not unmarshal fleet file '%s': %v", fullpath, err)
+			}
+			// Use the first blueprint in the fleet file
+			ships[i] = fleet.Blueprints[0]
+		} else {
+			ships[i], err = lib.UnmarshalShipFromFile(fullpath)
+			if err != nil { log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err) }
+		}
+
+		log.Printf("Did it work? here's the ship's name: %s", ships[i].Data.Name)
 	}
 
 	sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ship_paths), *ships_per_alliance_arg, *ships_per_alliance_arg)
@@ -156,12 +186,13 @@ func main() {
 	// sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
 
 	schedule, surrogates, err := get_schedule_from_path(sch_in_filepath)
+	if err != nil {
+		log.Fatalf("Could not get scheduling information: %v\n", err)
+	}
+	log.Printf("Used schedule file: %s\n", sch_in_filepath)
 	log.Printf("Schedule has %d matches.\n", len(schedule))
 	log.Printf("Assembling Alliances.\n")
 
-	for _, path := range ship_paths {
-		log.Printf("SHIP: %s\n", path)
-	}
 
 	for i, match := range schedule {
 		log.Printf("match %d: ", i+1)
