@@ -155,9 +155,23 @@ func main() {
 			len(ship_paths), *ships_per_alliance_arg)
 	}
 
+	sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ship_paths), *ships_per_alliance_arg, *ships_per_alliance_arg)
+	sch_in_filepath := filepath.Join(schej_directory, "out", sch_in_filename)
+	// sch_out_filepath := filepath.Join(scrpt_directory, "selected_schedule.csv")
+	// sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
+
+	schedule_idxs, _, err := get_schedule_from_path(sch_in_filepath)
+	if err != nil {
+		log.Fatalf("Could not get scheduling information: %v\n", err)
+	}
+	log.Printf("Used schedule file: %s\n", sch_in_filepath)
+	log.Printf("Schedule has %d matches.\n", len(schedule_idxs))
+	log.Printf("Unmarshalling ships.\n")
+
 	ships := make([]lib.Ship, len(ship_paths))
 
 	var unmarshal_wait_group sync.WaitGroup
+
 	for i, path := range ship_paths {
 		unmarshal_wait_group.Add(1)
 
@@ -186,23 +200,11 @@ func main() {
 		}(i, path)
 	}
 
-	sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ship_paths), *ships_per_alliance_arg, *ships_per_alliance_arg)
-	sch_in_filepath := filepath.Join(schej_directory, "out", sch_in_filename)
-	// sch_out_filepath := filepath.Join(scrpt_directory, "selected_schedule.csv")
-	// sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
-
-	schedule_idxs, _, err := get_schedule_from_path(sch_in_filepath)
-	if err != nil {
-		log.Fatalf("Could not get scheduling information: %v\n", err)
-	}
-	log.Printf("Used schedule file: %s\n", sch_in_filepath)
-	log.Printf("Schedule has %d matches.\n", len(schedule_idxs))
-	log.Printf("Assembling Alliances.\n")
-
 	schedule := make([]DRRTStandardMatch, len(schedule_idxs))
 	
 	unmarshal_wait_group.Wait()
 
+	log.Printf("Saving alliance fleet files to '%s'.", ships_directory)
 	var save_wait_group sync.WaitGroup
 	for i, match := range schedule_idxs {
 		save_wait_group.Add(1)
