@@ -3,7 +3,6 @@ package main
 import (
 	"drrt-scripts/lib"
 	"encoding/csv"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -44,7 +43,7 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
 	})
 
 	for _, file := range file_info {
-		if strings.EqualFold(filepath.Ext(file.Name()), ".json") {
+		if !strings.EqualFold(filepath.Ext(file.Name()), ".json") {
 			continue
 		}
 		ship_files = append(ship_files, file.Name())
@@ -62,7 +61,7 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
 func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
 	schedule_bytes, err := os.ReadFile(path)
 	if err != nil {
-		log.Fatal("Cannot find schedule file: ", err)
+		return nil, nil, err
 	}
 
 	schedule_string := string(schedule_bytes)
@@ -71,7 +70,7 @@ func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
 
 	records, err := r.ReadAll()
 	if err != nil {
-		log.Fatal(err)
+		return nil, nil, err
 	}
 
 	schedule := make([][]int, len(records))
@@ -93,7 +92,7 @@ func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
 
 			ships_in_match[i], err = strconv.Atoi(ship_noasterisk)
 			if err != nil {
-				return nil, nil, err
+				return schedule, surrogates, err
 			}
 		}
 		schedule[j] = ships_in_match
