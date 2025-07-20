@@ -154,11 +154,10 @@ func main() {
 	}
 
 	ships := make([]lib.Ship, len(ship_paths))
+
 	for i, path := range ship_paths {
 
 		fullpath := filepath.Join(ships_directory, path)
-
-		log.Printf("Trying to unmarshal '%s'...", path)
 
 		isfleet, err := lib.IsReassemblyJSONFileFleet(fullpath)
 		if err != nil {
@@ -172,12 +171,12 @@ func main() {
 			}
 			// Use the first blueprint in the fleet file
 			ships[i] = fleet.Blueprints[0]
+			log.Printf("Unmarshalled ship '%s' with author '%s' with schedule index %d from fleet '%s'", ships[i].Data.Name, ships[i].Data.Author, i + 1, fleet.Name)
 		} else {
 			ships[i], err = lib.UnmarshalShipFromFile(fullpath)
 			if err != nil { log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err) }
+			log.Printf("Unmarshalled ship '%s' with author '%s' with schedule index %d", ships[i].Data.Name, ships[i].Data.Author, i + 1)
 		}
-
-		log.Printf("Did it work? here's the ship's name: %s", ships[i].Data.Name)
 	}
 
 	sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ship_paths), *ships_per_alliance_arg, *ships_per_alliance_arg)
@@ -185,30 +184,50 @@ func main() {
 	// sch_out_filepath := filepath.Join(scrpt_directory, "selected_schedule.csv")
 	// sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
 
-	schedule, surrogates, err := get_schedule_from_path(sch_in_filepath)
+	schedule_idxs, _, err := get_schedule_from_path(sch_in_filepath)
 	if err != nil {
 		log.Fatalf("Could not get scheduling information: %v\n", err)
 	}
 	log.Printf("Used schedule file: %s\n", sch_in_filepath)
-	log.Printf("Schedule has %d matches.\n", len(schedule))
+	log.Printf("Schedule has %d matches.\n", len(schedule_idxs))
 	log.Printf("Assembling Alliances.\n")
 
+	schedule := make([]DRRTStandardMatch, len(schedule_idxs))
+	for i, match := range schedule_idxs {
+		go func(idx int, m []int) {
+			schedule[idx].TournamentName = "DRRT"
+			schedule[idx].MatchNumber = idx
 
-	for i, match := range schedule {
-		log.Printf("match %d: ", i+1)
-		for _, ship := range match {
-			log.Printf("%d ", ship)
-		}
-		log.Printf("\n")
+			red  := make([]lib.Ship, *ships_per_alliance_arg)
+			blue := make([]lib.Ship, *ships_per_alliance_arg)
+
+			for j, ship := range m {
+				if j >= *ships_per_alliance_arg {
+					blue[j - *ships_per_alliance_arg] = ships[ship - 1]
+				} else {
+					red[j] = ships[ship - 1]
+				}
+			}
+
+			schedule[idx].RedAlliance  = lib.AssembleAlliance(lib.RED_ALLIANCE_TEMPLATE, red)
+			schedule[idx].BlueAlliance = lib.AssembleAlliance(lib.BLUE_ALLIANCE_TEMPLATE, red)
+
+			schedule[idx].RedAlliance.Name = fmt.Sprintf("Match %00d - ^1The Red Alliance^7", idx+1)
+			schedule[idx].BlueAlliance.Name = fmt.Sprintf("Match %00d - ^4The Blue Alliance^7", idx+1)
+
+			WriteMatchFleets(schedule[idx], quals_directory)
+		}(i, match)
 	}
 
-	for i, match := range surrogates {
-		log.Printf("match %d: ", i+1)
-		for _, surrogate := range match {
-			log.Printf("%t ", surrogate)
-		}
-		log.Printf("\n")
-	}
+
+	//
+	// for i, match := range surrogates {
+	// 	log.Printf("match %d: ", i+1)
+	// 	for _, surrogate := range match {
+	// 		log.Printf("%t ", surrogate)
+	// 	}
+	// 	log.Printf("\n")
+	// }
 
 	
 }
