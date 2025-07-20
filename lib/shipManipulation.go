@@ -3,6 +3,7 @@ package lib
 import (
 	"encoding/json"
 	"os"
+	"compress/gzip"
 )
 
 type CommandData struct {
@@ -78,7 +79,31 @@ func UnmarshalShipFromFile(path string) (Ship, error) {
 		return Ship{}, err
 	}
 
-	return ship, nil
+	return RemoveNilIds(ship), nil
+}
+
+func RemoveNilIds(ship Ship) Ship {
+	// new_blocks := make([]blocks
+	blocks := 0
+	
+	for _, block := range ship.Blocks {
+		if block.Id != nil {
+			blocks++
+		}
+	}
+
+	new_blocks := make([]Block, blocks)
+	block_idx := 0
+	for _, block := range ship.Blocks {
+		if block.Id != nil {
+			new_blocks[block_idx] = block
+			block_idx++
+		}
+	}
+
+	ship.Blocks = new_blocks
+
+	return ship
 }
 
 func MarshalShipToFile(path string, ship Ship) error {
@@ -109,15 +134,21 @@ func UnmarshalFleetFromFile(path string) (Fleet, error) {
 	return fleet, nil
 }
 
-func MarshalFleetToFile(path string, ship Fleet) error {
-	b, err := json.MarshalIndent(ship, "", "  ")
+func MarshalFleetToFile(path string, fleet Fleet) error {
+	b, err := json.Marshal(fleet)
 	if err != nil {
 		return err
 	}
 
-	if err := os.WriteFile(path, b, 0666); err != nil {
+	file, err := os.Create(path)
+	if err != nil {
 		return err
 	}
+	defer file.Close()
+
+	gz, _ := gzip.NewWriterLevel(file, gzip.BestCompression)
+	gz.Write(b)
+	gz.Close()
 
 	return nil
 }

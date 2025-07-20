@@ -14,8 +14,8 @@ type DRRTStandardMatch struct {
 }
 
 func WriteMatchFleets(match DRRTStandardMatch, directory string) error {
-	redpath := filepath.Join(directory, fmt.Sprintf("%s_%s.json", match.RedAlliance.Name, match.TournamentName))
-	bluepath := filepath.Join(directory, fmt.Sprintf("%s_%s.json", match.BlueAlliance.Name, match.TournamentName))
+	redpath := filepath.Join(directory, fmt.Sprintf("%s_%s.json.gz", match.RedAlliance.Name, match.TournamentName))
+	bluepath := filepath.Join(directory, fmt.Sprintf("%s_%s.json.gz", match.BlueAlliance.Name, match.TournamentName))
 
 	err := lib.MarshalFleetToFile(redpath, match.RedAlliance)
 	if err != nil {
