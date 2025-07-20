@@ -225,7 +225,7 @@ func main() {
 			}
 
 			schedule[i].RedAlliance  = lib.AssembleAlliance(lib.RED_ALLIANCE_TEMPLATE, red)
-			schedule[i].BlueAlliance = lib.AssembleAlliance(lib.BLUE_ALLIANCE_TEMPLATE, red)
+			schedule[i].BlueAlliance = lib.AssembleAlliance(lib.BLUE_ALLIANCE_TEMPLATE, blue)
 
 			schedule[i].RedAlliance.Name = fmt.Sprintf("Match %03d - ^1The Red Alliance^7", i+1)
 			schedule[i].BlueAlliance.Name = fmt.Sprintf("Match %03d - ^4The Blue Alliance^7", i+1)
