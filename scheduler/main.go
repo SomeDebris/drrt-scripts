@@ -44,6 +44,9 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
 	})
 
 	for _, file := range file_info {
+		if strings.EqualFold(filepath.Ext(file.Name()), ".json") {
+			continue
+		}
 		ship_files = append(ship_files, file.Name())
 	}
 
@@ -156,19 +159,19 @@ func main() {
 		log.Fatalf("Cannot remove contents of Qualifications directory: %s\n", err)
 	}
 
-	ships, err := get_inspected_ship_paths(ships_directory)
+	ship_paths, err := get_inspected_ship_paths(ships_directory)
 	if err != nil {
 		log.Fatalf("Cannot get inspected ship paths: %s\n", err)
 	}
 
-	log.Printf("Found %d ship files!\n", len(ships))
+	log.Printf("Found %d ship files!\n", len(ship_paths))
 
-	if len(ships) < (*ships_per_alliance_arg * 2) {
+	if len(ship_paths) < (*ships_per_alliance_arg * 2) {
 		log.Fatalf("Error: %d is lesser than the minimum number of ships (%d).\n",
-			len(ships), *ships_per_alliance_arg)
+			len(ship_paths), *ships_per_alliance_arg)
 	}
 
-	sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ships), *ships_per_alliance_arg, *ships_per_alliance_arg)
+	sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ship_paths), *ships_per_alliance_arg, *ships_per_alliance_arg)
 	sch_in_filepath := filepath.Join(schej_directory, "out", sch_in_filename)
 	// sch_out_filepath := filepath.Join(scrpt_directory, "selected_schedule.csv")
 	// sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
@@ -177,20 +180,26 @@ func main() {
 	log.Printf("Schedule has %d matches.\n", len(schedule))
 	log.Printf("Assembling Alliances.\n")
 
+	for _, path := range ship_paths {
+		log.Printf("SHIP: %s\n", path)
+	}
+
 	for i, match := range schedule {
-		fmt.Printf("match %d: ", i+1)
+		log.Printf("match %d: ", i+1)
 		for _, ship := range match {
-			fmt.Printf("%d ", ship)
+			log.Printf("%d ", ship)
 		}
-		fmt.Printf("\n")
+		log.Printf("\n")
 	}
 
 	for i, match := range surrogates {
-		fmt.Printf("match %d: ", i+1)
+		log.Printf("match %d: ", i+1)
 		for _, surrogate := range match {
-			fmt.Printf("%t ", surrogate)
+			log.Printf("%t ", surrogate)
 		}
-		fmt.Printf("\n")
+		log.Printf("\n")
 	}
+
+	
 }
 
