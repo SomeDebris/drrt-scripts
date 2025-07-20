@@ -53,26 +53,6 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
 	return ship_files, nil
 }
 
-func get_clean_ship_from_json_string(ship []byte) (map[string](interface{}), error) {
-	ship_map := make(map[string](interface{}))
-	err := json.Unmarshal(ship, &ship_map)
-	if err != nil {
-		return nil, err
-	}
-
-	ship_output := make(map[string](interface{}))
-
-	if blueprints, ok := ship_map["blueprints"].([]interface{}); ok {
-		if len(blueprints) != 1 {
-			return nil, &MultipleShipsInFleetError{}
-		}
-		ship_output = blueprints[0].(map[string](interface{}))["data"].(map[string](interface{}))
-	} else {
-		ship_output = ship_map["data"].(map[string](interface{}))
-	}
-
-	return ship_output, nil
-}
 
 /**
 * schedule array
