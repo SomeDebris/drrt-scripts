@@ -11,6 +11,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 type ShipDataError struct{}
@@ -107,6 +108,7 @@ func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
 func main() {
 	drrt_directory_arg := flag.String("drrt-directory", ".", "Set the directory the DRRT will be run in.")
 	ships_per_alliance_arg := flag.Int("n", 3, "Set the number of ships per alliance.")
+	tournament_name_arg := flag.String("tournament-name", "DRRT", "Set the number of ships per alliance.")
 
 	flag.Parse()
 
@@ -155,28 +157,33 @@ func main() {
 
 	ships := make([]lib.Ship, len(ship_paths))
 
+	var unmarshal_wait_group sync.WaitGroup
 	for i, path := range ship_paths {
+		unmarshal_wait_group.Add(1)
 
-		fullpath := filepath.Join(ships_directory, path)
+		go func(i int, path string) {
+			defer unmarshal_wait_group.Done()
+			fullpath := filepath.Join(ships_directory, path)
 
-		isfleet, err := lib.IsReassemblyJSONFileFleet(fullpath)
-		if err != nil {
-			log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err)
-		}
-		
-		if isfleet {
-			fleet, err := lib.UnmarshalFleetFromFile(fullpath)
+			isfleet, err := lib.IsReassemblyJSONFileFleet(fullpath)
 			if err != nil {
-				log.Fatalf("Could not unmarshal fleet file '%s': %v", fullpath, err)
+				log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err)
 			}
-			// Use the first blueprint in the fleet file
-			ships[i] = fleet.Blueprints[0]
-			log.Printf("Unmarshalled ship '%s' with author '%s' with schedule index %d from fleet '%s'", ships[i].Data.Name, ships[i].Data.Author, i + 1, fleet.Name)
-		} else {
-			ships[i], err = lib.UnmarshalShipFromFile(fullpath)
-			if err != nil { log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err) }
-			log.Printf("Unmarshalled ship '%s' with author '%s' with schedule index %d", ships[i].Data.Name, ships[i].Data.Author, i + 1)
-		}
+
+			if isfleet {
+				fleet, err := lib.UnmarshalFleetFromFile(fullpath)
+				if err != nil {
+					log.Fatalf("Could not unmarshal fleet file '%s': %v", fullpath, err)
+				}
+				// Use the first blueprint in the fleet file
+				ships[i] = fleet.Blueprints[0]
+				log.Printf("Unmarshalled ship '%s' with author '%s' with schedule index %d from fleet '%s'", ships[i].Data.Name, ships[i].Data.Author, i + 1, fleet.Name)
+			} else {
+				ships[i], err = lib.UnmarshalShipFromFile(fullpath)
+				if err != nil { log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err) }
+				log.Printf("Unmarshalled ship '%s' with author '%s' with schedule index %d", ships[i].Data.Name, ships[i].Data.Author, i + 1)
+			}
+		}(i, path)
 	}
 
 	sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ship_paths), *ships_per_alliance_arg, *ships_per_alliance_arg)
@@ -193,15 +200,23 @@ func main() {
 	log.Printf("Assembling Alliances.\n")
 
 	schedule := make([]DRRTStandardMatch, len(schedule_idxs))
+	
+	unmarshal_wait_group.Wait()
+
+	var save_wait_group sync.WaitGroup
 	for i, match := range schedule_idxs {
-		go func(idx int, m []int) {
-			schedule[idx].TournamentName = "DRRT"
-			schedule[idx].MatchNumber = idx
+		save_wait_group.Add(1)
+
+		go func(i int, match []int) {
+			defer save_wait_group.Done()
+
+			schedule[i].TournamentName = *tournament_name_arg
+			schedule[i].MatchNumber = i
 
 			red  := make([]lib.Ship, *ships_per_alliance_arg)
 			blue := make([]lib.Ship, *ships_per_alliance_arg)
 
-			for j, ship := range m {
+			for j, ship := range match {
 				if j >= *ships_per_alliance_arg {
 					blue[j - *ships_per_alliance_arg] = ships[ship - 1]
 				} else {
@@ -209,26 +224,23 @@ func main() {
 				}
 			}
 
-			schedule[idx].RedAlliance  = lib.AssembleAlliance(lib.RED_ALLIANCE_TEMPLATE, red)
-			schedule[idx].BlueAlliance = lib.AssembleAlliance(lib.BLUE_ALLIANCE_TEMPLATE, red)
+			schedule[i].RedAlliance  = lib.AssembleAlliance(lib.RED_ALLIANCE_TEMPLATE, red)
+			schedule[i].BlueAlliance = lib.AssembleAlliance(lib.BLUE_ALLIANCE_TEMPLATE, red)
 
-			schedule[idx].RedAlliance.Name = fmt.Sprintf("Match %00d - ^1The Red Alliance^7", idx+1)
-			schedule[idx].BlueAlliance.Name = fmt.Sprintf("Match %00d - ^4The Blue Alliance^7", idx+1)
+			schedule[i].RedAlliance.Name = fmt.Sprintf("Match %00d - ^1The Red Alliance^7", i+1)
+			schedule[i].BlueAlliance.Name = fmt.Sprintf("Match %00d - ^4The Blue Alliance^7", i+1)
 
-			WriteMatchFleets(schedule[idx], quals_directory)
+			WriteMatchFleets(schedule[i], quals_directory)
+			if err != nil {
+				log.Fatalf("Failed to save fleets for match %d: %v", i + 1, err)
+			}
+
+			log.Printf("Saved fleets for match %d", i + 1)
 		}(i, match)
 	}
 
+	save_wait_group.Wait()
 
-	//
-	// for i, match := range surrogates {
-	// 	log.Printf("match %d: ", i+1)
-	// 	for _, surrogate := range match {
-	// 		log.Printf("%t ", surrogate)
-	// 	}
-	// 	log.Printf("\n")
-	// }
-
-	
+	log.Printf("Done. Have a great tournament!")
 }
 
