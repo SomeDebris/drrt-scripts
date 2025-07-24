@@ -232,7 +232,7 @@ func main() {
 			schedule[i].RedAlliance.Name = fmt.Sprintf("Match %03d - ^1The Red Alliance^7", i+1)
 			schedule[i].BlueAlliance.Name = fmt.Sprintf("Match %03d - ^4The Blue Alliance^7", i+1)
 
-			WriteMatchFleets(schedule[i], quals_directory)
+			err = WriteMatchFleets(schedule[i], quals_directory)
 			if err != nil {
 				log.Fatalf("Failed to save fleets for match %d: %v", i + 1, err)
 			}
