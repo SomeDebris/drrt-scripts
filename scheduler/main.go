@@ -4,6 +4,7 @@ import (
 	"drrt-scripts/lib"
 	"encoding/csv"
 	"flag"
+	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -12,6 +13,11 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+)
+
+const (
+	VERSION = "0.0.0"
+	PROGRAM_NAME = "drrt-scheduler"
 )
 
 type ShipDataError struct{}
@@ -59,7 +65,7 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
 * whether ship is participating as surrogate
 * any error recieved
  */
-func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
+func readScheduleAtPath(path string) ([][]int, [][]bool, error) {
 	schedule_bytes, err := os.ReadFile(path)
 	if err != nil {
 		return nil, nil, err
@@ -106,12 +112,23 @@ func get_schedule_from_path(path string) ([][]int, [][]bool, error) {
 // func assemble_alliance(ship_filenames []string, red_name string, blue_name string)
 
 func main() {
-	drrt_directory_arg := flag.String("drrt-directory", ".", "Set the directory the DRRT will be run in.")
+	drrt_directory_arg := flag.String("-drrt-directory", ".", "Set the directory the DRRT will be run in.")
 	ships_per_alliance_arg := flag.Int("n", 3, "Set the number of ships per alliance.")
-	tournament_name_arg := flag.String("tournament-name", "DRRT", "Set the number of ships per alliance.")
+	tournament_name_arg := flag.String("-tournament-name", "DRRT", "Set the name of the tournament. Red and Blue Alliance fleet files are suffixed with this.")
+	log_file_name := flag.String("-log-filename", "", "Send log messages to a file. If not set, log to standard error.")
 
 	flag.Parse()
 
+	if *log_file_name != "" {
+		log_file, err := os.Create(*log_file_name)
+		if err != nil {
+			log.Fatalf("Could not open log file '%s': %v", *log_file_name, err)
+		}
+		defer log_file.Close()
+		log_writer := bufio.NewWriter(log_file)
+		log.SetOutput(log_writer)
+	}
+	log.Printf("%s Version %s", os.Args[0], VERSION)
 	log.Printf("drrt_directory: %s\n", *drrt_directory_arg)
 	log.Printf("ships_per_alliance: %d\n", *ships_per_alliance_arg)
 
@@ -160,12 +177,12 @@ func main() {
 	// sch_out_filepath := filepath.Join(scrpt_directory, "selected_schedule.csv")
 	// sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
 
-	schedule_idxs, _, err := get_schedule_from_path(sch_in_filepath)
+	schedule_indices, _, err := readScheduleAtPath(sch_in_filepath)
 	if err != nil {
 		log.Fatalf("Could not get scheduling information: %v\n", err)
 	}
 	log.Printf("Used schedule file: %s\n", sch_in_filepath)
-	log.Printf("Schedule has %d matches.\n", len(schedule_idxs))
+	log.Printf("Schedule has %d matches.\n", len(schedule_indices))
 	log.Printf("Unmarshalling ships.\n")
 
 	ships := make([]lib.Ship, len(ship_paths))
@@ -200,13 +217,13 @@ func main() {
 		}(i, path)
 	}
 
-	schedule := make([]DRRTStandardMatch, len(schedule_idxs))
+	schedule := make([]DRRTStandardMatch, len(schedule_indices))
 	
 	unmarshal_wait_group.Wait()
 
 	log.Printf("Saving alliance fleet files to '%s'.", ships_directory)
 	var save_wait_group sync.WaitGroup
-	for i, match := range schedule_idxs {
+	for i, match := range schedule_indices {
 		save_wait_group.Add(1)
 
 		go func(i int, match []int) {
