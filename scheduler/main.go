@@ -127,6 +127,7 @@ func main() {
 		defer log_file.Close()
 		log_writer := bufio.NewWriter(log_file)
 		log.SetOutput(log_writer)
+		defer log_writer.Flush()
 	}
 	log.Printf("%s Version %s", os.Args[0], VERSION)
 	log.Printf("drrt_directory: %s\n", *drrt_directory_arg)
