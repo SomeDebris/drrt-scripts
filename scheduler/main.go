@@ -112,10 +112,10 @@ func readScheduleAtPath(path string) ([][]int, [][]bool, error) {
 // func assemble_alliance(ship_filenames []string, red_name string, blue_name string)
 
 func main() {
-	drrt_directory_arg := flag.String("-drrt-directory", ".", "Set the directory the DRRT will be run in.")
+	drrt_directory_arg := flag.String("drrt-directory", ".", "Set the directory the DRRT will be run in.")
 	ships_per_alliance_arg := flag.Int("n", 3, "Set the number of ships per alliance.")
-	tournament_name_arg := flag.String("-tournament-name", "DRRT", "Set the name of the tournament. Red and Blue Alliance fleet files are suffixed with this.")
-	log_file_name := flag.String("-log-filename", "", "Send log messages to a file. If not set, log to standard error.")
+	tournament_name_arg := flag.String("tournament-name", "DRRT", "Set the name of the tournament. Red and Blue Alliance fleet files are suffixed with this.")
+	log_file_name := flag.String("log-filename", "", "Send log messages to a file. If not set, log to standard error.")
 
 	flag.Parse()
 
