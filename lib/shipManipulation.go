@@ -1,9 +1,9 @@
 package lib
 
 import (
+	"compress/gzip"
 	"encoding/json"
 	"os"
-	"compress/gzip"
 )
 
 type CommandData struct {
@@ -85,7 +85,7 @@ func UnmarshalShipFromFile(path string) (Ship, error) {
 func RemoveNilIds(ship Ship) Ship {
 	// new_blocks := make([]blocks
 	blocks := 0
-	
+
 	for _, block := range ship.Blocks {
 		if block.Id != nil {
 			blocks++
