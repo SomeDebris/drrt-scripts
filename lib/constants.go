@@ -20,3 +20,5 @@ var BLUE_ALLIANCE_TEMPLATE Fleet = Fleet{
 	101,
 	"The Blue Alliance",
 }
+
+var REASSEMBLY_FILE_TIMESTAMP_FMT = "20060102_03.04.05.PM"
