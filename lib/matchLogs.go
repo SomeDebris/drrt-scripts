@@ -5,6 +5,8 @@ import (
 	"bufio"
 	"os"
 	"regexp"
+	"strconv"
+	"fmt"
 )
 
 const (
@@ -20,6 +22,14 @@ const (
 	mlog_destruction = `DESTRUCTION`
 	mlog_result = `RESULT`
 	mlog_survival = `SURVIVAL`
+
+	length_fleetListingSlice = 5
+	length_resultListingSlice = 5
+
+	length_shipListingSlice = 2
+	length_survivalListingSlice = 2
+
+	length_destructionListingSlice = 4
 )
 
 type DRRTStandardTerseMatchLog struct {
@@ -54,6 +64,15 @@ type MatchLogDestructionListing struct {
 	Fdestroyed string
 }
 
+type matchLogRaw struct {
+	StartListings []MatchLogFleetListing
+	ShipListings []MatchLogShipListing
+	DestructionListings []MatchLogDestructionListing
+	ResultListings []MatchLogFleetListing
+	SurvivalListings []MatchLogShipListing
+}
+
+
 
 func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 	mlog_regex_type := regexp.MustCompile(mlog_typeRegexCaptureString)
@@ -75,13 +94,53 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 
 	var mlog_object DRRTStandardTerseMatchLog
 
+	var mlog_raw matchLogRaw
+
 	match_log_scanner := bufio.NewScanner(match_log)
+
+	mlog_RecordNumber := 0
+
 	for match_log_scanner.Scan() {
 		line := match_log_scanner.Text()
 
+		mlog_RecordNumber++
+
 		switch string(mlog_regex_type.Find([]byte(line))) {
 		case mlog_start:
-			// TODO
+			fields := mlog_regex_map[mlog_start].FindAll([]byte(line), -1)
+
+			if len(fields) != length_fleetListingSlice {
+				return DRRTStandardTerseMatchLog{}, fmt.Errorf("Line %d: Failed parsing [START] line: %d fields detected when there should have been %d", mlog_RecordNumber, len(fields), length_fleetListingSlice)
+			}
+
+			var listing MatchLogFleetListing
+
+			// TODO: try to make this require less statements
+			listing.Faction, err = strconv.Atoi(string(fields[0]))
+			if err != nil {
+				return DRRTStandardTerseMatchLog{}, err
+			}
+
+			listing.Name = string(fields[1])
+
+			listing.DamageTaken, err = strconv.Atoi(string(fields[2]))
+			if err != nil {
+				return DRRTStandardTerseMatchLog{}, err
+			}
+
+			listing.DamageInflicted, err = strconv.Atoi(string(fields[3]))
+			if err != nil {
+				return DRRTStandardTerseMatchLog{}, err
+			}
+
+			listing.Alive, err = strconv.Atoi(string(fields[4]))
+			if err != nil {
+				return DRRTStandardTerseMatchLog{}, err
+			}
+
+			mlog_raw.StartListings = append(mlog_raw.StartListings, listing)
+		case mlog_ship:
+
 		}
 	}
 }
