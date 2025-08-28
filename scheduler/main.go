@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"github.com/SomeDebris/rsmships-go"
 )
 
 const (
@@ -186,7 +187,7 @@ func main() {
 	log.Printf("Schedule has %d matches.\n", len(schedule_indices))
 	log.Printf("Unmarshalling ships.\n")
 
-	ships := make([]lib.Ship, len(ship_paths))
+	ships := make([]*rsmships.Ship, len(ship_paths))
 
 	var unmarshal_wait_group sync.WaitGroup
 
@@ -197,13 +198,13 @@ func main() {
 			defer unmarshal_wait_group.Done()
 			fullpath := filepath.Join(ships_directory, path)
 
-			isfleet, err := lib.IsReassemblyJSONFileFleet(fullpath)
+			isfleet, err := rsmships.IsReassemblyJSONFileFleet(fullpath)
 			if err != nil {
 				log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err)
 			}
 
 			if isfleet {
-				fleet, err := lib.UnmarshalFleetFromFile(fullpath)
+				fleet, err := rsmships.UnmarshalFleetFromFile(fullpath)
 				if err != nil {
 					log.Fatalf("Could not unmarshal fleet file '%s': %v", fullpath, err)
 				}
@@ -211,7 +212,7 @@ func main() {
 				ships[i] = fleet.Blueprints[0]
 				log.Printf("Unmarshalled ship '%s' with author '%s' with schedule index %d from fleet '%s'", ships[i].Data.Name, ships[i].Data.Author, i + 1, fleet.Name)
 			} else {
-				ships[i], err = lib.UnmarshalShipFromFile(fullpath)
+				*ships[i], err = rsmships.UnmarshalShipFromFile(fullpath)
 				if err != nil { log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err) }
 				log.Printf("Unmarshalled ship '%s' with author '%s' with schedule index %d", ships[i].Data.Name, ships[i].Data.Author, i + 1)
 			}
@@ -233,8 +234,8 @@ func main() {
 			schedule[i].TournamentName = *tournament_name_arg
 			schedule[i].MatchNumber = i
 
-			red  := make([]lib.Ship, *ships_per_alliance_arg)
-			blue := make([]lib.Ship, *ships_per_alliance_arg)
+			red  := make([]*rsmships.Ship, *ships_per_alliance_arg)
+			blue := make([]*rsmships.Ship, *ships_per_alliance_arg)
 
 			for j, ship := range match {
 				if j >= *ships_per_alliance_arg {
@@ -244,8 +245,8 @@ func main() {
 				}
 			}
 
-			schedule[i].RedAlliance  = lib.AssembleAlliance(lib.RED_ALLIANCE_TEMPLATE, red)
-			schedule[i].BlueAlliance = lib.AssembleAlliance(lib.BLUE_ALLIANCE_TEMPLATE, blue)
+			schedule[i].RedAlliance  = lib.RED_ALLIANCE_TEMPLATE.CopyUsingShips(red)
+			schedule[i].BlueAlliance = lib.BLUE_ALLIANCE_TEMPLATE.CopyUsingShips(blue)
 
 			schedule[i].RedAlliance.Name = fmt.Sprintf("Match %03d - ^1The Red Alliance^7", i+1)
 			schedule[i].BlueAlliance.Name = fmt.Sprintf("Match %03d - ^4The Blue Alliance^7", i+1)
