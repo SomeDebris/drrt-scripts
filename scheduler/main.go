@@ -279,9 +279,9 @@ func main() {
 
 			for j, ship := range match {
 				if j >= *ships_per_alliance_arg {
-					blue[j - *ships_per_alliance_arg] = ships[ship - 1]
+					blue[j - *ships_per_alliance_arg] = &ships[ship - 1]
 				} else {
-					red[j] = ships[ship - 1]
+					red[j] = &ships[ship - 1]
 				}
 			}
 
