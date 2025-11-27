@@ -127,7 +127,7 @@ func main() {
 	flag.Parse()
 
 	var handler *slog.TextHandler
-	handler_options := slog.HandlerOptions{Level: log_lvl}
+	handler_options := &slog.HandlerOptions{Level: log_lvl}
 
 	if *log_file_name != "" {
 		log_file, err := os.Create(*log_file_name)
