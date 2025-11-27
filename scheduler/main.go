@@ -263,7 +263,7 @@ func main() {
 	
 	unmarshal_wait_group.Wait()
 
-	log.Printf("Saving alliance fleet files to '%s'.", ships_directory)
+	slog.Info("Saving alliance fleet files", "dir", ships_directory)
 	var save_wait_group sync.WaitGroup
 	for i, match := range schedule_indices {
 		save_wait_group.Add(1)
@@ -293,15 +293,17 @@ func main() {
 
 			err = WriteMatchFleets(schedule[i], quals_directory)
 			if err != nil {
-				log.Fatalf("Failed to save fleets for match %d: %v", i + 1, err)
+				slog.Error("Failed to save fleets for match", "match", i + 1, "err", err)
+				exit_code = 1
+				return
 			}
 
-			log.Printf("Saved fleets for match %d", i + 1)
+			slog.Info("Saved fleets for match", "match", i + 1)
 		}(i, match)
 	}
 
 	save_wait_group.Wait()
 
-	log.Printf("Done. Have a great tournament!")
+	slog.Info("Scheduler finished. Have a great tournament!")
 }
 
