@@ -248,7 +248,7 @@ func main() {
 				ships[i] = fleet.Blueprints[0]
 				slog.Info("Unmarshalled ship from fleet", "name", ships[i].Data.Name, "author", ships[i].Data.Author, "idx", i + 1, "fleet.Name", fleet.Name)
 			} else {
-				*ships[i], err = rsmships.UnmarshalShipFromFile(fullpath)
+				ships[i], err = rsmships.UnmarshalShipFromFile(fullpath)
 				if err != nil {
 					slog.Error("Failed unmarshalling ship", "path", fullpath, "err", err)
 					exit_code = 1
