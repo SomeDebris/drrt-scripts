@@ -180,7 +180,7 @@ func parseDestructionLine(line string) (MatchLogDestructionListing, error) {
 	return listing, nil
 }
 
-
+/*
 func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 	mlog_regex_type := regexp.MustCompile(mlog_typeRegexCaptureString)
 
@@ -309,4 +309,4 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 		}
 	}
 }
-
+// */
