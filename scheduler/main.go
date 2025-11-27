@@ -7,6 +7,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"sort"
@@ -113,12 +114,20 @@ func readScheduleAtPath(path string) ([][]int, [][]bool, error) {
 // func assemble_alliance(ship_filenames []string, red_name string, blue_name string)
 
 func main() {
+	exit_code := 0
+	defer os.Exit(exit_code)
+
+	log_lvl := slog.LevelInfo
+
 	drrt_directory_arg := flag.String("drrt-directory", ".", "Set the directory the DRRT will be run in.")
 	ships_per_alliance_arg := flag.Int("n", 3, "Set the number of ships per alliance.")
 	tournament_name_arg := flag.String("tournament-name", "DRRT", "Set the name of the tournament. Red and Blue Alliance fleet files are suffixed with this.")
 	log_file_name := flag.String("log-filename", "", "Send log messages to a file. If not set, log to standard error.")
 
 	flag.Parse()
+
+	var handler *slog.TextHandler
+	handler_options := slog.HandlerOptions{Level: log_lvl}
 
 	if *log_file_name != "" {
 		log_file, err := os.Create(*log_file_name)
@@ -127,12 +136,19 @@ func main() {
 		}
 		defer log_file.Close()
 		log_writer := bufio.NewWriter(log_file)
-		log.SetOutput(log_writer)
+		handler = slog.NewTextHandler(log_writer, handler_options)
 		defer log_writer.Flush()
+	} else {
+		handler = slog.NewTextHandler(os.Stderr, handler_options)
 	}
-	log.Printf("%s Version %s", os.Args[0], VERSION)
-	log.Printf("drrt_directory: %s\n", *drrt_directory_arg)
-	log.Printf("ships_per_alliance: %d\n", *ships_per_alliance_arg)
+	
+	logger := slog.New(handler)
+
+	// Set the default log tech to the logger thing
+	slog.SetDefault(logger)
+
+	slog.Info("Starting DRRT Scheduler.", "exec", os.Args[0], "version", VERSION)
+	slog.Info("Arguments", "drrt-directory", *drrt_directory_arg, "n", *ships_per_alliance_arg, "tournament-name", *tournament_name_arg, "log-filename", *log_file_name)
 
 	ships_directory := filepath.Join(*drrt_directory_arg, "Ships")
 	quals_directory := filepath.Join(*drrt_directory_arg, "Qualifications")
@@ -140,15 +156,24 @@ func main() {
 	playf_directory := filepath.Join(*drrt_directory_arg, "Playoffs")
 	schej_directory := filepath.Join(*drrt_directory_arg, "schedules")
 
+	slog.Debug("Directories",
+		"ships",          ships_directory,
+		"qualifications", quals_directory,
+		"staging",        stags_directory,
+		"playoffs",       playf_directory,
+		"schedules",      schej_directory)
+
 	drrt_subdirectories := []string{ships_directory, quals_directory,
 		stags_directory, playf_directory, schej_directory}
 	for _, dir := range drrt_subdirectories {
 		err := os.MkdirAll(dir, os.ModePerm)
 		if err != nil {
 			if os.IsExist(err) {
-				log.Printf("Directory '%s' already exists.\n", dir)
+				slog.Warn("Tried to create directory, but it already exists. Continuing.", "dir", dir)
 			} else {
-				log.Fatalf("Error making directory '%s': %s\n", dir, err)
+				slog.Error("Failed to create directory. Cannot recover.", "dir", dir, "err", err)
+				exit_code = 1
+				return
 			}
 		}
 	}
@@ -156,22 +181,28 @@ func main() {
 	// Empty the contents of the Qualifications directory
 	err := lib.Remove_directory_contents(quals_directory)
 	if err != nil {
-		log.Fatalf("Cannot remove contents of Qualifications directory: %s\n", err)
+		slog.Error("Cannot remove contents of Qualifications directory.", "err", err)
+		exit_code = 1
+		return
 	}
 
 	ship_paths, err := get_inspected_ship_paths(ships_directory)
 	if err != nil {
-		log.Fatalf("Cannot get inspected ship paths: %s\n", err)
+		slog.Error("Cannot get inspected ship paths.", "err", err)
+		exit_code = 1
+		return
 	}
 
 	log.Printf("Found %d ship files!\n", len(ship_paths))
+	slog.Info("Found paths for ship files.", "count", len(ship_paths))
 	for _, path := range ship_paths {
-		log.Printf("SHIP: %s\n", path)
+		slog.Debug("Ship path", "path", path)
 	}
 
 	if len(ship_paths) < (*ships_per_alliance_arg * 2) {
-		log.Fatalf("Error: %d is lesser than the minimum number of ships (%d).\n",
-			len(ship_paths), *ships_per_alliance_arg)
+		slog.Error("Number of participating shps is lower than the minimum number of ships.", "min", *ships_per_alliance_arg * 2, "count", len(ship_paths))
+		exit_code = 1
+		return
 	}
 
 	sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ship_paths), *ships_per_alliance_arg, *ships_per_alliance_arg)
@@ -181,11 +212,12 @@ func main() {
 
 	schedule_indices, _, err := readScheduleAtPath(sch_in_filepath)
 	if err != nil {
-		log.Fatalf("Could not get scheduling information: %v\n", err)
+		slog.Error("Could not get scheduling information.", "err", err)
+		exit_code = 1
+		return
 	}
-	log.Printf("Used schedule file: %s\n", sch_in_filepath)
-	log.Printf("Schedule has %d matches.\n", len(schedule_indices))
-	log.Printf("Unmarshalling ships.\n")
+	slog.Info("Schedule information", "path", sch_in_filepath, "matches", len(schedule_indices))
+	slog.Debug("Starting unmarshalling ships.")
 
 	ships := make([]*rsmships.Ship, len(ship_paths))
 
@@ -200,21 +232,29 @@ func main() {
 
 			isfleet, err := rsmships.IsReassemblyJSONFileFleet(fullpath)
 			if err != nil {
-				log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err)
+				slog.Error("Failed preparation for unmarshalling ship", "path", fullpath, "err", err)
+				exit_code = 1
+				return
 			}
 
 			if isfleet {
 				fleet, err := rsmships.UnmarshalFleetFromFile(fullpath)
 				if err != nil {
-					log.Fatalf("Could not unmarshal fleet file '%s': %v", fullpath, err)
+					slog.Error("Failed unmarshalling fleet", "path", fullpath, "err", err)
+					exit_code = 1
+					return
 				}
 				// Use the first blueprint in the fleet file
 				ships[i] = fleet.Blueprints[0]
-				log.Printf("Unmarshalled ship '%s' with author '%s' with schedule index %d from fleet '%s'", ships[i].Data.Name, ships[i].Data.Author, i + 1, fleet.Name)
+				slog.Info("Unmarshalled ship from fleet", "name", ships[i].Data.Name, "author", ships[i].Data.Author, "idx", i + 1, "fleet.Name", fleet.Name)
 			} else {
 				*ships[i], err = rsmships.UnmarshalShipFromFile(fullpath)
-				if err != nil { log.Fatalf("Could not unmarshal ship file '%s': %v", fullpath, err) }
-				log.Printf("Unmarshalled ship '%s' with author '%s' with schedule index %d", ships[i].Data.Name, ships[i].Data.Author, i + 1)
+				if err != nil {
+					slog.Error("Failed unmarshalling ship", "path", fullpath, "err", err)
+					exit_code = 1
+					return
+				}
+				slog.Info("Unmarshalled ship", "name", ships[i].Data.Name, "author", ships[i].Data.Author, "idx", i + 1)
 			}
 		}(i, path)
 	}
