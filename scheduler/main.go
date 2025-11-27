@@ -193,7 +193,6 @@ func main() {
 		return
 	}
 
-	log.Printf("Found %d ship files!\n", len(ship_paths))
 	slog.Info("Found paths for ship files.", "count", len(ship_paths))
 	for _, path := range ship_paths {
 		slog.Debug("Ship path", "path", path)
