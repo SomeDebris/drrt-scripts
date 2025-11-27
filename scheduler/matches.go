@@ -1,7 +1,7 @@
 package main
 
 import (
-	"drrt-scripts/lib"
+	"github.com/SomeDebris/rsmships-go"
 	"path/filepath"
 	"fmt"
 )
@@ -9,20 +9,20 @@ import (
 type DRRTStandardMatch struct {
 	MatchNumber    int
 	TournamentName string
-	RedAlliance    lib.Fleet
-	BlueAlliance   lib.Fleet
+	RedAlliance    rsmships.Fleet
+	BlueAlliance   rsmships.Fleet
 }
 
 func WriteMatchFleets(match DRRTStandardMatch, directory string) error {
 	redpath := filepath.Join(directory, fmt.Sprintf("%s_%s.json.gz", match.RedAlliance.Name, match.TournamentName))
 	bluepath := filepath.Join(directory, fmt.Sprintf("%s_%s.json.gz", match.BlueAlliance.Name, match.TournamentName))
 
-	err := lib.MarshalFleetToFile(redpath, match.RedAlliance)
+	err := rsmships.MarshalFleetToFile(redpath, match.RedAlliance)
 	if err != nil {
 		return err
 	}
 
-	err = lib.MarshalFleetToFile(bluepath, match.BlueAlliance)
+	err = rsmships.MarshalFleetToFile(bluepath, match.BlueAlliance)
 	if err != nil {
 		return err
 	}
