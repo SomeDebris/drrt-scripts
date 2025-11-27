@@ -211,7 +211,7 @@ func main() {
 
 	schedule_indices, _, err := readScheduleAtPath(sch_in_filepath)
 	if err != nil {
-		slog.Error("Could not get scheduling information.", "err", err)
+		slog.Error("Could not get information from schedule file.", "path", sch_in_filepath, "err", err)
 		exit_code = 1
 		return
 	}
