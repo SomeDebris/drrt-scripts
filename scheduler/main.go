@@ -219,7 +219,7 @@ func main() {
 	slog.Info("Schedule information", "path", sch_in_filepath, "matches", len(schedule_indices))
 	slog.Debug("Starting unmarshalling ships.")
 
-	ships := make([]*rsmships.Ship, len(ship_paths))
+	ships := make([]rsmships.Ship, len(ship_paths))
 
 	var unmarshal_wait_group sync.WaitGroup
 
@@ -245,7 +245,7 @@ func main() {
 					return
 				}
 				// Use the first blueprint in the fleet file
-				ships[i] = fleet.Blueprints[0]
+				ships[i] = *fleet.Blueprints[0]
 				slog.Info("Unmarshalled ship from fleet", "name", ships[i].Data.Name, "author", ships[i].Data.Author, "idx", i + 1, "fleet.Name", fleet.Name)
 			} else {
 				ships[i], err = rsmships.UnmarshalShipFromFile(fullpath)
