@@ -72,6 +72,7 @@ type DRRTStandardTerseMatchLog struct {
 	RedPointsDamageTaken      int
 	BluePointsDamageInflicted int
 	BluePointsDamageTaken     int
+	Raw                       MatchLogRaw
 }
 
 type MatchLogFleetListing struct {
@@ -94,12 +95,13 @@ type MatchLogDestructionListing struct {
 	Fdestroyed int
 }
 
-type matchLogRaw struct {
-	StartListings []MatchLogFleetListing
-	ShipListings []MatchLogShipListing
+type MatchLogRaw struct {
+	CreatedTimestamp    time.Time
+	StartListings       []MatchLogFleetListing
+	ShipListings        []MatchLogShipListing
 	DestructionListings []MatchLogDestructionListing
-	ResultListings []MatchLogFleetListing
-	SurvivalListings []MatchLogShipListing
+	ResultListings      []MatchLogFleetListing
+	SurvivalListings    []MatchLogShipListing
 }
 
 var (
@@ -111,31 +113,31 @@ var (
 )
 
 // Append a START event.
-func (mlograw *matchLogRaw) appendStart(record MatchLogFleetListing, mutex *sync.Mutex) {
+func (mlograw *MatchLogRaw) appendStart(record MatchLogFleetListing, mutex *sync.Mutex) {
 	mutex.Lock()
 	mlograw.StartListings = append(mlograw.StartListings, record)
 	mutex.Unlock()
 }
 // Append a SHIP event.
-func (mlograw *matchLogRaw) appendShip(record MatchLogShipListing, mutex *sync.Mutex) {
+func (mlograw *MatchLogRaw) appendShip(record MatchLogShipListing, mutex *sync.Mutex) {
 	mutex.Lock()
 	mlograw.ShipListings = append(mlograw.ShipListings, record)
 	mutex.Unlock()
 }
 // Append a DESTRUCTION event.
-func (mlograw *matchLogRaw) appendDestruction(record MatchLogDestructionListing, mutex *sync.Mutex) {
+func (mlograw *MatchLogRaw) appendDestruction(record MatchLogDestructionListing, mutex *sync.Mutex) {
 	mutex.Lock()
 	mlograw.DestructionListings = append(mlograw.DestructionListings, record)
 	mutex.Unlock()
 }
 // Append a RESULT event.
-func (mlograw *matchLogRaw) appendResult(record MatchLogFleetListing, mutex *sync.Mutex) {
+func (mlograw *MatchLogRaw) appendResult(record MatchLogFleetListing, mutex *sync.Mutex) {
 	mutex.Lock()
 	mlograw.ResultListings = append(mlograw.ResultListings, record)
 	mutex.Unlock()
 }
 // Append a SURVIVAL event.
-func (mlograw *matchLogRaw) appendSurvival(record MatchLogShipListing, mutex *sync.Mutex) {
+func (mlograw *MatchLogRaw) appendSurvival(record MatchLogShipListing, mutex *sync.Mutex) {
 	mutex.Lock()
 	mlograw.SurvivalListings = append(mlograw.SurvivalListings, record)
 	mutex.Unlock()
@@ -181,18 +183,16 @@ func parseDestructionLine(line string) (MatchLogDestructionListing, error) {
 }
 
 //*
-func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
+func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 	mlog_regex_type := regexp.MustCompile(mlog_typeRegexCaptureString)
 
 	match_log, err := os.Open(path)
 	if err != nil {
-		return DRRTStandardTerseMatchLog{}, err
+		return MatchLogRaw{}, err
 	}
 	defer match_log.Close()
 
-	var mlog_object DRRTStandardTerseMatchLog
-
-	var mlog_raw matchLogRaw
+	var mlog_raw MatchLogRaw
 
 	match_log_scanner := bufio.NewScanner(match_log)
 
@@ -209,7 +209,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			fields := mlog_regex_map[mlog_start].FindStringSubmatch(line)
 
 			if fields == nil {
-				return mlog_object, &MatchLogRegexError{
+				return mlog_raw, &MatchLogRegexError{
 					event:      mlog_start,
 					line:       line,
 					lineNumber: mlog_RecordNumber,
@@ -220,7 +220,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			var listing MatchLogFleetListing
 			listing.Faction, err = strconv.Atoi(fields[1])
 			if err != nil {
-				return mlog_object, &MatchLogFieldError{
+				return mlog_raw, &MatchLogFieldError{
 					field: "faction",
 					event: mlog_start,
 					lineNumber:  mlog_RecordNumber,
@@ -231,7 +231,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			listing.Name = fields[2]
 			listing.DamageTaken, err = strconv.Atoi(fields[3])
 			if err != nil {
-				return mlog_object, &MatchLogFieldError{
+				return mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "DT",
 					event: mlog_start,
@@ -242,7 +242,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			}
 			listing.DamageInflicted, err = strconv.Atoi(fields[4])
 			if err != nil {
-				return mlog_object, &MatchLogFieldError{
+				return mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "DI",
 					event: mlog_start,
@@ -253,7 +253,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			}
 			listing.Alive, err = strconv.Atoi(fields[5])
 			if err != nil {
-				return mlog_object, &MatchLogFieldError{
+				return mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "alive",
 					event: mlog_start,
@@ -267,7 +267,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 		case mlog_ship:
 			fields := mlog_regex_map[mlog_ship].FindStringSubmatch(line)
 			if fields == nil {
-				return mlog_object, &MatchLogRegexError{
+				return mlog_raw, &MatchLogRegexError{
 					event:      mlog_ship,
 					line:       line,
 					lineNumber: mlog_RecordNumber,
@@ -278,7 +278,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			var listing MatchLogShipListing
 			listing.Fleet, err = strconv.Atoi(fields[1])
 			if err != nil {
-				return mlog_object, &MatchLogFieldError{
+				return mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					event: mlog_ship,
 					field: "faction",
@@ -303,7 +303,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 					fielderr.AddContext(mlog_RecordNumber, path)
 					err = fielderr
 				}
-				return mlog_object, err
+				return mlog_raw, err
 			}
 			mlog_raw.appendDestruction(listing, &matchLogRawMutex_destruction)
 
@@ -311,7 +311,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			fields := mlog_regex_map[mlog_result].FindStringSubmatch(line)
 
 			if fields == nil {
-				return mlog_object, &MatchLogRegexError{
+				return mlog_raw, &MatchLogRegexError{
 					event:      mlog_result,
 					line:       line,
 					lineNumber: mlog_RecordNumber,
@@ -322,7 +322,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			var listing MatchLogFleetListing
 			listing.Faction, err = strconv.Atoi(fields[1])
 			if err != nil {
-				return mlog_object, &MatchLogFieldError{
+				return mlog_raw, &MatchLogFieldError{
 					field: "faction",
 					event: mlog_result,
 					lineNumber:  mlog_RecordNumber,
@@ -333,7 +333,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			listing.Name = fields[2]
 			listing.DamageTaken, err = strconv.Atoi(fields[3])
 			if err != nil {
-				return mlog_object, &MatchLogFieldError{
+				return mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "DT",
 					event: mlog_result,
@@ -344,7 +344,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			}
 			listing.DamageInflicted, err = strconv.Atoi(fields[4])
 			if err != nil {
-				return mlog_object, &MatchLogFieldError{
+				return mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "DI",
 					event: mlog_result,
@@ -355,7 +355,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			}
 			listing.Alive, err = strconv.Atoi(fields[5])
 			if err != nil {
-				return mlog_object, &MatchLogFieldError{
+				return mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "alive",
 					event: mlog_result,
@@ -369,7 +369,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 		case mlog_survival:
 			fields := mlog_regex_map[mlog_survival].FindStringSubmatch(line)
 			if fields == nil {
-				return mlog_object, &MatchLogRegexError{
+				return mlog_raw, &MatchLogRegexError{
 					event:      mlog_survival,
 					line:       line,
 					lineNumber: mlog_RecordNumber,
@@ -380,7 +380,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 			var listing MatchLogShipListing
 			listing.Fleet, err = strconv.Atoi(fields[1])
 			if err != nil {
-				return mlog_object, &MatchLogFieldError{
+				return mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					event: mlog_survival,
 					field: "faction",
@@ -395,7 +395,7 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 	}
 
 	// We have successfully assembled a mlog_raw. from this, we shall make a DRRTStandardTerseMatchLog.
-
-	// return mlog_raw, nil
+	// TODO how does one get the timestamp at which a file was created?
+	return mlog_raw, nil
 }
 // */
