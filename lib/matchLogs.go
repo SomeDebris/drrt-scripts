@@ -2,13 +2,13 @@ package lib
 
 import (
 	"time"
-	// "bufio"
-	// "os"
+	"bufio"
+	"os"
 	"regexp"
 	"strconv"
 	// "fmt"
 	// "slog"
-	// "errors"
+	"errors"
 	"sync"
 )
 
@@ -180,7 +180,7 @@ func parseDestructionLine(line string) (MatchLogDestructionListing, error) {
 	return listing, nil
 }
 
-/*
+//*
 func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 	mlog_regex_type := regexp.MustCompile(mlog_typeRegexCaptureString)
 
@@ -306,7 +306,96 @@ func ReadMatchLogAtPath(path string) (DRRTStandardTerseMatchLog, error) {
 				return mlog_object, err
 			}
 			mlog_raw.appendDestruction(listing, &matchLogRawMutex_destruction)
+
+		case mlog_result:
+			fields := mlog_regex_map[mlog_result].FindStringSubmatch(line)
+
+			if fields == nil {
+				return mlog_object, &MatchLogRegexError{
+					event:      mlog_result,
+					line:       line,
+					lineNumber: mlog_RecordNumber,
+					path:       path,
+					regex:      mlog_regex_map[mlog_result].String(),
+				}
+			}
+			var listing MatchLogFleetListing
+			listing.Faction, err = strconv.Atoi(fields[1])
+			if err != nil {
+				return mlog_object, &MatchLogFieldError{
+					field: "faction",
+					event: mlog_result,
+					lineNumber:  mlog_RecordNumber,
+					line: line,
+					path: path,
+				}
+			}
+			listing.Name = fields[2]
+			listing.DamageTaken, err = strconv.Atoi(fields[3])
+			if err != nil {
+				return mlog_object, &MatchLogFieldError{
+					message: err.Error(),
+					field: "DT",
+					event: mlog_result,
+					lineNumber:  mlog_RecordNumber,
+					line: line,
+					path: path,
+				}
+			}
+			listing.DamageInflicted, err = strconv.Atoi(fields[4])
+			if err != nil {
+				return mlog_object, &MatchLogFieldError{
+					message: err.Error(),
+					field: "DI",
+					event: mlog_result,
+					lineNumber:  mlog_RecordNumber,
+					line: line,
+					path: path,
+				}
+			}
+			listing.Alive, err = strconv.Atoi(fields[5])
+			if err != nil {
+				return mlog_object, &MatchLogFieldError{
+					message: err.Error(),
+					field: "alive",
+					event: mlog_result,
+					lineNumber:  mlog_RecordNumber,
+					line: line,
+					path: path,
+				}
+			}
+			mlog_raw.appendResult(listing, &matchLogRawMutex_result)
+
+		case mlog_survival:
+			fields := mlog_regex_map[mlog_survival].FindStringSubmatch(line)
+			if fields == nil {
+				return mlog_object, &MatchLogRegexError{
+					event:      mlog_survival,
+					line:       line,
+					lineNumber: mlog_RecordNumber,
+					path:       path,
+					regex:      mlog_regex_map[mlog_survival].String(),
+				}
+			}
+			var listing MatchLogShipListing
+			listing.Fleet, err = strconv.Atoi(fields[1])
+			if err != nil {
+				return mlog_object, &MatchLogFieldError{
+					message: err.Error(),
+					event: mlog_survival,
+					field: "faction",
+					line: line,
+					lineNumber: mlog_RecordNumber,
+					path: path,
+				}
+			}
+			listing.Ship = fields[2]
+			mlog_raw.appendShip(listing, &matchLogRawMutex_survival)
 		}
 	}
+
+	// We have successfully assembled a mlog_raw. from this, we shall make a DRRTStandardTerseMatchLog.
+
+	// return mlog_raw, nil
 }
 // */
