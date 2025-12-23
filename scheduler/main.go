@@ -245,7 +245,7 @@ func main() {
 				}
 				// Use the first blueprint in the fleet file
 				ships[i] = *fleet.Blueprints[0]
-				slog.Info("Unmarshalled ship from fleet", "name", ships[i].Data.Name, "author", ships[i].Data.Author, "idx", i + 1, "fleet.Name", fleet.Name)
+				slog.Info("Unmarshalled ship from fleet.", "name", ships[i].Data.Name, "author", ships[i].Data.Author, "idx", i + 1, "fleet.Name", fleet.Name)
 			} else {
 				ships[i], err = rsmships.UnmarshalShipFromFile(fullpath)
 				if err != nil {
