@@ -17,12 +17,12 @@ func WriteMatchFleets(match DRRTStandardMatch, directory string) error {
 	redpath := filepath.Join(directory, fmt.Sprintf("%s_%s.json.gz", match.RedAlliance.Name, match.TournamentName))
 	bluepath := filepath.Join(directory, fmt.Sprintf("%s_%s.json.gz", match.BlueAlliance.Name, match.TournamentName))
 
-	err := rsmships.MarshalFleetToFile(redpath, match.RedAlliance)
+	err := rsmships.MarshalFleetToFileGzip(redpath, match.RedAlliance)
 	if err != nil {
 		return err
 	}
 
-	err = rsmships.MarshalFleetToFile(bluepath, match.BlueAlliance)
+	err = rsmships.MarshalFleetToFileGzip(bluepath, match.BlueAlliance)
 	if err != nil {
 		return err
 	}
