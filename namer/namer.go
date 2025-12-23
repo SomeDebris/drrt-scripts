@@ -1,4 +1,4 @@
-package namer
+package main
 
 import (
 	// "drrt-scripts/lib"
@@ -7,9 +7,8 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
-	// "path/filepath"
+	"path/filepath"
 	"github.com/SomeDebris/rsmships-go"
-	// "bufio"
 )
 
 // Goal is to make a command line tool for
@@ -33,13 +32,22 @@ func main() {
 		slog.Error("Expected filename of ship as first positional argument, but no positional arguments specified.")
 		exit_code = 1
 		return
-	} else if flag.NArg() > 1 {
+	} else if flag.NArg() > 2 {
 		slog.Error("Expected single positional argument (ship filename), but multiple positinal arguments specified.")
 		exit_code = 1
 		return
 	}
 
 	filename := flag.Arg(0)
+	target_directory, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		slog.Error("Could not find current directory of script. Defaulting to '.'.", "err", err)
+		exit_code = 1
+		return
+	}
+	if flag.NArg() > 1 {
+		target_directory = flag.Arg(1)
+	}
 	var ship rsmships.Ship
 
 	// determine if ship file is fleet
@@ -51,6 +59,7 @@ func main() {
 	}
 
 	// extract the ship in the correct method
+	// TODO: this should, very likely, be made into a new function
 	if isfleet {
 		fleet, err := rsmships.UnmarshalFleetFromFile(filename)
 		if err != nil {
@@ -76,5 +85,23 @@ func main() {
 	ship.Data.Name = *name_arg
 	ship.Data.Author = *author_arg
 	
-	out_filename = fmt.Sprintf("%s_[by_%s]_%s.json", *name_arg, *author_arg, *suffix_arg)
+	out_filename := fmt.Sprintf("%s_[by_%s]_%s.json", *name_arg, *author_arg, *suffix_arg)
+	out_filepath := filepath.Join(target_directory, out_filename)
+
+	// create the file!
+	err = rsmships.MarshalShipToFile(out_filepath, ship)
+	if err != nil {
+		slog.Error("Could not create ship file.", "path", out_filepath, "err", err)
+		exit_code = 1
+		return
+	}
+
+	slog.Info("Create new ship file with specified Author and Name.", "path", out_filepath)
+
+	if !*copy_arg {
+		slog.Info("Removing initial file", "removed_fname", filename)
+		os.Remove(filename)
+	}
+
+	slog.Info("Done.")
 }

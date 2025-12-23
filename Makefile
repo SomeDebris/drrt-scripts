@@ -1,4 +1,4 @@
-programs=drrt-scheduler
+programs=drrt-scheduler drrt-namer
 
 all: $(programs)
 

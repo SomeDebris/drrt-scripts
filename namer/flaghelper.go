@@ -1,4 +1,4 @@
-package namer
+package main
 
 import (
 	"flag"
