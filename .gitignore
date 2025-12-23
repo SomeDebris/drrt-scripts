@@ -12,3 +12,5 @@ selected_schedule.csv
 # !schedules/out/
 # schedules/*
 tags
+tags*
+drrt-scheduler
