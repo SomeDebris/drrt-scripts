@@ -8,7 +8,7 @@ import (
 	"strconv"
 	// "fmt"
 	// "slog"
-	"errors"
+"errors"
 	"sync"
 )
 
@@ -193,6 +193,14 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 	defer match_log.Close()
 
 	var mlog_raw MatchLogRaw
+
+	// get the last modified time of the file:
+	mlog_fileinfo, err := match_log.Stat()
+	if err != nil {
+		return mlog_raw, err
+	}
+	// Set the CreatedTimestamp value to the last modified time of the file
+	mlog_raw.CreatedTimestamp = mlog_fileinfo.ModTime()
 
 	match_log_scanner := bufio.NewScanner(match_log)
 

@@ -23,6 +23,8 @@ const (
 	CREDENTIALS_FNAME   = `credentials.json`
 )
 
+var DatasheetService *sheets.Service = nil
+
 
 // this was taken from the go quickstart
 // https://developers.google.com/workspace/sheets/api/quickstart/go
@@ -83,7 +85,7 @@ func saveToken(path string, token *oauth2.Token) {
 }
 
 
-func GetSheetsService() (*sheets.Service, error) {
+func getSheetsService() (*sheets.Service, error) {
 	ctx := context.Background()
 	// read contents of secret into memory
 	b, err := os.ReadFile(CREDENTIALS_FNAME)
@@ -101,4 +103,17 @@ func GetSheetsService() (*sheets.Service, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	return srv, nil
+}
+
+func GetGlobalSheetsService() (*sheets.Service, error) {
+	if DatasheetService == nil {
+		srv, err := getSheetsService()
+		if err != nil {
+			return nil, err
+		}
+		DatasheetService = srv
+	}
+	return DatasheetService, nil
 }

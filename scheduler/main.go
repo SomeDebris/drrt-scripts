@@ -301,6 +301,8 @@ func main() {
 		}(i, match)
 	}
 
+	// during marshalling of fleet files, copy the match schedule to the root drrt directory
+
 	save_wait_group.Wait()
 
 	slog.Info("Scheduler finished. Have a great tournament!")
