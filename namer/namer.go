@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "drrt-scripts/lib"
+	"drrt-scripts/lib"
 	"flag"
 	// "log"
 	"fmt"
@@ -9,7 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"github.com/SomeDebris/rsmships-go"
-	"strings"
 )
 
 // Goal is to make a command line tool for
@@ -88,24 +87,10 @@ func main() {
 
 
 	
-	replacer_out_filename := strings.NewReplacer(
-		` `, `_`,
-		`/`, `-`,
-		`\`, `-`,
-		`?`, `-`,
-		`*`, `⋆`,
-		`:`, `꞉`,
-		`%`, `-`,
-		`|`, `∣`,
-		`"`, `''`,
-		`<`, `lt`,
-		`>`, `gt`,
-		`.`, `p`,
-		`=`, `-`)
 	out_filename := fmt.Sprintf("%s_[by_%s]_%s.json",
-		replacer_out_filename.Replace(*name_arg),
-		replacer_out_filename.Replace(*author_arg),
-		replacer_out_filename.Replace(*suffix_arg))
+		lib.Replacer_Out_Filename.Replace(*name_arg),
+		lib.Replacer_Out_Filename.Replace(*author_arg),
+		lib.Replacer_Out_Filename.Replace(*suffix_arg))
 	out_filepath := filepath.Join(target_directory, out_filename)
 
 	// create the file!

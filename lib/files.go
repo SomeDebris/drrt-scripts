@@ -2,8 +2,24 @@ package lib
 
 import (
 	"os"
+	"strings"
 	"path/filepath"
 )
+
+var Replacer_Out_Filename = strings.NewReplacer(
+	` `, `_`,
+	`/`, `-`,
+	`\`, `-`,
+	`?`, `-`,
+	`*`, `⋆`,
+	`:`, `꞉`,
+	`%`, `-`,
+	`|`, `∣`,
+	`"`, `''`,
+	`<`, `lt`,
+	`>`, `gt`,
+	`.`, `p`,
+	`=`, `-`)
 
 func Path_exists(path string) (bool, error) {
     _, err := os.Stat(path)
