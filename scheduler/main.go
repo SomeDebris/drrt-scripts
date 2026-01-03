@@ -129,50 +129,48 @@ func readScheduleAtPath(path string) ([][]int, [][]bool, [][]string, error) {
 	return schedule, surrogates, records, nil
 }
 
-func getScheduleStringslice(path string, schedule [][]int, surrogates [][]bool) ([][]string, error) {
-	if len(schedule) != len(surrogates) {
-		return nil, &ScheduleLengthMismatch{
-			SchedulesLength:  len(schedule),
-			SurrogatesLength: len(surrogates),
-		}
-	}
-	if len(schedule[0]) != len(surrogates[0]) {
-		return nil, &MatchLengthMismatch{
-			SchedulesLength:  len(schedule[0]),
-			SurrogatesLength: len(surrogates[0]),
-		}
-	}
-	match_count := len(schedule)
-	records := make([][]string, match_count)
-	var builder strings.Builder
-	for j, match := range schedule {
-		record := make([]string, len(match))
-		for i, ship := range match {
-			_, err := builder.WriteString(strconv.Itoa(ship))
-			if err != nil {
-				return records, err
-			}
-			if surrogates[j][i] {
-				_, err := builder.WriteString("*")
-				if err != nil {
-					return records, err
-				}
-			}
-			record[i] = builder.String()
-			builder.Reset()
+func int2dSliceToString(ints [][]int) ([][]string, error) {
+	count := len(ints)
+	records := make([][]string, count)
+	for j, row := range ints {
+		record := make([]string, len(row))
+		for i, val := range row {
+			record[i] = strconv.Itoa(val)
 		}
 		records[j] = record
 	}
 	return records, nil
 }
 
-func writeScheduleToFile(path string, records [][]string) error {
-	schedule_file, err := os.Create(path)
+func appendSurrogateAsterisks(records [][]string, surrogates [][]bool) ([][]string, error) {
+	if len(records) != len(surrogates) {
+		return nil, &ScheduleLengthMismatch{
+			SchedulesLength:  len(records),
+			SurrogatesLength: len(surrogates),
+		}
+	}
+	out_records := make([][]string, len(records))
+	for j, match := range records {
+		out_record := make([]string, len(match))
+		for i, val := range match {
+			if surrogates[j][i] {
+				out_record[i] = val + "*"
+			} else {
+				out_record[i] = val
+			}
+			out_records[j] = out_record
+		}
+	}
+	return out_records, nil
+}
+
+func writeCSVRecordsToFile(path string, records [][]string) error {
+	file, err := os.Create(path)
 	if err != nil {
 		return err
 	}
-	defer schedule_file.Close()
-	writer := csv.NewWriter(schedule_file)
+	defer file.Close()
+	writer := csv.NewWriter(file)
 	defer writer.Flush()
 	err = writer.WriteAll(records)
 	if err != nil {
@@ -307,7 +305,7 @@ func main() {
 	slog.Info("Schedule information", "path", sch_in_filepath, "matches", len(schedule_indices))
 	
 	// write the schedule to a file
-	schedule_raw
+	err = write
 
 	slog.Debug("Starting unmarshalling ships.")
 
