@@ -317,7 +317,12 @@ func main() {
 	slog.Info("Schedule information", "path", sch_in_filepath, "matches", len(schedule_indices))
 	
 	// write the schedule to a file
-	err = write
+	err = writeScheduleRecordsSurrogates(sch_out_filepath, schedule_records, schedule_surrogates)
+	if err != nil {
+		slog.Error("Could not write schedule to file.", "path", sch_out_filepath, "err", err)
+		exit_code = 1
+		return
+	}
 
 	slog.Debug("Starting unmarshalling ships.")
 
