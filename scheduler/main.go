@@ -27,15 +27,6 @@ const (
 
 type ShipDataError struct{}
 type MultipleShipsInFleetError struct{}
-type ScheduleLengthMismatch struct {
-	SchedulesLength  int // length of schedules slice
-	SurrogatesLength int // length of surrogates slice
-}
-
-type MatchLengthMismatch struct {
-	SchedulesLength  int // length of schedules slice
-	SurrogatesLength int // length of surrogates slice
-}
 
 func (m *ShipDataError) Error() string {
 	return "Ship data not found in file or formatted incorrectly."
@@ -43,13 +34,6 @@ func (m *ShipDataError) Error() string {
 
 func (m *MultipleShipsInFleetError) Error() string {
 	return "Fleet file has multiple ships defined. Only one ship should be defined in the file."
-}
-
-func (m *ScheduleLengthMismatch) Error() string {
-	return "Length of schedule indices slice (" + strconv.Itoa(m.SchedulesLength) + ") and surrogates slice (" + strconv.Itoa(m.SurrogatesLength) + ") should be equivalent, but are not."
-}
-func (m *MatchLengthMismatch) Error() string {
-	return "Length of match's schedule indices slice (" + strconv.Itoa(m.SchedulesLength) + ") and match's surrogates slice (" + strconv.Itoa(m.SurrogatesLength) + ") should be equivalent, but are not."
 }
 
 func get_inspected_ship_paths(dir string) ([]string, error) {
