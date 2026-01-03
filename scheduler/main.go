@@ -32,6 +32,11 @@ type ScheduleLengthMismatch struct {
 	SurrogatesLength int // length of surrogates slice
 }
 
+type MatchLengthMismatch struct {
+	SchedulesLength  int // length of schedules slice
+	SurrogatesLength int // length of surrogates slice
+}
+
 func (m *ShipDataError) Error() string {
 	return "Ship data not found in file or formatted incorrectly."
 }
@@ -41,7 +46,10 @@ func (m *MultipleShipsInFleetError) Error() string {
 }
 
 func (m *ScheduleLengthMismatch) Error() string {
-	return "Length of schedule indices slice (" + m.SchedulesLength + ") and surrogates slice (" + m.SurrogatesLength + ") should be equivalent, but are not."
+	return "Length of schedule indices slice (" + strconv.Itoa(m.SchedulesLength) + ") and surrogates slice (" + strconv.Itoa(m.SurrogatesLength) + ") should be equivalent, but are not."
+}
+func (m *MatchLengthMismatch) Error() string {
+	return "Length of match's schedule indices slice (" + strconv.Itoa(m.SchedulesLength) + ") and match's surrogates slice (" + strconv.Itoa(m.SurrogatesLength) + ") should be equivalent, but are not."
 }
 
 func get_inspected_ship_paths(dir string) ([]string, error) {
@@ -128,15 +136,27 @@ func getScheduleStringslice(path string, schedule [][]int, surrogates [][]bool) 
 			SurrogatesLength: len(surrogates),
 		}
 	}
+	if len(schedule[0]) != len(surrogates[0]) {
+		return nil, &MatchLengthMismatch{
+			SchedulesLength:  len(schedule[0]),
+			SurrogatesLength: len(surrogates[0]),
+		}
+	}
 	match_count := len(schedule)
 	records := make([][]string, match_count)
 	var builder strings.Builder
 	for j, match := range schedule {
 		record := make([]string, len(match))
 		for i, ship := range match {
-			builder.WriteString(strconv.Itoa(ship))
+			_, err := builder.WriteString(strconv.Itoa(ship))
+			if err != nil {
+				return records, err
+			}
 			if surrogates[j][i] {
-				builder.WriteString("*")
+				_, err := builder.WriteString("*")
+				if err != nil {
+					return records, err
+				}
 			}
 			record[i] = builder.String()
 			builder.Reset()
