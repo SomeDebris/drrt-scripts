@@ -365,6 +365,7 @@ func main() {
 		exit_code = 1
 		return
 	}
+	slog.Info("Wrote schedule to file.", "path", sch_out_filepath)
 	// write the no-asterisks version of the schedule to a file
 	err = matchschedule.WriteScheduleToFileNoSurrogates(sch_out_filepath_no_asterisks)
 	if err != nil {
@@ -372,6 +373,7 @@ func main() {
 		exit_code = 1
 		return
 	}
+	slog.Info("Wrote no-surrogates schedule to file.", "path", sch_out_filepath_no_asterisks)
 
 	save_wait_group.Wait()
 
