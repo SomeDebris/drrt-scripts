@@ -15,15 +15,22 @@ import (
 	"strings"
 	"sync"
 	"github.com/SomeDebris/rsmships-go"
+	"errors"
 )
 
 const (
-	VERSION = "0.0.0"
-	PROGRAM_NAME = "drrt-scheduler"
+	VERSION                       = "0.0.0"
+	PROGRAM_NAME                  = "drrt-scheduler"
+	SELECTED_SCHEDULE_FNAME       = "selected_schedule.csv"
+	SELECTED_SCHEDULE_NOAST_FNAME = ".no_asterisks.csv"
 )
 
 type ShipDataError struct{}
 type MultipleShipsInFleetError struct{}
+type ScheduleLengthMismatch struct {
+	SchedulesLength  int // length of schedules slice
+	SurrogatesLength int // length of surrogates slice
+}
 
 func (m *ShipDataError) Error() string {
 	return "Ship data not found in file or formatted incorrectly."
@@ -31,6 +38,10 @@ func (m *ShipDataError) Error() string {
 
 func (m *MultipleShipsInFleetError) Error() string {
 	return "Fleet file has multiple ships defined. Only one ship should be defined in the file."
+}
+
+func (m *ScheduleLengthMismatch) Error() string {
+	return "Length of schedule indices slice (" + m.SchedulesLength + ") and surrogates slice (" + m.SurrogatesLength + ") should be equivalent, but are not."
 }
 
 func get_inspected_ship_paths(dir string) ([]string, error) {
@@ -110,6 +121,31 @@ func readScheduleAtPath(path string) ([][]int, [][]bool, error) {
 	return schedule, surrogates, nil
 }
 
+func getScheduleStringslice(path string, schedule [][]int, surrogates [][]bool) ([][]string, error) {
+	if len(schedule) != len(surrogates) {
+		return nil, &ScheduleLengthMismatch{
+			SchedulesLength:  len(schedule),
+			SurrogatesLength: len(surrogates),
+		}
+	}
+	match_count := len(schedule)
+	records := make([][]string, match_count)
+	var builder strings.Builder
+	for j, match := range schedule {
+		record := make([]string, len(match))
+		for i, ship := range match {
+			builder.WriteString(strconv.Itoa(ship))
+			if surrogates[j][i] {
+				builder.WriteString("*")
+			}
+			record[i] = builder.String()
+			builder.Reset()
+		}
+		records[j] = record
+	}
+	return records, nil
+}
+
 // assemble alliance
 // func assemble_alliance(ship_filenames []string, red_name string, blue_name string)
 
@@ -119,6 +155,7 @@ func main() {
 
 	log_lvl := slog.LevelInfo
 
+	// Define arguments
 	drrt_directory_arg := flag.String("drrt-directory", ".", "Set the directory the DRRT will be run in.")
 	ships_per_alliance_arg := flag.Int("n", 3, "Set the number of ships per alliance.")
 	tournament_name_arg := flag.String("tournament-name", "DRRT", "Set the name of the tournament. Red and Blue Alliance fleet files are suffixed with this.")
@@ -126,6 +163,7 @@ func main() {
 
 	flag.Parse()
 
+	// Use the slog.TextHandler for the log format
 	var handler *slog.TextHandler
 	handler_options := &slog.HandlerOptions{Level: log_lvl}
 
@@ -142,14 +180,15 @@ func main() {
 		handler = slog.NewTextHandler(os.Stderr, handler_options)
 	}
 	
+	// Set the default log tech to the logger we set before
 	logger := slog.New(handler)
-
-	// Set the default log tech to the logger thing
 	slog.SetDefault(logger)
 
+	// log the input arguments
 	slog.Info("Starting DRRT Scheduler.", "exec", os.Args[0], "version", VERSION)
 	slog.Info("Arguments", "drrt-directory", *drrt_directory_arg, "n", *ships_per_alliance_arg, "tournament-name", *tournament_name_arg, "log-filename", *log_file_name)
 
+	// set some path variables to be used later
 	ships_directory := filepath.Join(*drrt_directory_arg, "Ships")
 	quals_directory := filepath.Join(*drrt_directory_arg, "Qualifications")
 	stags_directory := filepath.Join(*drrt_directory_arg, "Staging")
@@ -186,6 +225,7 @@ func main() {
 		return
 	}
 
+	// get a slice comprising paths to all ships
 	ship_paths, err := get_inspected_ship_paths(ships_directory)
 	if err != nil {
 		slog.Error("Cannot get inspected ship paths.", "err", err)
@@ -198,6 +238,7 @@ func main() {
 		slog.Debug("Ship path", "path", path)
 	}
 
+	// check if there are less ships than can participate in a single match. Fail if this is true.
 	if len(ship_paths) < (*ships_per_alliance_arg * 2) {
 		slog.Error("Number of participating shps is lower than the minimum number of ships.", "min", *ships_per_alliance_arg * 2, "count", len(ship_paths))
 		exit_code = 1
@@ -206,8 +247,21 @@ func main() {
 
 	sch_in_filename := fmt.Sprintf("%d_%dv%d.csv", len(ship_paths), *ships_per_alliance_arg, *ships_per_alliance_arg)
 	sch_in_filepath := filepath.Join(schej_directory, "out", sch_in_filename)
-	// sch_out_filepath := filepath.Join(scrpt_directory, "selected_schedule.csv")
-	// sch_out_filepath_no_asterisks := filepath.Join(scrpt_directory, ".no_asterisks.csv")
+	sch_out_filepath := filepath.Join(*drrt_directory_arg, SELECTED_SCHEDULE_FNAME)
+	sch_out_filepath_no_asterisks := filepath.Join(*drrt_directory_arg, SELECTED_SCHEDULE_NOAST_FNAME)
+
+	// delete the selected schedule files if they exist
+	for _, schedpath := range [2]string{sch_out_filepath, sch_out_filepath_no_asterisks} {
+		if err := os.Remove(schedpath); err == nil {
+			slog.Info("removed old schedule file.", "path", schedpath)
+		} else if errors.Is(err, os.ErrNotExist) {
+			slog.Info("No old schedule file exists.", "path", schedpath, "err", err)
+		} else {
+			slog.Error("Error removing old schedule selection file.", "path", schedpath, "err", err)
+			exit_code = 1
+			return
+		}
+	}
 
 	schedule_indices, _, err := readScheduleAtPath(sch_in_filepath)
 	if err != nil {
