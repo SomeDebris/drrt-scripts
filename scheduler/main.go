@@ -70,10 +70,10 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
 * whether ship is participating as surrogate
 * any error recieved
  */
-func readScheduleAtPath(path string) ([][]int, [][]bool, [][]string, error) {
+func readScheduleAtPath(path string) (MatchSchedule, [][]string, error) {
 	schedule_bytes, err := os.ReadFile(path)
 	if err != nil {
-		return nil, nil, nil, err
+		return MatchSchedule{}, nil, err
 	}
 
 	schedule_string := string(schedule_bytes)
@@ -82,7 +82,7 @@ func readScheduleAtPath(path string) ([][]int, [][]bool, [][]string, error) {
 
 	records, err := r.ReadAll()
 	if err != nil {
-		return nil, nil, nil, err
+		return MatchSchedule{}, nil, err
 	}
 
 	schedule := make([][]int, len(records))
@@ -104,13 +104,18 @@ func readScheduleAtPath(path string) ([][]int, [][]bool, [][]string, error) {
 
 			ships_in_match[i], err = strconv.Atoi(ship_noasterisk)
 			if err != nil {
-				return schedule, surrogates, records, err
+				return MatchSchedule{}, records, err
 			}
 		}
 		schedule[j] = ships_in_match
 		surrogates[j] = surrogates_in_match
 	}
-	return schedule, surrogates, records, nil
+	return MatchSchedule{
+		Schedule:       schedule,
+		Surrogates:     surrogates,
+		Length:         len(records),
+		AllianceLength: len(records[0]),
+	}, records, nil
 }
 
 func int2dSliceToString(ints [][]int) ([][]string, error) {
@@ -124,28 +129,6 @@ func int2dSliceToString(ints [][]int) ([][]string, error) {
 		records[j] = record
 	}
 	return records, nil
-}
-
-func getScheduleWithSurrogateAsterisks(records [][]string, surrogates [][]bool) ([][]string, error) {
-	if len(records) != len(surrogates) {
-		return nil, &ScheduleLengthMismatch{
-			SchedulesLength:  len(records),
-			SurrogatesLength: len(surrogates),
-		}
-	}
-	out_records := make([][]string, len(records))
-	for j, match := range records {
-		out_record := make([]string, len(match))
-		for i, val := range match {
-			if surrogates[j][i] {
-				out_record[i] = val + "*"
-			} else {
-				out_record[i] = val
-			}
-			out_records[j] = out_record
-		}
-	}
-	return out_records, nil
 }
 
 func writeCSVRecordsToFile(path string, records [][]string) error {
@@ -163,17 +146,6 @@ func writeCSVRecordsToFile(path string, records [][]string) error {
 	return nil
 }
 
-func writeScheduleRecordsSurrogates(path string, records [][]string, surrogates [][]bool) error {
-	records_with_surrogates, err := getScheduleWithSurrogateAsterisks(records, surrogates)
-	if err != nil {
-		return err
-	}
-	err = writeCSVRecordsToFile(path, records_with_surrogates)
-	if err != nil {
-		return err
-	}
-	return nil
-}
 
 // assemble alliance
 // func assemble_alliance(ship_filenames []string, red_name string, blue_name string)
