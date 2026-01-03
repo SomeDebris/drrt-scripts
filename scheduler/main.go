@@ -251,40 +251,14 @@ func main() {
 	sch_out_filepath := filepath.Join(*drrt_directory_arg, SELECTED_SCHEDULE_FNAME)
 	sch_out_filepath_no_asterisks := filepath.Join(*drrt_directory_arg, SELECTED_SCHEDULE_NOAST_FNAME)
 
-	// delete the selected schedule files if they exist
-	for _, schedpath := range [2]string{sch_out_filepath, sch_out_filepath_no_asterisks} {
-		if err := os.Remove(schedpath); err == nil {
-			slog.Info("removed old schedule file.", "path", schedpath)
-		} else if errors.Is(err, os.ErrNotExist) {
-			slog.Info("No old schedule file exists.", "path", schedpath, "err", err)
-		} else {
-			slog.Error("Error removing old schedule selection file.", "path", schedpath, "err", err)
-			exit_code = 1
-			return
-		}
-	}
-
-	schedule_indices, _, schedule_records, err := readScheduleAtPath(sch_in_filepath)
+	matchschedule, _, err := readScheduleAtPath(sch_in_filepath)
 	if err != nil {
 		slog.Error("Could not get information from schedule file.", "path", sch_in_filepath, "err", err)
 		exit_code = 1
 		return
 	}
-	slog.Info("Schedule information", "path", sch_in_filepath, "matches", len(schedule_indices))
+	slog.Info("Schedule information", "path", sch_in_filepath, "matches", matchschedule.Length)
 	
-	// write the schedule to a file
-	err = writeCSVRecordsToFile(sch_out_filepath, schedule_records)
-	if err != nil {
-		slog.Error("Could not write schedule to file.", "path", sch_out_filepath, "err", err)
-		exit_code = 1
-		return
-	}
-	err = writeCSVRecordsToFile(sch_out_filepath_no_asterisks, schedule_records)
-	if err != nil {
-		slog.Error("Could not write schedule to file.", "path", sch_out_filepath, "err", err)
-		exit_code = 1
-		return
-	}
 
 	slog.Debug("Starting unmarshalling ships.")
 
@@ -328,13 +302,13 @@ func main() {
 		}(i, path)
 	}
 
-	schedule := make([]DRRTStandardMatch, len(schedule_indices))
+	schedule := make([]DRRTStandardMatch, matchschedule.Length)
 	
 	unmarshal_wait_group.Wait()
 
 	slog.Info("Saving alliance fleet files", "dir", ships_directory)
 	var save_wait_group sync.WaitGroup
-	for i, match := range schedule_indices {
+	for i, match := range matchschedule.Schedule {
 		save_wait_group.Add(1)
 
 		go func(i int, match []int) {
@@ -371,7 +345,33 @@ func main() {
 		}(i, match)
 	}
 
-	// during marshalling of fleet files, copy the match schedule to the root drrt directory
+	// during marshalling of fleet files, write the match log to a file
+	// delete the selected schedule files if they exist
+	for _, schedpath := range [2]string{sch_out_filepath, sch_out_filepath_no_asterisks} {
+		if err := os.Remove(schedpath); err == nil {
+			slog.Info("removed old schedule file.", "path", schedpath)
+		} else if errors.Is(err, os.ErrNotExist) {
+			slog.Info("No old schedule file exists.", "path", schedpath, "err", err)
+		} else {
+			slog.Error("Error removing old schedule selection file.", "path", schedpath, "err", err)
+			exit_code = 1
+			return
+		}
+	}
+	// write the schedule to a file
+	err = matchschedule.WriteScheduleToFileSurrogates(sch_out_filepath)
+	if err != nil {
+		slog.Error("Could not write schedule to file.", "path", sch_out_filepath, "err", err)
+		exit_code = 1
+		return
+	}
+	// write the no-asterisks version of the schedule to a file
+	err = matchschedule.WriteScheduleToFileNoSurrogates(sch_out_filepath_no_asterisks)
+	if err != nil {
+		slog.Error("Could not write no-surrogate schedule to file.", "path", sch_out_filepath_no_asterisks, "err", err)
+		exit_code = 1
+		return
+	}
 
 	save_wait_group.Wait()
 
