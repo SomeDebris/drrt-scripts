@@ -86,10 +86,10 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
 * whether ship is participating as surrogate
 * any error recieved
  */
-func readScheduleAtPath(path string) ([][]int, [][]bool, error) {
+func readScheduleAtPath(path string) ([][]int, [][]bool, [][]string, error) {
 	schedule_bytes, err := os.ReadFile(path)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	schedule_string := string(schedule_bytes)
@@ -98,7 +98,7 @@ func readScheduleAtPath(path string) ([][]int, [][]bool, error) {
 
 	records, err := r.ReadAll()
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	schedule := make([][]int, len(records))
@@ -120,13 +120,13 @@ func readScheduleAtPath(path string) ([][]int, [][]bool, error) {
 
 			ships_in_match[i], err = strconv.Atoi(ship_noasterisk)
 			if err != nil {
-				return schedule, surrogates, err
+				return schedule, surrogates, records, err
 			}
 		}
 		schedule[j] = ships_in_match
 		surrogates[j] = surrogates_in_match
 	}
-	return schedule, surrogates, nil
+	return schedule, surrogates, records, nil
 }
 
 func getScheduleStringslice(path string, schedule [][]int, surrogates [][]bool) ([][]string, error) {
@@ -164,6 +164,21 @@ func getScheduleStringslice(path string, schedule [][]int, surrogates [][]bool) 
 		records[j] = record
 	}
 	return records, nil
+}
+
+func writeScheduleToFile(path string, records [][]string) error {
+	schedule_file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer schedule_file.Close()
+	writer := csv.NewWriter(schedule_file)
+	defer writer.Flush()
+	err = writer.WriteAll(records)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // assemble alliance
@@ -283,13 +298,17 @@ func main() {
 		}
 	}
 
-	schedule_indices, _, err := readScheduleAtPath(sch_in_filepath)
+	schedule_indices, _, schedule_raw, err := readScheduleAtPath(sch_in_filepath)
 	if err != nil {
 		slog.Error("Could not get information from schedule file.", "path", sch_in_filepath, "err", err)
 		exit_code = 1
 		return
 	}
 	slog.Info("Schedule information", "path", sch_in_filepath, "matches", len(schedule_indices))
+	
+	// write the schedule to a file
+	schedule_raw
+
 	slog.Debug("Starting unmarshalling ships.")
 
 	ships := make([]rsmships.Ship, len(ship_paths))
