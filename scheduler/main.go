@@ -308,7 +308,7 @@ func main() {
 		}
 	}
 
-	schedule_indices, schedule_surrogates, schedule_records, err := readScheduleAtPath(sch_in_filepath)
+	schedule_indices, _, schedule_records, err := readScheduleAtPath(sch_in_filepath)
 	if err != nil {
 		slog.Error("Could not get information from schedule file.", "path", sch_in_filepath, "err", err)
 		exit_code = 1
@@ -317,7 +317,13 @@ func main() {
 	slog.Info("Schedule information", "path", sch_in_filepath, "matches", len(schedule_indices))
 	
 	// write the schedule to a file
-	err = writeScheduleRecordsSurrogates(sch_out_filepath, schedule_records, schedule_surrogates)
+	err = writeCSVRecordsToFile(sch_out_filepath, schedule_records)
+	if err != nil {
+		slog.Error("Could not write schedule to file.", "path", sch_out_filepath, "err", err)
+		exit_code = 1
+		return
+	}
+	err = writeCSVRecordsToFile(sch_out_filepath_no_asterisks, schedule_records)
 	if err != nil {
 		slog.Error("Could not write schedule to file.", "path", sch_out_filepath, "err", err)
 		exit_code = 1
