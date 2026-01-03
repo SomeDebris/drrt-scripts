@@ -142,7 +142,7 @@ func int2dSliceToString(ints [][]int) ([][]string, error) {
 	return records, nil
 }
 
-func appendSurrogateAsterisks(records [][]string, surrogates [][]bool) ([][]string, error) {
+func getScheduleWithSurrogateAsterisks(records [][]string, surrogates [][]bool) ([][]string, error) {
 	if len(records) != len(surrogates) {
 		return nil, &ScheduleLengthMismatch{
 			SchedulesLength:  len(records),
@@ -173,6 +173,18 @@ func writeCSVRecordsToFile(path string, records [][]string) error {
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 	err = writer.WriteAll(records)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func writeScheduleRecordsSurrogates(path string, records [][]string, surrogates [][]bool) error {
+	records_with_surrogates, err := getScheduleWithSurrogateAsterisks(records, surrogates)
+	if err != nil {
+		return err
+	}
+	err = writeCSVRecordsToFile(path, records_with_surrogates)
 	if err != nil {
 		return err
 	}
@@ -296,7 +308,7 @@ func main() {
 		}
 	}
 
-	schedule_indices, _, schedule_raw, err := readScheduleAtPath(sch_in_filepath)
+	schedule_indices, schedule_surrogates, schedule_records, err := readScheduleAtPath(sch_in_filepath)
 	if err != nil {
 		slog.Error("Could not get information from schedule file.", "path", sch_in_filepath, "err", err)
 		exit_code = 1
