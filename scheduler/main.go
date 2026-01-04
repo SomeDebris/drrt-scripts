@@ -161,6 +161,8 @@ func main() {
 	ships_per_alliance_arg := flag.Int("n", 3, "Set the number of ships per alliance.")
 	tournament_name_arg := flag.String("tournament-name", "DRRT", "Set the name of the tournament. Red and Blue Alliance fleet files are suffixed with this.")
 	log_file_name := flag.String("log-filename", "", "Send log messages to a file. If not set, log to standard error.")
+	append_authors_quals := flag.Bool("append-authors-quals", false, "Append the author name to the name of the ship with the final appearance 'SHIP [by AUTHOR]' for each ship in all generated alliance fleet files.")
+	update_spreadsheet := flag.Bool("update-spreadsheet", true, "Update the DRRT datasheet after generating alliances.")
 
 	flag.Parse()
 
@@ -312,10 +314,14 @@ func main() {
 			blue := make([]*rsmships.Ship, *ships_per_alliance_arg)
 
 			for j, ship := range match {
+				appendme := ships[ship - 1]
+				if (*append_authors_quals) {
+					appendme.Data.Name += " [by " +  appendme.Data.Author + "]"
+				}
 				if j >= *ships_per_alliance_arg {
-					blue[j - *ships_per_alliance_arg] = &ships[ship - 1]
+					blue[j - *ships_per_alliance_arg] = &appendme
 				} else {
-					red[j] = &ships[ship - 1]
+					red[j] = &appendme
 				}
 			}
 
@@ -366,28 +372,25 @@ func main() {
 	}
 	slog.Info("Wrote no-surrogates schedule to file.", "path", sch_out_filepath_no_asterisks)
 
-	save_wait_group.Wait()
+	// If the DRRT Datasheet is to be updated:
+	if *update_spreadsheet {
+		// update the match schedule!
+		drrtdatasheet := lib.NewDRRTDatasheet(lib.DRRT_SPREADSHEET_ID, lib.RANGE_MATCH_SCHEDULE, lib.RANGE_SHIP_ENTRY, lib.RANGE_DATA_ENTRY)
+		if drrtdatasheet.Service == nil {
+			slog.Error("Failed to get google sheets service.", "err", err)
+			exit_code = 1
+			return
+		}
+		
+		err = drrtdatasheet.UpdateShipsAndMatchSchedule(ships, lib.Array2DToInterface(records))
+		if err != nil {
+			slog.Warn("Issue updating ships and match schedule in DRRT datasheet.", "err", err)
+			exit_code = 1
+			return
+		}
+	}
 
-	// update the match schedule!
-	drrtdatasheet := lib.NewDRRTDatasheet(lib.DRRT_SPREADSHEET_ID, lib.RANGE_MATCH_SCHEDULE, lib.RANGE_SHIP_ENTRY, lib.RANGE_DATA_ENTRY)
-	if drrtdatasheet.Service == nil {
-		slog.Error("Failed to get google sheets service.", "err", err)
-		exit_code = 1
-		return
-	}
-	
-	err = drrtdatasheet.UpdateMatchSchedule(lib.Array2DToInterface(records))
-	if err != nil {
-		slog.Warn("Issue updating match schedule in DRRT datasheet.", "err", err)
-		exit_code = 1
-		return
-	}
-	err = drrtdatasheet.UpdateShipsList(ships)
-	if err != nil {
-		slog.Warn("Issue updating ships in DRRT datasheet.", "err", err)
-		exit_code = 1
-		return
-	}
+	save_wait_group.Wait()
 
 	slog.Info("Scheduler finished. Have a great tournament!")
 }
