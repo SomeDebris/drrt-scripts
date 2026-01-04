@@ -193,6 +193,11 @@ func (m *DRRTDatasheet) BatchUpdateValues(theranges []string, values [][][]inter
 	return m.Service.Spreadsheets.Values.BatchUpdate(m.Id, &req).Do()
 }
 
+func (m *DRRTDatasheet) BatchClearValues(theranges []string) (*sheets.BatchClearValuesResponse, error) {
+	req := sheets.BatchClearValuesRequest{Ranges: theranges}
+	return m.Service.Spreadsheets.Values.BatchClear(m.Id, &req).Do()
+}
+
 func (m *DRRTDatasheet) ClearMatchSchedule() (*sheets.ClearValuesResponse, error) {
 	return m.ClearValues(m.MatchScheduleRange)
 }
@@ -245,6 +250,16 @@ func (m *DRRTDatasheet) UpdateShipsAndMatchSchedule(ships []rsmships.Ship, sched
 		return err
 	}
 	slog.Info("Updated ships list and match schedule.", "id", resp.SpreadsheetId, "TotalUpdatedCells", resp.TotalUpdatedCells)
-	return err
+	return nil
+}
+
+func (m *DRRTDatasheet) ClearShipsAndMatchSchedule() error {
+	resp, err := m.BatchClearValues([]string{m.MatchScheduleRange, m.ShipEntryRange})
+	if err != nil {
+		slog.Error("Failed to clear ships list and match schedule.", "err", err)
+		return err
+	}
+	slog.Info("Cleared ships list and match schedule.", "ClearedRanges[0]", resp.ClearedRanges[0], "ClearedRanges[1]", resp.ClearedRanges[1])
+	return nil
 }
 
