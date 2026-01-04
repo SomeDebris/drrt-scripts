@@ -236,11 +236,6 @@ func (m *DRRTDatasheet) UpdateShipsList(ships []rsmships.Ship) error {
 }
 
 func (m *DRRTDatasheet) UpdateShipsAndMatchSchedule(ships []rsmships.Ship, schedule [][]any) error {
-	// err := m.ClearShipsAndMatchSchedule()
-	// if err != nil {
-	// 	return err
-	// }
-
 	shipauthornamepairs := getShipAuthorNamePairInterface(ships)
 	resp, err := m.BatchUpdateValues([]string{m.MatchScheduleRange, m.ShipEntryRange}, [][][]any{schedule, shipauthornamepairs})
 	if err != nil {
