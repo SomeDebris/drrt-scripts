@@ -11,7 +11,6 @@ import (
 func DRRTLoggerPreferences(path string, log_lvl slog.Level) (*os.File, *bufio.Writer, error) {
 	var handler *slog.TextHandler
 	// Set the default log tech to the logger we set before
-	defer slog.SetDefault(slog.New(handler))
 
 	var log_file os.File
 	var writer io.Writer
@@ -31,6 +30,7 @@ func DRRTLoggerPreferences(path string, log_lvl slog.Level) (*os.File, *bufio.Wr
 		writer = os.Stderr
 	}
 	handler = slog.NewTextHandler(writer, handler_options)
-
+	logger := slog.New(handler)
+	slog.SetDefault(logger)
 	return &log_file, bufferedwriter, nil
 }
