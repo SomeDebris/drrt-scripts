@@ -15,11 +15,14 @@ import (
 )
 
 const (
-	SHEET_SCOPE         = `https://www.googleapis.com/auth/spreadsheets`
-	SHEET_SCOPE_RO      = `https://www.googleapis.com/auth/spreadsheets`
-	DRRT_SPREADSHEET_ID = `1RTxlvsUHe6RXdOzsFxBWvxhul5pyJ0O2VaDVaVl-Uow`
-	TOKEN_FNAME         = `token.json`
-	CREDENTIALS_FNAME   = `credentials.json`
+	SHEET_SCOPE          = `https://www.googleapis.com/auth/spreadsheets`
+	SHEET_SCOPE_RO       = `https://www.googleapis.com/auth/spreadsheets`
+	DRRT_SPREADSHEET_ID  = `1RTxlvsUHe6RXdOzsFxBWvxhul5pyJ0O2VaDVaVl-Uow`
+	TOKEN_FNAME          = `token.json`
+	CREDENTIALS_FNAME    = `credentials.json`
+	RANGE_MATCH_SCHEDULE = `Calc!A1:F`
+	RANGE_SHIP_ENTRY     = `Ships!A2:B`
+	RANGE_DATA_ENTRY     = `DATA_ENTRY!A2:J`
 )
 
 var DatasheetService *sheets.Service = nil
@@ -31,6 +34,23 @@ type DRRTDatasheet struct {
 	LogRange           string          `json:"logRange"`
 	Service            *sheets.Service `json:"-"`
 }
+// TODO: add function for marshalling this to JSON
+
+func NewDRRTDatasheet(id string, matchschedulerange string, shipentryrange string, logrange string) *DRRTDatasheet {
+	p := new(DRRTDatasheet)
+	p.Id = id
+	p.MatchScheduleRange = matchschedulerange
+	p.ShipEntryRange = shipentryrange
+	p.LogRange = logrange
+	srv, err := getSheetsService()
+	if err != nil {
+		slog.Warn("Failed to get google sheets service. Cannot assign value to this field.", "err", err)
+		return p
+	}
+	p.Service = srv
+	return p
+}
+
 
 // this was taken from the go quickstart
 // https://developers.google.com/workspace/sheets/api/quickstart/go
@@ -145,27 +165,36 @@ func GetGlobalSheetsService() (*sheets.Service, error) {
 	return DatasheetService, nil
 }
 
-// convinience functions for working with the DRRT datasheet
+// Call an "Update" on the sheet with at the given range with the given values.
+func (m *DRRTDatasheet) UpdateValues(therange string, values [][]interface{}) (*sheets.UpdateValuesResponse, error) {
+	valrange := sheets.ValueRange{Values: values}
+	return m.Service.Spreadsheets.Values.Update(m.Id, therange, &valrange).Do()
+}
+
+// Call a "Clear" on the sheet at the given range.
+func (m *DRRTDatasheet) ClearValues(therange string) (*sheets.ClearValuesResponse, error) {
+	req := sheets.ClearValuesRequest{}
+	return m.Service.Spreadsheets.Values.Clear(m.Id, m.MatchScheduleRange, &req).Do()
+}
+
 // TODO: make the clear request into an update request that replaces the cells
 // with empty strings. Then, make both into a batch update.
-func (m *DRRTDatasheet) UpdateMatchSchedule(schedule [][]string) error {
+func (m *DRRTDatasheet) UpdateMatchSchedule(schedule [][]interface{}) error {
 	// clear contents of the match schedule location
-	req := sheets.ClearValuesRequest{}
-	resp, err := m.srv.Spreadsheets.Values.Clear(m.id, m.MatchScheduleRange, &req).Do()
+	respclear, err := m.ClearValues(m.MatchScheduleRange)
 	if err != nil {
-		slog.Error("Failed to clear values.", "id", m.id, "range", m.MatchScheduleRange, "err", err)
+		slog.Error("Failed to clear values.", "id", m.Id, "range", m.MatchScheduleRange, "err", err)
 		return err
 	}
-	slog.Info("Deleted match schedule range.", "range", resp.ClearedRange, "HTTPStatusCode", resp.HTTPStatusCode, "id", resp.SpreadsheetId)
+	slog.Info("Deleted match schedule range.", "range", respclear.ClearedRange, "HTTPStatusCode", respclear.HTTPStatusCode, "id", respclear.SpreadsheetId)
 
 	// update range with new match schedule
-	matchschedulevalrange := sheets.ValueRange{Values: Array2DStringsToInterface(schedule)}
-	resp, err := m.srv.Spreadsheets.Values.Update(m.id, m.MatchScheduleRange, &matchschedulevalrange).Do()
+	respupdate, err := m.UpdateValues(m.MatchScheduleRange, schedule)
 	if err != nil {
-		slog.Error("Failed to update values.", "id", m.id, "range", m.MatchScheduleRange, "err", err)
+		slog.Error("Failed to update values.", "id", m.Id, "range", m.MatchScheduleRange, "err", err)
+		return err
 	}
-	slog.Info("Updated match schedule range.", 
-
+	slog.Info("Successfully updated match schedule values.", "range", respupdate.UpdatedRange, "HTTPStatusCode", respupdate.HTTPStatusCode, "id", respupdate.SpreadsheetId)
 
 	return nil
 }

@@ -7,6 +7,7 @@ import (
 	"io"
 )
 
+// opens a log file at the specified location. Selects standard error if 
 func DRRTLoggerPreferences(path string, log_lvl slog.Level) (*os.File, *bufio.Writer, error) {
 	var handler *slog.TextHandler
 	// Set the default log tech to the logger we set before

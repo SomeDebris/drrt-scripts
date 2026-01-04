@@ -1,54 +1,49 @@
 package main
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
+	// "context"
+	// "encoding/json"
+	// "fmt"
 	"log"
-	"net/http"
+	"log/slog"
+	// "net/http"
+	"flag"
 	"os"
+	// "bufio"
+	"drrt-scripts/lib"
 
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
-	"google.golang.org/api/option"
-	"google.golang.org/api/sheets/v4"
+	// "golang.org/x/oauth2"
+	// "golang.org/x/oauth2/google"
+	// "google.golang.org/api/option"
+	// "google.golang.org/api/sheets/v4"
 )
 
 func main() {
-	ctx := context.Background()
-	b, err := os.ReadFile("credentials.json")
+	// boilerplate stuff for exit codes
+	exit_code := 0
+	defer os.Exit(exit_code)
+
+	log_lvl := slog.LevelInfo
+
+	log_file_name := flag.String("log-filename", "", "Send log messages to a file. If not set, log to standard error.")
+	flag.Parse()
+
+	// same tech used in scheduler/main.go
+	log_ref, log_writer_ref, err := lib.DRRTLoggerPreferences(*log_file_name, log_lvl)
 	if err != nil {
-		log.Fatalf("Unable to read client secret file: %v", err)
+		log.Fatalf("Could not open log file '%s': %v", *log_file_name, err)
+	}
+	logfile := *log_ref
+	defer logfile.Close()
+	if log_writer_ref != nil {
+		logwriter := *log_writer_ref
+		defer logwriter.Flush()
 	}
 
-	// If modifying these scopes, delete your previously saved token.json.
-	config, err := google.ConfigFromJSON(b, "https://www.googleapis.com/auth/spreadsheets.readonly")
-	if err != nil {
-		log.Fatalf("Unable to parse client secret file to config: %v", err)
-	}
-	client := getClient(config)
-
-	srv, err := sheets.NewService(ctx, option.WithHTTPClient(client))
-	if err != nil {
-		log.Fatalf("Unable to retrieve Sheets client: %v", err)
-	}
-
-	// Prints the names and majors of students in a sample spreadsheet:
-	// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-	spreadsheetId := "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms"
-	readRange := "Class Data!A2:E"
-	resp, err := srv.Spreadsheets.Values.Get(spreadsheetId, readRange).Do()
-	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet: %v", err)
-	}
-
-	if len(resp.Values) == 0 {
-		fmt.Println("No data found.")
-	} else {
-		fmt.Println("Name, Major:")
-		for _, row := range resp.Values {
-			// Print columns A and E, which correspond to indices 0 and 4.
-			fmt.Printf("%s, %s\n", row[0], row[4])
-		}
+	drrtdatasheet := lib.NewDRRTDatasheet(lib.DRRT_SPREADSHEET_ID, lib.RANGE_MATCH_SCHEDULE, lib.RANGE_SHIP_ENTRY, lib.RANGE_DATA_ENTRY)
+	if drrtdatasheet.Service == nil {
+		slog.Error("Failed to get google sheets service.", "err", err)
+		exit_code = 1
+		return
 	}
 }

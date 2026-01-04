@@ -17,3 +17,25 @@ func HTMLColorCodeToInt(code string) (int, error) {
 
 	return out, nil
 }
+
+func Array2DToInterface[T any](in [][]T) [][]interface{} {
+	var out [][]interface{} = make([][]interface{}, len(in))
+	for i, row := range in {
+		var outrow []interface{} = make([]interface{}, len(row))
+		for j, val := range row {
+			outrow[j] = val
+		}
+		out[i] = outrow
+	}
+	return out
+}
+
+// Returns an [][]any (or [][]interface{}) with the same dimensions as in, but with no assigned values.
+// TODO: are these values actually empty? or do I need to assign "nil" to each index?
+func Array2DToEmptyInterface[T any](in [][]T) [][]interface{} {
+	var out [][]interface{} = make([][]interface{}, len(in))
+	for i, row := range in {
+		out[i] = make([]interface{}, len(row))
+	}
+	return out
+}
