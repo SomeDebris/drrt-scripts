@@ -165,25 +165,16 @@ func main() {
 	flag.Parse()
 
 	// Use the slog.TextHandler for the log format
-	var handler *slog.TextHandler
-	handler_options := &slog.HandlerOptions{Level: log_lvl}
-
-	if *log_file_name != "" {
-		log_file, err := os.Create(*log_file_name)
-		if err != nil {
-			log.Fatalf("Could not open log file '%s': %v", *log_file_name, err)
-		}
-		defer log_file.Close()
-		log_writer := bufio.NewWriter(log_file)
-		handler = slog.NewTextHandler(log_writer, handler_options)
-		defer log_writer.Flush()
-	} else {
-		handler = slog.NewTextHandler(os.Stderr, handler_options)
+	log_ref, log_writer_ref, err := lib.DRRTLoggerPreferences(*log_file_name, log_lvl)
+	if err != nil {
+		log.Fatalf("Could not open log file '%s': %v", *log_file_name, err)
 	}
-	
-	// Set the default log tech to the logger we set before
-	logger := slog.New(handler)
-	slog.SetDefault(logger)
+	logfile := *log_ref
+	defer logfile.Close()
+	if log_writer_ref != nil {
+		logwriter := *log_writer_ref
+		defer logwriter.Flush()
+	}
 
 	// log the input arguments
 	slog.Info("Starting DRRT Scheduler.", "exec", os.Args[0], "version", VERSION)
