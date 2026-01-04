@@ -24,6 +24,13 @@ const (
 
 var DatasheetService *sheets.Service = nil
 
+type DRRTDatasheet struct {
+	Id                 string          `json:"id,omitempty"`
+	MatchScheduleRange string          `json:"matchScheduleRange,omitempty"`
+	ShipEntryRange     string          `json:"shipEntryRange,omitempty"`
+	LogRange           string          `json:"logRange"`
+	Service            *sheets.Service `json:"-"`
+}
 
 // this was taken from the go quickstart
 // https://developers.google.com/workspace/sheets/api/quickstart/go
@@ -136,4 +143,29 @@ func GetGlobalSheetsService() (*sheets.Service, error) {
 		DatasheetService = srv
 	}
 	return DatasheetService, nil
+}
+
+// convinience functions for working with the DRRT datasheet
+// TODO: make the clear request into an update request that replaces the cells
+// with empty strings. Then, make both into a batch update.
+func (m *DRRTDatasheet) UpdateMatchSchedule(schedule [][]string) error {
+	// clear contents of the match schedule location
+	req := sheets.ClearValuesRequest{}
+	resp, err := m.srv.Spreadsheets.Values.Clear(m.id, m.MatchScheduleRange, &req).Do()
+	if err != nil {
+		slog.Error("Failed to clear values.", "id", m.id, "range", m.MatchScheduleRange, "err", err)
+		return err
+	}
+	slog.Info("Deleted match schedule range.", "range", resp.ClearedRange, "HTTPStatusCode", resp.HTTPStatusCode, "id", resp.SpreadsheetId)
+
+	// update range with new match schedule
+	matchschedulevalrange := sheets.ValueRange{Values: Array2DStringsToInterface(schedule)}
+	resp, err := m.srv.Spreadsheets.Values.Update(m.id, m.MatchScheduleRange, &matchschedulevalrange).Do()
+	if err != nil {
+		slog.Error("Failed to update values.", "id", m.id, "range", m.MatchScheduleRange, "err", err)
+	}
+	slog.Info("Updated match schedule range.", 
+
+
+	return nil
 }
