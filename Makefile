@@ -1,4 +1,4 @@
-programs=drrt-scheduler drrt-namer
+programs=drrt-scheduler drrt-namer drrt-datasheet-updater
 
 all: $(programs)
 

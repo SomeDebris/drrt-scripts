@@ -15,3 +15,6 @@ tags
 tags*
 drrt-scheduler
 drrt-namer
+
+credentials.json
+token.json
