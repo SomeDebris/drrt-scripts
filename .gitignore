@@ -17,5 +17,6 @@ drrt-scheduler
 drrt-namer
 drrt-datasheet-updater
 
+credentials_drrt.json
 credentials.json
 token.json
