@@ -12,6 +12,7 @@ import (
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"
+	"github.com/SomeDebris/rsmships-go"
 )
 
 const (
@@ -168,7 +169,9 @@ func GetGlobalSheetsService() (*sheets.Service, error) {
 // Call an "Update" on the sheet with at the given range with the given values.
 func (m *DRRTDatasheet) UpdateValues(therange string, values [][]interface{}) (*sheets.UpdateValuesResponse, error) {
 	valrange := sheets.ValueRange{Values: values}
-	return m.Service.Spreadsheets.Values.Update(m.Id, therange, &valrange).Do()
+	call := m.Service.Spreadsheets.Values.Update(m.Id, therange, &valrange)
+	call.ValueInputOption("USER_ENTERED")
+	return call.Do()
 }
 
 // Call a "Clear" on the sheet at the given range.
@@ -196,5 +199,22 @@ func (m *DRRTDatasheet) UpdateMatchSchedule(schedule [][]interface{}) error {
 	}
 	slog.Info("Successfully updated match schedule values.", "range", respupdate.UpdatedRange, "HTTPStatusCode", respupdate.HTTPStatusCode, "id", respupdate.SpreadsheetId)
 
+	return nil
+}
+
+func (m *DRRTDatasheet) UpdateShipsList(ships []rsmships.Ship) error {
+	var theupdate [][]interface{} = make([][]interface{}, len(ships))
+	for i, ship := range ships {
+		var shipauthorpair []interface{} = make([]interface{}, 2)
+		shipauthorpair[0] = ship.Data.Name
+		shipauthorpair[1] = ship.Data.Author
+		theupdate[i] = shipauthorpair
+	}
+	respupdate, err := m.UpdateValues(m.ShipEntryRange, theupdate)
+	if err != nil {
+		slog.Error("Failed to update values.", "id", m.Id, "range", m.MatchScheduleRange, "err", err)
+		return err
+	}
+	slog.Info("Successfully updated match schedule values.", "range", respupdate.UpdatedRange, "HTTPStatusCode", respupdate.HTTPStatusCode, "id", respupdate.SpreadsheetId)
 	return nil
 }
