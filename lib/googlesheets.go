@@ -215,6 +215,6 @@ func (m *DRRTDatasheet) UpdateShipsList(ships []rsmships.Ship) error {
 		slog.Error("Failed to update values.", "id", m.Id, "range", m.MatchScheduleRange, "err", err)
 		return err
 	}
-	slog.Info("Successfully updated match schedule values.", "range", respupdate.UpdatedRange, "HTTPStatusCode", respupdate.HTTPStatusCode, "id", respupdate.SpreadsheetId)
+	slog.Info("Successfully updated ships list.", "range", respupdate.UpdatedRange, "HTTPStatusCode", respupdate.HTTPStatusCode, "id", respupdate.SpreadsheetId)
 	return nil
 }
