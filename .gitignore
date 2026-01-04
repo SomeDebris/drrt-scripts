@@ -15,6 +15,7 @@ tags
 tags*
 drrt-scheduler
 drrt-namer
+drrt-datasheet-updater
 
 credentials.json
 token.json
