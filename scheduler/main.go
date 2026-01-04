@@ -242,7 +242,7 @@ func main() {
 	sch_out_filepath := filepath.Join(*drrt_directory_arg, SELECTED_SCHEDULE_FNAME)
 	sch_out_filepath_no_asterisks := filepath.Join(*drrt_directory_arg, SELECTED_SCHEDULE_NOAST_FNAME)
 
-	matchschedule, _, err := readScheduleAtPath(sch_in_filepath)
+	matchschedule, records, err := readScheduleAtPath(sch_in_filepath)
 	if err != nil {
 		slog.Error("Could not get information from schedule file.", "path", sch_in_filepath, "err", err)
 		exit_code = 1
@@ -367,6 +367,27 @@ func main() {
 	slog.Info("Wrote no-surrogates schedule to file.", "path", sch_out_filepath_no_asterisks)
 
 	save_wait_group.Wait()
+
+	// update the match schedule!
+	drrtdatasheet := lib.NewDRRTDatasheet(lib.DRRT_SPREADSHEET_ID, lib.RANGE_MATCH_SCHEDULE, lib.RANGE_SHIP_ENTRY, lib.RANGE_DATA_ENTRY)
+	if drrtdatasheet.Service == nil {
+		slog.Error("Failed to get google sheets service.", "err", err)
+		exit_code = 1
+		return
+	}
+	
+	err = drrtdatasheet.UpdateMatchSchedule(lib.Array2DToInterface(records))
+	if err != nil {
+		slog.Warn("Issue updating match schedule in DRRT datasheet.", "err", err)
+		exit_code = 1
+		return
+	}
+	err = drrtdatasheet.UpdateShipsList(ships)
+	if err != nil {
+		slog.Warn("Issue updating ships in DRRT datasheet.", "err", err)
+		exit_code = 1
+		return
+	}
 
 	slog.Info("Scheduler finished. Have a great tournament!")
 }
