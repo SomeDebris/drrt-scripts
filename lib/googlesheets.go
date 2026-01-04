@@ -19,7 +19,7 @@ const (
 	SHEET_SCOPE_RO       = `https://www.googleapis.com/auth/spreadsheets`
 	DRRT_SPREADSHEET_ID  = `1RTxlvsUHe6RXdOzsFxBWvxhul5pyJ0O2VaDVaVl-Uow`
 	TOKEN_FNAME          = `token.json`
-	CREDENTIALS_FNAME    = `credentials.json`
+	CREDENTIALS_FNAME    = `credentials_drrt.json`
 	RANGE_MATCH_SCHEDULE = `Calc!A1:F`
 	RANGE_SHIP_ENTRY     = `Ships!A2:B`
 	RANGE_DATA_ENTRY     = `DATA_ENTRY!A2:J`
@@ -84,7 +84,7 @@ func getTokenFromWeb(config *oauth2.Config) (*oauth2.Token, error) {
 	fmt.Printf("Go to the follo&wing link in your browser then type the "+
 		"authorization code: \n%v\n", authURL)
 	var authCode string
-	if _, err := fmt.Scan(authCode); err != nil {
+	if _, err := fmt.Scan(&authCode); err != nil {
 		slog.Error("Unable to read authorization code.", "err", err)
 		return nil, err
 	}
@@ -103,12 +103,12 @@ func tokenFromFile(file string) (*oauth2.Token, error) {
 		return nil, err
 	}
 	defer f.Close()
-	tok := oauth2.Token{}
+	tok := &oauth2.Token{}
 	err = json.NewDecoder(f).Decode(tok)
 	if err != nil {
 		slog.Error("Error decoding token.", "err", err)
 	}
-	return &tok, err
+	return tok, err
 }
 
 // Saves a token to a file path.
