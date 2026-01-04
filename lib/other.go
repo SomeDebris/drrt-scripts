@@ -3,6 +3,7 @@ package lib
 import (
 	"fmt"
 	"strconv"
+	"github.com/SomeDebris/rsmships-go"
 )
 
 func HTMLColorCodeToInt(code string) (int, error) {
@@ -36,6 +37,17 @@ func Array2DToEmptyInterface[T any](in [][]T) [][]interface{} {
 	var out [][]interface{} = make([][]interface{}, len(in))
 	for i, row := range in {
 		out[i] = make([]interface{}, len(row))
+	}
+	return out
+}
+
+func getShipAuthorNamePairInterface(ships []rsmships.Ship) [][]interface{} {
+	var out [][]interface{} = make([][]interface{}, len(ships))
+	for i, ship := range ships {
+		var shipauthorpair []interface{} = make([]interface{}, 2)
+		shipauthorpair[0] = ship.Data.Name
+		shipauthorpair[1] = ship.Data.Author
+		out[i] = shipauthorpair
 	}
 	return out
 }

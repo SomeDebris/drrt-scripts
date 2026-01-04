@@ -180,11 +180,28 @@ func (m *DRRTDatasheet) ClearValues(therange string) (*sheets.ClearValuesRespons
 	return m.Service.Spreadsheets.Values.Clear(m.Id, m.MatchScheduleRange, &req).Do()
 }
 
+func (m *DRRTDatasheet) BatchUpdateValues(theranges []string, values [][][]interface{}) (*sheets.BatchUpdateValuesResponse, error) {
+	if len(theranges) != len(values) {
+		slog.Error("length of ranges is not equivalent to length of values.", "lengthranges", len(theranges), "lengthvalues", len(values))
+		return nil, fmt.Errorf("length of ranges is not equivalent to length of values.")
+	}
+	valueranges := make([]*sheets.ValueRange, len(theranges))
+	for i, _ := range valueranges {
+		valueranges[i] = &sheets.ValueRange{Values: values[i], Range: theranges[i]}
+	}
+	req := sheets.BatchUpdateValuesRequest{Data: valueranges, ValueInputOption: "USER_ENTERED"}
+	return m.Service.Spreadsheets.Values.BatchUpdate(m.Id, &req).Do()
+}
+
+func (m *DRRTDatasheet) ClearMatchSchedule() (*sheets.ClearValuesResponse, error) {
+	return m.ClearValues(m.MatchScheduleRange)
+}
+
 // TODO: make the clear request into an update request that replaces the cells
 // with empty strings. Then, make both into a batch update.
 func (m *DRRTDatasheet) UpdateMatchSchedule(schedule [][]interface{}) error {
 	// clear contents of the match schedule location
-	respclear, err := m.ClearValues(m.MatchScheduleRange)
+	respclear, err := m.ClearMatchSchedule()
 	if err != nil {
 		slog.Error("Failed to clear values.", "id", m.Id, "range", m.MatchScheduleRange, "err", err)
 		return err
@@ -203,13 +220,7 @@ func (m *DRRTDatasheet) UpdateMatchSchedule(schedule [][]interface{}) error {
 }
 
 func (m *DRRTDatasheet) UpdateShipsList(ships []rsmships.Ship) error {
-	var theupdate [][]interface{} = make([][]interface{}, len(ships))
-	for i, ship := range ships {
-		var shipauthorpair []interface{} = make([]interface{}, 2)
-		shipauthorpair[0] = ship.Data.Name
-		shipauthorpair[1] = ship.Data.Author
-		theupdate[i] = shipauthorpair
-	}
+	theupdate := getShipAuthorNamePairInterface(ships)
 	respupdate, err := m.UpdateValues(m.ShipEntryRange, theupdate)
 	if err != nil {
 		slog.Error("Failed to update values.", "id", m.Id, "range", m.MatchScheduleRange, "err", err)
@@ -218,3 +229,22 @@ func (m *DRRTDatasheet) UpdateShipsList(ships []rsmships.Ship) error {
 	slog.Info("Successfully updated ships list.", "range", respupdate.UpdatedRange, "HTTPStatusCode", respupdate.HTTPStatusCode, "id", respupdate.SpreadsheetId)
 	return nil
 }
+
+func (m *DRRTDatasheet) UpdateShipsAndMatchSchedule(ships []rsmships.Ship, schedule [][]interface{}) error {
+	response_matchschedule_clear, err := m.ClearMatchSchedule()
+	if err != nil {
+		slog.Error("Failed to clear match schedule.", "err", err)
+		return err
+	}
+	slog.Info("Deleted match schedule range.", "range", response_matchschedule_clear.ClearedRange, "HTTPStatusCode", response_matchschedule_clear.HTTPStatusCode, "id", response_matchschedule_clear.SpreadsheetId)
+
+	shipauthornamepairs := getShipAuthorNamePairInterface(ships)
+	resp, err := m.BatchUpdateValues([]string{m.MatchScheduleRange, m.ShipEntryRange}, [][][]interface{}{schedule, shipauthornamepairs})
+	if err != nil {
+		slog.Error("Error occured while updating ships list and match schedule.", "err", err)
+		return err
+	}
+	slog.Info("Updated ships list and match schedule.", "id", resp.SpreadsheetId, "TotalUpdatedCells", resp.TotalUpdatedCells)
+	return err
+}
+
