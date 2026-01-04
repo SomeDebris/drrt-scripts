@@ -113,12 +113,11 @@ func getSheetsService() (*sheets.Service, error) {
 		return nil, err
 	}
 	client, err := getClient(config)
-	srv, err := sheets.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
 		return nil, err
 	}
-
-	return srv, nil
+	srv, err := sheets.NewService(ctx, option.WithHTTPClient(client))
+	return srv, err
 }
 
 func GetGlobalSheetsService() (*sheets.Service, error) {
