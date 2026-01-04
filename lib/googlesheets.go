@@ -106,17 +106,23 @@ func getSheetsService() (*sheets.Service, error) {
 	// read contents of secret into memory
 	b, err := os.ReadFile(CREDENTIALS_FNAME)
 	if err != nil {
+		slog.Error("Unable to read credentials filename.", "err", err)
 		return nil, err
 	}
 	config, err := google.ConfigFromJSON(b, SHEET_SCOPE)
 	if err != nil {
+		slog.Error("Unable to get service configuration.", "err", err)
 		return nil, err
 	}
 	client, err := getClient(config)
 	if err != nil {
+		slog.Error("Unable to get client information.", "err", err)
 		return nil, err
 	}
 	srv, err := sheets.NewService(ctx, option.WithHTTPClient(client))
+	if err != nil {
+		slog.Error("Unable to create new sheets service.", "err", err)
+	}
 	return srv, err
 }
 
