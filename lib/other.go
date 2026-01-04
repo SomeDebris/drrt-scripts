@@ -19,10 +19,10 @@ func HTMLColorCodeToInt(code string) (int, error) {
 	return out, nil
 }
 
-func Array2DToInterface[T any](in [][]T) [][]interface{} {
-	var out [][]interface{} = make([][]interface{}, len(in))
+func Array2DToInterface[T any](in [][]T) [][]any {
+	var out [][]any = make([][]any, len(in))
 	for i, row := range in {
-		var outrow []interface{} = make([]interface{}, len(row))
+		var outrow []any = make([]any, len(row))
 		for j, val := range row {
 			outrow[j] = val
 		}
@@ -31,20 +31,20 @@ func Array2DToInterface[T any](in [][]T) [][]interface{} {
 	return out
 }
 
-// Returns an [][]any (or [][]interface{}) with the same dimensions as in, but with no assigned values.
+// Returns an [][]any (or [][]any) with the same dimensions as in, but with no assigned values.
 // TODO: are these values actually empty? or do I need to assign "nil" to each index?
-func Array2DToEmptyInterface[T any](in [][]T) [][]interface{} {
-	var out [][]interface{} = make([][]interface{}, len(in))
+func Array2DToEmptyInterface[T any](in [][]T) [][]any {
+	var out [][]any = make([][]any, len(in))
 	for i, row := range in {
-		out[i] = make([]interface{}, len(row))
+		out[i] = make([]any, len(row))
 	}
 	return out
 }
 
-func getShipAuthorNamePairInterface(ships []rsmships.Ship) [][]interface{} {
-	var out [][]interface{} = make([][]interface{}, len(ships))
+func getShipAuthorNamePairInterface(ships []rsmships.Ship) [][]any {
+	var out [][]any = make([][]any, len(ships))
 	for i, ship := range ships {
-		var shipauthorpair []interface{} = make([]interface{}, 2)
+		var shipauthorpair []any = make([]any, 2)
 		shipauthorpair[0] = ship.Data.Name
 		shipauthorpair[1] = ship.Data.Author
 		out[i] = shipauthorpair
