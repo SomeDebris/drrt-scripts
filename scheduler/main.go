@@ -4,7 +4,6 @@ import (
 	"drrt-scripts/lib"
 	"encoding/csv"
 	"flag"
-	"bufio"
 	"fmt"
 	"log"
 	"log/slog"
@@ -210,7 +209,7 @@ func main() {
 	}
 
 	// Empty the contents of the Qualifications directory
-	err := lib.Remove_directory_contents(quals_directory)
+	err = lib.Remove_directory_contents(quals_directory)
 	if err != nil {
 		slog.Error("Cannot remove contents of Qualifications directory.", "err", err)
 		exit_code = 1
