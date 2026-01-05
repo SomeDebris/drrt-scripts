@@ -1,10 +1,8 @@
 package lib
 
 import (
-	"encoding/csv"
 	"fmt"
 	"github.com/SomeDebris/rsmships-go"
-	"os"
 	"strconv"
 )
 
@@ -67,17 +65,3 @@ func Int2dSliceToString(ints [][]int) ([][]string, error) {
 	return records, nil
 }
 
-func WriteCSVRecordsToFile(path string, records [][]string) error {
-	file, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-	err = writer.WriteAll(records)
-	if err != nil {
-		return err
-	}
-	return nil
-}

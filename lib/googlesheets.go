@@ -52,6 +52,10 @@ func NewDRRTDatasheet(id string, matchschedulerange string, shipentryrange strin
 	return p
 }
 
+func NewDRRTDatasheetDefaults() *DRRTDatasheet {
+	return NewDRRTDatasheet(DRRT_SPREADSHEET_ID, RANGE_MATCH_SCHEDULE, RANGE_SHIP_ENTRY, RANGE_DATA_ENTRY)
+}
+
 
 // this was taken from the go quickstart
 // https://developers.google.com/workspace/sheets/api/quickstart/go

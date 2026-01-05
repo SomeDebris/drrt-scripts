@@ -40,7 +40,7 @@ func main() {
 		defer logwriter.Flush()
 	}
 
-	drrtdatasheet := lib.NewDRRTDatasheet(lib.DRRT_SPREADSHEET_ID, lib.RANGE_MATCH_SCHEDULE, lib.RANGE_SHIP_ENTRY, lib.RANGE_DATA_ENTRY)
+	drrtdatasheet := lib.NewDRRTDatasheetDefaults()
 	if drrtdatasheet.Service == nil {
 		slog.Error("Failed to get google sheets service.", "err", err)
 		exit_code = 1

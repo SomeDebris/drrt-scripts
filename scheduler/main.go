@@ -65,58 +65,6 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
 }
 
 
-/**
-* schedule array
-* whether ship is participating as surrogate
-* any error recieved
- */
-func readScheduleAtPath(path string) (lib.MatchSchedule, [][]string, error) {
-	schedule_bytes, err := os.ReadFile(path)
-	if err != nil {
-		return lib.MatchSchedule{}, nil, err
-	}
-
-	schedule_string := string(schedule_bytes)
-
-	r := csv.NewReader(strings.NewReader(schedule_string))
-
-	records, err := r.ReadAll()
-	if err != nil {
-		return lib.MatchSchedule{}, nil, err
-	}
-
-	schedule := make([][]int, len(records))
-	surrogates := make([][]bool, len(records))
-
-	// Parse out the strings in the schedules to integers
-	for j, match := range records {
-		ships_in_match := make([]int, len(match))
-		surrogates_in_match := make([]bool, len(match))
-
-		for i, ship := range match {
-			if strings.ContainsAny(ship, "*") {
-				surrogates_in_match[i] = true
-			} else {
-				surrogates_in_match[i] = false
-			}
-
-			ship_noasterisk := strings.ReplaceAll(ship, "*", "")
-
-			ships_in_match[i], err = strconv.Atoi(ship_noasterisk)
-			if err != nil {
-				return lib.MatchSchedule{}, records, err
-			}
-		}
-		schedule[j] = ships_in_match
-		surrogates[j] = surrogates_in_match
-	}
-	return lib.MatchSchedule{
-		Schedule:       schedule,
-		Surrogates:     surrogates,
-		Length:         len(records),
-		AllianceLength: len(records[0]),
-	}, records, nil
-}
 
 
 
@@ -217,7 +165,7 @@ func main() {
 	sch_out_filepath := filepath.Join(*drrt_directory_arg, SELECTED_SCHEDULE_FNAME)
 	sch_out_filepath_no_asterisks := filepath.Join(*drrt_directory_arg, SELECTED_SCHEDULE_NOAST_FNAME)
 
-	matchschedule, records, err := readScheduleAtPath(sch_in_filepath)
+	matchschedule, records, err := lib.ReadScheduleAtPath(sch_in_filepath)
 	if err != nil {
 		slog.Error("Could not get information from schedule file.", "path", sch_in_filepath, "err", err)
 		exit_code = 1
@@ -348,7 +296,7 @@ func main() {
 	// If the DRRT Datasheet is to be updated:
 	if *update_spreadsheet {
 		// update the match schedule!
-		drrtdatasheet := lib.NewDRRTDatasheet(lib.DRRT_SPREADSHEET_ID, lib.RANGE_MATCH_SCHEDULE, lib.RANGE_SHIP_ENTRY, lib.RANGE_DATA_ENTRY)
+		drrtdatasheet := lib.NewDRRTDatasheetDefaults()
 		if drrtdatasheet.Service == nil {
 			slog.Error("Failed to get google sheets service.", "err", err)
 			exit_code = 1

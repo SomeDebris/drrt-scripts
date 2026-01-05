@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 	"path/filepath"
+	"encoding/csv"
 )
 
 var Replacer_Out_Filename = strings.NewReplacer(
@@ -37,25 +38,40 @@ func Path_exists(path string) (bool, error) {
 }
 
 func Remove_directory_contents(directory string) error {
-    d, err := os.Open(directory)
-    if err != nil {
-        return err
-    }
+	d, err := os.Open(directory)
+	if err != nil {
+		return err
+	}
 
-    defer d.Close()
+	defer d.Close()
 
-    names, err := d.Readdirnames(-1)
+	names, err := d.Readdirnames(-1)
 
-    if err != nil {
-        return err
-    }
+	if err != nil {
+		return err
+	}
 
-    for _, name := range names {
-        err = os.RemoveAll(filepath.Join(directory, name))
-        if err != nil {
-            return err
-        }
-    }
+	for _, name := range names {
+		err = os.RemoveAll(filepath.Join(directory, name))
+		if err != nil {
+			return err
+		}
+	}
 
-    return nil
+	return nil
+}
+
+func WriteCSVRecordsToFile(path string, records [][]string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+	err = writer.WriteAll(records)
+	if err != nil {
+		return err
+	}
+	return nil
 }
