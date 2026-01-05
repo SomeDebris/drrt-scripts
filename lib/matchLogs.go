@@ -37,6 +37,10 @@ const (
 	length_destructionListingSlice = 4
 )
 
+var (
+	mlog_regex_type = regexp.MustCompile(mlog_typeRegexCaptureString)
+)
+
 /** example
 MLOG OPEN: 793.504312
 [START] faction:{100} name:{Interceptor} DT:{0} DI:{0} alive:{2}
@@ -200,7 +204,6 @@ func GetTimeOfMatchLogFilename(path string) (time.Time, error) {
 
 //*
 func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
-	mlog_regex_type := regexp.MustCompile(mlog_typeRegexCaptureString)
 
 	match_log, err := os.Open(path)
 	if err != nil {
