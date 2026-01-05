@@ -199,12 +199,12 @@ func GetTimeOfMatchLogFilename(path string) (time.Time, error) {
 }
 
 //*
-func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
+func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 	mlog_regex_type := regexp.MustCompile(mlog_typeRegexCaptureString)
 
 	match_log, err := os.Open(path)
 	if err != nil {
-		return MatchLogRaw{}, err
+		return nil, err
 	}
 	defer match_log.Close()
 
@@ -222,7 +222,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 	// */
 	mlog_raw.CreatedTimestamp, err = GetTimeOfMatchLogFilename(path)
 	if err != nil {
-		return mlog_raw, err
+		return &mlog_raw, err
 	}
 
 	match_log_scanner := bufio.NewScanner(match_log)
@@ -240,7 +240,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			fields := mlog_regex_map[mlog_start].FindStringSubmatch(line)
 
 			if fields == nil {
-				return mlog_raw, &MatchLogRegexError{
+				return &mlog_raw, &MatchLogRegexError{
 					event:      mlog_start,
 					line:       line,
 					lineNumber: mlog_RecordNumber,
@@ -251,7 +251,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			var listing MatchLogFleetListing
 			listing.Faction, err = strconv.Atoi(fields[1])
 			if err != nil {
-				return mlog_raw, &MatchLogFieldError{
+				return &mlog_raw, &MatchLogFieldError{
 					field: "faction",
 					event: mlog_start,
 					lineNumber:  mlog_RecordNumber,
@@ -262,7 +262,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			listing.Name = fields[2]
 			listing.DamageTaken, err = strconv.Atoi(fields[3])
 			if err != nil {
-				return mlog_raw, &MatchLogFieldError{
+				return &mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "DT",
 					event: mlog_start,
@@ -273,7 +273,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			}
 			listing.DamageInflicted, err = strconv.Atoi(fields[4])
 			if err != nil {
-				return mlog_raw, &MatchLogFieldError{
+				return &mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "DI",
 					event: mlog_start,
@@ -284,7 +284,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			}
 			listing.Alive, err = strconv.Atoi(fields[5])
 			if err != nil {
-				return mlog_raw, &MatchLogFieldError{
+				return &mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "alive",
 					event: mlog_start,
@@ -298,7 +298,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 		case mlog_ship:
 			fields := mlog_regex_map[mlog_ship].FindStringSubmatch(line)
 			if fields == nil {
-				return mlog_raw, &MatchLogRegexError{
+				return &mlog_raw, &MatchLogRegexError{
 					event:      mlog_ship,
 					line:       line,
 					lineNumber: mlog_RecordNumber,
@@ -309,7 +309,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			var listing MatchLogShipListing
 			listing.Fleet, err = strconv.Atoi(fields[1])
 			if err != nil {
-				return mlog_raw, &MatchLogFieldError{
+				return &mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					event: mlog_ship,
 					field: "faction",
@@ -334,7 +334,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 					fielderr.AddContext(mlog_RecordNumber, path)
 					err = fielderr
 				}
-				return mlog_raw, err
+				return &mlog_raw, err
 			}
 			mlog_raw.appendDestruction(listing, &matchLogRawMutex_destruction)
 
@@ -342,7 +342,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			fields := mlog_regex_map[mlog_result].FindStringSubmatch(line)
 
 			if fields == nil {
-				return mlog_raw, &MatchLogRegexError{
+				return &mlog_raw, &MatchLogRegexError{
 					event:      mlog_result,
 					line:       line,
 					lineNumber: mlog_RecordNumber,
@@ -353,7 +353,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			var listing MatchLogFleetListing
 			listing.Faction, err = strconv.Atoi(fields[1])
 			if err != nil {
-				return mlog_raw, &MatchLogFieldError{
+				return &mlog_raw, &MatchLogFieldError{
 					field: "faction",
 					event: mlog_result,
 					lineNumber:  mlog_RecordNumber,
@@ -364,7 +364,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			listing.Name = fields[2]
 			listing.DamageTaken, err = strconv.Atoi(fields[3])
 			if err != nil {
-				return mlog_raw, &MatchLogFieldError{
+				return &mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "DT",
 					event: mlog_result,
@@ -375,7 +375,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			}
 			listing.DamageInflicted, err = strconv.Atoi(fields[4])
 			if err != nil {
-				return mlog_raw, &MatchLogFieldError{
+				return &mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "DI",
 					event: mlog_result,
@@ -386,7 +386,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			}
 			listing.Alive, err = strconv.Atoi(fields[5])
 			if err != nil {
-				return mlog_raw, &MatchLogFieldError{
+				return &mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					field: "alive",
 					event: mlog_result,
@@ -400,7 +400,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 		case mlog_survival:
 			fields := mlog_regex_map[mlog_survival].FindStringSubmatch(line)
 			if fields == nil {
-				return mlog_raw, &MatchLogRegexError{
+				return &mlog_raw, &MatchLogRegexError{
 					event:      mlog_survival,
 					line:       line,
 					lineNumber: mlog_RecordNumber,
@@ -411,7 +411,7 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 			var listing MatchLogShipListing
 			listing.Fleet, err = strconv.Atoi(fields[1])
 			if err != nil {
-				return mlog_raw, &MatchLogFieldError{
+				return &mlog_raw, &MatchLogFieldError{
 					message: err.Error(),
 					event: mlog_survival,
 					field: "faction",
@@ -427,6 +427,6 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 
 	// We have successfully assembled a mlog_raw. from this, we shall make a DRRTStandardTerseMatchLog.
 	// TODO how does one get the timestamp at which a file was created?
-	return mlog_raw, nil
+	return &mlog_raw, nil
 }
 // */
