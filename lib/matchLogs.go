@@ -6,10 +6,12 @@ import (
 	"os"
 	"regexp"
 	"strconv"
-	// "fmt"
+	"fmt"
 	// "slog"
+	"path/filepath"
 	"errors"
 	"sync"
+	"strings"
 )
 
 const (
@@ -97,6 +99,7 @@ type MatchLogDestructionListing struct {
 
 type MatchLogRaw struct {
 	CreatedTimestamp    time.Time
+	Path                string
 	StartListings       []MatchLogFleetListing
 	ShipListings        []MatchLogShipListing
 	DestructionListings []MatchLogDestructionListing
@@ -182,6 +185,19 @@ func parseDestructionLine(line string) (MatchLogDestructionListing, error) {
 	return listing, nil
 }
 
+func GetTimeOfMatchLogFilename(path string) (time.Time, error) {
+	basename := filepath.Base(path)
+	trimmed, found := strings.CutPrefix(basename, MLOG_PREFIX)
+	if !found {
+		return time.Time{}, fmt.Errorf("Cannot find prefix `%s`.", MLOG_PREFIX)
+	}
+	timestamp, found := strings.CutSuffix(trimmed, MLOG_EXTENSION)
+	if !found {
+		return time.Time{}, fmt.Errorf("Cannot find extension `%s`.", MLOG_EXTENSION)
+	}
+	return time.Parse(REASSEMBLY_FILE_TIMESTAMP_FMT, timestamp)
+}
+
 //*
 func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 	mlog_regex_type := regexp.MustCompile(mlog_typeRegexCaptureString)
@@ -193,7 +209,9 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 	defer match_log.Close()
 
 	var mlog_raw MatchLogRaw
+	mlog_raw.Path = path
 
+	/*
 	// get the last modified time of the file:
 	mlog_fileinfo, err := match_log.Stat()
 	if err != nil {
@@ -201,6 +219,11 @@ func ReadMatchLogAtPath(path string) (MatchLogRaw, error) {
 	}
 	// Set the CreatedTimestamp value to the last modified time of the file
 	mlog_raw.CreatedTimestamp = mlog_fileinfo.ModTime()
+	// */
+	mlog_raw.CreatedTimestamp, err = GetTimeOfMatchLogFilename(path)
+	if err != nil {
+		return mlog_raw, err
+	}
 
 	match_log_scanner := bufio.NewScanner(match_log)
 

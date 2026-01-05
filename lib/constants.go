@@ -21,4 +21,8 @@ var BLUE_ALLIANCE_TEMPLATE rsmships.Fleet = rsmships.Fleet{
 	Name:       "The Blue Alliance",
 }
 
-const REASSEMBLY_FILE_TIMESTAMP_FMT = "20060102_03.04.05.PM"
+const (
+	REASSEMBLY_FILE_TIMESTAMP_FMT = "20060102_03.04.05.PM"
+	MLOG_PREFIX                   = `MLOG_`
+	MLOG_EXTENSION                = `.txt`
+)

@@ -70,10 +70,10 @@ func get_inspected_ship_paths(dir string) ([]string, error) {
 * whether ship is participating as surrogate
 * any error recieved
  */
-func readScheduleAtPath(path string) (MatchSchedule, [][]string, error) {
+func readScheduleAtPath(path string) (lib.MatchSchedule, [][]string, error) {
 	schedule_bytes, err := os.ReadFile(path)
 	if err != nil {
-		return MatchSchedule{}, nil, err
+		return lib.MatchSchedule{}, nil, err
 	}
 
 	schedule_string := string(schedule_bytes)
@@ -82,7 +82,7 @@ func readScheduleAtPath(path string) (MatchSchedule, [][]string, error) {
 
 	records, err := r.ReadAll()
 	if err != nil {
-		return MatchSchedule{}, nil, err
+		return lib.MatchSchedule{}, nil, err
 	}
 
 	schedule := make([][]int, len(records))
@@ -104,13 +104,13 @@ func readScheduleAtPath(path string) (MatchSchedule, [][]string, error) {
 
 			ships_in_match[i], err = strconv.Atoi(ship_noasterisk)
 			if err != nil {
-				return MatchSchedule{}, records, err
+				return lib.MatchSchedule{}, records, err
 			}
 		}
 		schedule[j] = ships_in_match
 		surrogates[j] = surrogates_in_match
 	}
-	return MatchSchedule{
+	return lib.MatchSchedule{
 		Schedule:       schedule,
 		Surrogates:     surrogates,
 		Length:         len(records),
@@ -118,33 +118,6 @@ func readScheduleAtPath(path string) (MatchSchedule, [][]string, error) {
 	}, records, nil
 }
 
-func int2dSliceToString(ints [][]int) ([][]string, error) {
-	count := len(ints)
-	records := make([][]string, count)
-	for j, row := range ints {
-		record := make([]string, len(row))
-		for i, val := range row {
-			record[i] = strconv.Itoa(val)
-		}
-		records[j] = record
-	}
-	return records, nil
-}
-
-func writeCSVRecordsToFile(path string, records [][]string) error {
-	file, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-	err = writer.WriteAll(records)
-	if err != nil {
-		return err
-	}
-	return nil
-}
 
 
 // assemble alliance
@@ -295,7 +268,7 @@ func main() {
 		}(i, path)
 	}
 
-	schedule := make([]DRRTStandardMatch, matchschedule.Length)
+	schedule := make([]lib.DRRTStandardMatch, matchschedule.Length)
 	
 	unmarshal_wait_group.Wait()
 
@@ -331,7 +304,7 @@ func main() {
 			schedule[i].RedAlliance.Name = fmt.Sprintf("Match %03d - ^1The Red Alliance^7", i+1)
 			schedule[i].BlueAlliance.Name = fmt.Sprintf("Match %03d - ^4The Blue Alliance^7", i+1)
 
-			err = WriteMatchFleets(schedule[i], quals_directory)
+			err = lib.WriteMatchFleets(schedule[i], quals_directory)
 			if err != nil {
 				slog.Error("Failed to save fleets for match", "match", i + 1, "err", err)
 				exit_code = 1

@@ -1,9 +1,11 @@
 package lib
 
 import (
+	"encoding/csv"
 	"fmt"
-	"strconv"
 	"github.com/SomeDebris/rsmships-go"
+	"os"
+	"strconv"
 )
 
 func HTMLColorCodeToInt(code string) (int, error) {
@@ -50,4 +52,32 @@ func getShipAuthorNamePairInterface(ships []rsmships.Ship) [][]any {
 		out[i] = shipauthorpair
 	}
 	return out
+}
+
+func Int2dSliceToString(ints [][]int) ([][]string, error) {
+	count := len(ints)
+	records := make([][]string, count)
+	for j, row := range ints {
+		record := make([]string, len(row))
+		for i, val := range row {
+			record[i] = strconv.Itoa(val)
+		}
+		records[j] = record
+	}
+	return records, nil
+}
+
+func WriteCSVRecordsToFile(path string, records [][]string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+	err = writer.WriteAll(records)
+	if err != nil {
+		return err
+	}
+	return nil
 }
