@@ -15,23 +15,24 @@ import (
 )
 
 const (
-	mlog_typeRegexCaptureString = `^\[([A-Z]+)\]`
-	mlog_startRegexCaptureString = `^\[START\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
-	mlog_shipRegexCaptureString = `^\[SHIP\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
+	mlog_typeRegexCaptureString        = `^\[([A-Z]+)\]`
+	mlog_startRegexCaptureString       = `^\[START\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
+	mlog_shipRegexCaptureString        = `^\[SHIP\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
 	mlog_destructionRegexCaptureString = `^\[DESTRUCTION\] ship:\{(.*)\} fship:\{([0-9]*)\} destroyed:\{(.*)\} fdestroyed:\{([0-9]*)\}$`
-	mlog_resultRegexCaptureString = `^\[RESULT\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
-	mlog_survivalRegexCaptureString = `^\[SURVIVAL\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
+	mlog_resultRegexCaptureString      = `^\[RESULT\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
+	mlog_survivalRegexCaptureString    = `^\[SURVIVAL\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
+	mlog_shipauthorRegexCaptureString  = `^(.*) \[by (.*)\]$`
 
-	mlog_start = `START`
-	mlog_ship = `SHIP`
+	mlog_start       = `START`
+	mlog_ship        = `SHIP`
 	mlog_destruction = `DESTRUCTION`
-	mlog_result = `RESULT`
-	mlog_survival = `SURVIVAL`
+	mlog_result      = `RESULT`
+	mlog_survival    = `SURVIVAL`
 
-	length_fleetListingSlice = 5
+	length_fleetListingSlice  = 5
 	length_resultListingSlice = 5
 
-	length_shipListingSlice = 2
+	length_shipListingSlice     = 2
 	length_survivalListingSlice = 2
 
 	length_destructionListingSlice = 4
@@ -39,6 +40,7 @@ const (
 
 var (
 	mlog_regex_type = regexp.MustCompile(mlog_typeRegexCaptureString)
+	mlog_regex_shipauthor = regexp.MustCompile(mlog_shipRegexCaptureString)
 )
 
 /** example
@@ -67,19 +69,6 @@ var mlog_regex_map = map[string]*regexp.Regexp{
 		mlog_result:      regexp.MustCompile(mlog_resultRegexCaptureString),
 		mlog_survival:    regexp.MustCompile(mlog_survivalRegexCaptureString),
 	}
-
-type DRRTStandardTerseMatchLog struct {
-	MatchNumber               int
-	Timestamp                 time.Time
-	RedAlliance               []string
-	BlueAlliance              []string
-	Destructions              map[string]string
-	RedPointsDamageInflicted  int
-	RedPointsDamageTaken      int
-	BluePointsDamageInflicted int
-	BluePointsDamageTaken     int
-	Raw                       MatchLogRaw
-}
 
 type MatchLogFleetListing struct {
 	Faction         int
@@ -112,11 +101,11 @@ type MatchLogRaw struct {
 }
 
 var (
-	matchLogRawMutex_start sync.Mutex
-	matchLogRawMutex_ship sync.Mutex
+	matchLogRawMutex_start       sync.Mutex
+	matchLogRawMutex_ship        sync.Mutex
 	matchLogRawMutex_destruction sync.Mutex
-	matchLogRawMutex_result sync.Mutex
-	matchLogRawMutex_survival sync.Mutex
+	matchLogRawMutex_result      sync.Mutex
+	matchLogRawMutex_survival    sync.Mutex
 )
 
 // Append a START event.
@@ -433,3 +422,5 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 	return &mlog_raw, nil
 }
 // */
+
+
