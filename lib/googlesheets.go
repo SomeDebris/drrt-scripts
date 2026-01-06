@@ -197,6 +197,10 @@ func (m *DRRTDatasheet) BatchUpdateValues(theranges []string, values [][][]any) 
 	return m.Service.Spreadsheets.Values.BatchUpdate(m.Id, &req).Do()
 }
 
+func (m *DRRTDatasheet) GetValues(therange string) (*sheets.ValueRange, error) {
+	return m.Service.Spreadsheets.Values.Get(m.Id, therange).Do()
+}
+
 func (m *DRRTDatasheet) BatchClearValues(theranges []string) (*sheets.BatchClearValuesResponse, error) {
 	req := sheets.BatchClearValuesRequest{Ranges: theranges}
 	return m.Service.Spreadsheets.Values.BatchClear(m.Id, &req).Do()
@@ -260,3 +264,13 @@ func (m *DRRTDatasheet) ClearShipsAndMatchSchedule() error {
 	return nil
 }
 
+func (m *DRRTDatasheet) GetMatchSheduleValues() ([][]any, error) {
+	vals, err := m.GetValues(m.MatchScheduleRange)
+	if err != nil {
+		slog.Error("Error getting match schedule from DRRT Datasheet.", "err", err)
+		return [][]any{}, err
+	}
+	schedule := vals.Values
+	slog.Info("Got match schedule from sheet.", "rangerecieved", vals.Range, "HTTPStatusCode", vals.ServerResponse.HTTPStatusCode, "scheduleLength", len(schedule))
+	return schedule, nil
+}
