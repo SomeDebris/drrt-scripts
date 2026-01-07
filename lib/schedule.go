@@ -7,7 +7,10 @@ import (
 	"strconv"
 	"strings"
 	"os"
+	"sync"
 	"encoding/csv"
+	"log/slog"
+	"sort"
 )
 
 type ScheduleLengthMismatch struct {
@@ -157,4 +160,64 @@ func ReadScheduleAtPath(path string) (MatchSchedule, [][]string, error) {
 		Length:         len(records),
 		AllianceLength: len(records[0]),
 	}, records, nil
+}
+
+func GoUnmarshalAllShipsFromPaths(ships *[]rsmships.Ship, paths []string, wg *sync.WaitGroup) {
+	for i, path := range paths {
+		wg.Add(1)
+
+		go func(i int, path string) {
+			defer wg.Done()
+			isfleet, err := rsmships.IsReassemblyJSONFileFleet(path)
+			if err != nil {
+				slog.Error("Failed preparation for unmarshalling ship", "path", path, "err", err)
+				return
+			}
+			if isfleet {
+				fleet, err := rsmships.UnmarshalFleetFromFile(path)
+				if err != nil {
+					slog.Error("Failed unmarshalling fleet", "path", path, "err", err)
+					return
+				}
+				// Use the first blueprint in the fleet file
+				(*ships)[i] = *fleet.Blueprints[0]
+				slog.Info("Unmarshalled ship from fleet.", "name", (*ships)[i].Data.Name, "author", (*ships)[i].Data.Author, "idx", i + 1, "fleet.Name", fleet.Name)
+			} else {
+				(*ships)[i], err = rsmships.UnmarshalShipFromFile(path)
+				if err != nil {
+					slog.Error("Failed unmarshalling ship", "path", path, "err", err)
+					return
+				}
+				slog.Info("Unmarshalled ship", "name", (*ships)[i].Data.Name, "author", (*ships)[i].Data.Author, "idx", i + 1)
+			}
+		}(i, path)
+	}
+}
+
+func GetJSONFilesSortedByModTime(dir string) ([]string, error) {
+	var ship_files []string
+
+	f, err := os.Open(dir)
+	if err != nil {
+		return ship_files, err
+	}
+	defer f.Close()
+
+	file_info, err := f.Readdir(-1)
+	if err != nil {
+		return ship_files, err
+	}
+
+	sort.Slice(file_info, func(i, j int) bool {
+		return file_info[i].ModTime().Before(file_info[j].ModTime())
+	})
+
+	for _, file := range file_info {
+		if !strings.EqualFold(filepath.Ext(file.Name()), ".json") {
+			continue
+		}
+		ship_files = append(ship_files, file.Name())
+	}
+
+	return ship_files, nil
 }
