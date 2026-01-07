@@ -41,6 +41,25 @@ type matchPerformance struct {
 	Result           matchResult
 	Survived         bool
 }
+func (m *matchPerformance) scoreKill() {
+	m.Destructions += 1
+	m.RankPointsEarned += 1
+}
+func (m *matchPerformance) scoreSurvived() {
+	m.Survived = true
+}
+func (m *matchPerformance) scoreDestructionWin() {
+	m.Result = WinDestruction
+	m.RankPointsEarned += 2
+}
+func (m *matchPerformance) scorePointsWin() {
+	m.Result = WinPoints
+	m.RankPointsEarned += 2
+}
+func (m *matchPerformance) scoreLoss() {
+	m.Result = Loss
+}
+
 func (m *matchPerformance) toSheetsRow() [][]any {
 	output := make([]any, 8)
 	output[0] = m.Ship.Data.Name
@@ -100,10 +119,23 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 	redMatchNumber := GetMatchNumberFromAllianceName(raw.StartListings[0].Name, false)
 	blueMatchNumber := GetMatchNumberFromAllianceName(raw.StartListings[1].Name, true)
 	if redMatchNumber != blueMatchNumber {
+		// TODO: make this a real error type
 		return &mlog, errors.New("Red and Blue Alliance match numbers are different. Bad match log!")
 	}
 	mlog.MatchNumber = redMatchNumber // == blueMatchNumber
 	slog.Debug("found match log number from filenames", "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+
+	// Check the length of both alliances
+	redAllianceLength  := raw.StartListings[0].Alive
+	blueAllianceLength := raw.StartListings[1].Alive
+	if redAllianceLength != blueAllianceLength {
+		return &mlog, &MatchLogAllianceLengthMismatchError{
+			redAllianceLength: redAllianceLength,
+			blueAllianceLength: blueAllianceLength,
+		}
+	}
+	mlog.AllianceLength = redAllianceLength
+
 
 	// collect array of shipidxs
 	// TODO: possibly good idea to accept ship list from the spreadsheet and stop using actual ship datatypes?
@@ -115,39 +147,47 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 		slog.Debug("Ship in match", "matchNumber", mlog.MatchNumber, "name", ship.Data.Name, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 	}
 
-	mlog.AllianceLength = len(raw.ShipListings) / 2
+	// FIXME: currently, there is no sanity checking of match log input. A fleet
+	// line could say that an alliance has 4 members when only 3 are present,
+	// and such.
+
 	// Get the indices of each ship participating in this match log
 	// The first n ships are from the Red alliance, but may not be sorted in the order they appear in Reassembly's fleet screen.
 	mlog.ShipIndices = make([]int, len(raw.ShipListings))
 	mlog.Ships = make([]*rsmships.Ship, len(raw.ShipListings))
 	for i, shiplsting := range raw.ShipListings {
 		name := ShipAuthorFromCommonNamefmt(shiplsting.Ship)[0]
-		nameCorrelator, ok := nametoidx[name]
+		var idxfac *nameCorrelator
+		idxfac, ok := nametoidx[name]
 		if !ok {
-			slog.Warn("Ship index cannot be found using map.", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			slog.Warn("Ship index cannot be found using map.", "scoring", "SHIP", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			// TODO: you may want to return an error here.. but I don't know.
 		}
-		mlog.ShipIndices[i] = nameCorrelator.Idx
-		mlog.Ships[i] = ships[nameCorrelator.Idx]
-		nameCorrelator.Faction = shiplsting.Fleet
+		mlog.ShipIndices[i] = idxfac.Idx
+		mlog.Ships[i] = ships[idxfac.Idx]
+		idxfac.Faction = shiplsting.Fleet
 	}
 	
 
 
-	// Map the ship's index value to its performance in the match
+	// Map the ship's index value to its performance in the match. This contains
+	// the same references as mlog.Records.
 	idxtoperformance := make(map[int]*matchPerformance)
+	mlog.Record = make([]*matchPerformance, mlog.AllianceLength * 2)
 	// create an empty matchPerformance entry for each ship
-	for _, idx := range mlog.ShipIndices {
+	for i, idx := range mlog.ShipIndices {
 		// get the faction of the ship
-		idxtoperformance[idx] = &matchPerformance{Ship: ships[idx], Match: mlog.MatchNumber}
+		mlog.Record[i] = &matchPerformance{Ship: ships[idx], Match: mlog.MatchNumber}
+		idxtoperformance[idx] = mlog.Record[i]
 		slog.Debug("Add ship to match performance.", "author", ships[idx].Data.Author, "name", ships[idx].Data.Name, "idx", idx, "path", raw.Path)
 	}
+
 	// add the [DESTRUCTION] mlog information to the datatype
 	for _, destruction := range raw.DestructionListings {
 		destroyername := ShipAuthorFromCommonNamefmt(destruction.Ship)[0]
 		destroyernameCorrelator, ok := nametoidx[destroyername]
 		if !ok {
-			slog.Warn("Ship index of destroying ship cannot be found using map.", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			slog.Warn("Ship index of destroying ship cannot be found using map.","scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			// TODO: you may want to return an error here.. but I don't know.
 			continue
 		}
@@ -155,24 +195,68 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 		var p *matchPerformance
 		p, ok = idxtoperformance[destroyernameCorrelator.Idx]
 		if !ok {
-			slog.Warn("Cannot find performance of ship from index.", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			slog.Warn("Cannot find performance of ship from index.","scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			continue
 		}
 		// SCORING
 		// if a ship destroys another ship, increase ranking points earned and destructions by 1
-		p.Destructions += 1
-		p.RankPointsEarned += 1
+		p.scoreKill()
 	}
-
+	
 	// add surviving ship information
 	for _, survival := range raw.SurvivalListings {
+		name := ShipAuthorFromCommonNamefmt(survival.Ship)[0]
+		idxfac, ok := nametoidx[name]
+		if !ok {
+			slog.Warn("Ship index cannot be found using map.","scoring", "SURVIVAL", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			// TODO: you may want to return an error here.. but I don't know.
+		}
+		var p *matchPerformance
+		p, ok = idxtoperformance[idxfac.Idx]
+		if !ok {
+			slog.Warn("Cannot find performance of ship from index.", "scoring", "SURVIVAL", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			continue
+		}
 		// SCORING
-		// If score is to be added due to a survival, do it here. Do a switch
-		// statement on the faction name et cetera.
-		// switch survival.Fleet {
-		// case MLOG_RED_FACTION:
-
+		p.scoreSurvived()
 	}
+
+	// Define which type of points the match shall be scored with. 
+	pointsMethod := func(lst *MatchLogFleetListing) int {
+		return lst.DamageInflicted
+	}
+	// initialize functions that will be used to send points to each alliance
+	var blueResultScorer func(p *matchPerformance)
+	var redResultScorer  func(p *matchPerformance)
+	// add RESULT line infomration
+	if raw.ResultListings[0].Alive <= 0 {
+		// red alliance loses on destruction
+		blueResultScorer = func(p *matchPerformance) { p.scoreDestructionWin() }
+		redResultScorer = func(p *matchPerformance) { p.scoreLoss() }
+	} else if raw.ResultListings[1].Alive <= 0 {
+		// blue alliance loses on destruction
+		blueResultScorer = func(p *matchPerformance) { p.scoreLoss() }
+		redResultScorer = func(p *matchPerformance) { p.scoreDestructionWin() }
+	} else if pointsMethod(&raw.ResultListings[0]) >= pointsMethod(&raw.ResultListings[1]) {
+		// red alliance wins on points.
+		// If tie, default to red alliance, just like Reassembly.
+		blueResultScorer = func(p *matchPerformance) { p.scoreLoss() }
+		redResultScorer = func(p *matchPerformance) { p.scorePointsWin() }
+	} else {
+		// blue alliance wins on points
+		blueResultScorer = func(p *matchPerformance) { p.scorePointsWin() }
+		redResultScorer = func(p *matchPerformance) { p.scoreLoss() }
+	}
+	for i, rec := range mlog.Record {
+		if i < mlog.AllianceLength {
+			// red alliance
+			redResultScorer(rec)
+		} else {
+			// blue alliance
+			blueResultScorer(rec)
+		}
+	}
+
 
 
 	// TODO next time: 
@@ -186,3 +270,4 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 
 	return &mlog, nil
 }
+
