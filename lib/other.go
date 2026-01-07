@@ -31,6 +31,22 @@ func Array2DToInterface[T any](in [][]T) [][]any {
 	return out
 }
 
+func Array2DToInt(in [][]any) ([][]int, error) {
+	out := make([][]int, len(in))
+	var ok bool
+	for i, row := range in {
+		outrow := make([]int, len(row))
+		for j, val := range row {
+			outrow[j], ok = val.(int)
+			if !ok {
+				return out, fmt.Errorf("Failed to convert [][]any to [][]int at index out[%d][%d].", i, j)
+			}
+		}
+		out[i] = outrow
+	}
+	return out, nil
+}
+
 // Returns an [][]any (or [][]any) with the same dimensions as in, but with no assigned values.
 // TODO: are these values actually empty? or do I need to assign "nil" to each index?
 func Array2DToEmptyInterface[T any](in [][]T) [][]any {
