@@ -106,6 +106,16 @@ type DRRTStandardMatchLog struct {
 	Raw                   *MatchLogRaw
 }
 
+func getShipIdxFacMap(ships []*rsmships.Ship) *map[string]*nameCorrelator {
+	nametoidx := make(map[string]*nameCorrelator)
+	for i, ship := range ships {
+		// NOTE: the ships' names must not use standard name format (name [by author])
+		// NOTE: value is 1 less than match schedule values; schedule starts at 1 and not 0. internally, use 0 minimum. Print 1+ this value.
+		nametoidx[ship.Data.Name] = &nameCorrelator{i, 0}
+	}
+	return &nametoidx
+}
+
 // TODO: make the nametoidx variable an input argument
 // TODO: This function is long and unweildly
 func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) (*DRRTStandardMatchLog, error) {
@@ -119,7 +129,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 	redMatchNumber := GetMatchNumberFromAllianceName(raw.StartListings[0].Name, false)
 	blueMatchNumber := GetMatchNumberFromAllianceName(raw.StartListings[1].Name, true)
 	if redMatchNumber != blueMatchNumber {
-		// TODO: make this a real error type
+		// FIXME: make this a real error type
 		return &mlog, errors.New("Red and Blue Alliance match numbers are different. Bad match log!")
 	}
 	mlog.MatchNumber = redMatchNumber // == blueMatchNumber
@@ -139,14 +149,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 
 	// collect array of shipidxs
 	// TODO: possibly good idea to accept ship list from the spreadsheet and stop using actual ship datatypes?
-	nametoidx := make(map[string]*nameCorrelator)
-	for i, ship := range ships {
-		// NOTE: the ships' names must not use standard name format (name [by author])
-		// NOTE: value is 1 less than match schedule values; schedule starts at 1 and not 0. internally, use 0 minimum. Print 1+ this value.
-		nametoidx[ship.Data.Name] = &nameCorrelator{i, 0}
-		slog.Debug("Ship in match", "matchNumber", mlog.MatchNumber, "name", ship.Data.Name, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
-	}
-
+	nametoidx := getShipIdxFacMap(ships)
 	// FIXME: currently, there is no sanity checking of match log input. A fleet
 	// line could say that an alliance has 4 members when only 3 are present,
 	// and such.
@@ -158,7 +161,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 	for i, shiplsting := range raw.ShipListings {
 		name := ShipAuthorFromCommonNamefmt(shiplsting.Ship)[0]
 		var idxfac *nameCorrelator
-		idxfac, ok := nametoidx[name]
+		idxfac, ok := (*nametoidx)[name]
 		if !ok {
 			slog.Warn("Ship index cannot be found using map.", "scoring", "SHIP", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			// TODO: you may want to return an error here.. but I don't know.
@@ -167,8 +170,6 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 		mlog.Ships[i] = ships[idxfac.Idx]
 		idxfac.Faction = shiplsting.Fleet
 	}
-	
-
 
 	// Map the ship's index value to its performance in the match. This contains
 	// the same references as mlog.Records.
@@ -185,7 +186,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 	// add the [DESTRUCTION] mlog information to the datatype
 	for _, destruction := range raw.DestructionListings {
 		destroyername := ShipAuthorFromCommonNamefmt(destruction.Ship)[0]
-		destroyernameCorrelator, ok := nametoidx[destroyername]
+		destroyernameCorrelator, ok := (*nametoidx)[destroyername]
 		if !ok {
 			slog.Warn("Ship index of destroying ship cannot be found using map.", "scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			// TODO: you may want to return an error here.. but I don't know.
@@ -203,10 +204,14 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 		p.scoreKill()
 	}
 	
+	// assertion:
+	if len(raw.SurvivalListings) <= 0 {
+		return &mlog, errors.New("Match log not finished: no survival lines.")
+	}
 	// add surviving ship information
 	for _, survival := range raw.SurvivalListings {
 		name := ShipAuthorFromCommonNamefmt(survival.Ship)[0]
-		idxfac, ok := nametoidx[name]
+		idxfac, ok := (*nametoidx)[name]
 		if !ok {
 			slog.Warn("Ship index cannot be found using map.", "scoring", "SURVIVAL", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			// TODO: you may want to return an error here.. but I don't know.
@@ -230,7 +235,9 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 	var redResultScorer  func(p *matchPerformance)
 
 
+	// assertions:
 	if len(raw.ResultListings) <= 0 {
+		// FIXME: make this a real error type
 		return &mlog, errors.New("Match log not finished: result lines not present.")
 	}
 	if len(raw.ResultListings) > 2 {
