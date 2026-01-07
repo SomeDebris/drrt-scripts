@@ -13,10 +13,8 @@ import (
 	"path/filepath"
 	"drrt-scripts/lib"
 	"github.com/SomeDebris/rsmships-go"
-	"time"
 	"sync"
 	// "cmp"
-	"errors"
 	"slices"
 
 	// "golang.org/x/oauth2"
@@ -24,122 +22,6 @@ import (
 	// "google.golang.org/api/option"
 	// "google.golang.org/api/sheets/v4"
 )
-type matchResult int
-const (
-	WinDestruction matchResult = iota
-	WinPoints
-	Loss
-)
-
-
-type matchPerformance struct {
-	Match            int
-	Ship             *rsmships.Ship
-	Destructions     int
-	RankPointsEarned int
-	Result           matchResult
-	Survived         bool
-}
-func (m *matchPerformance) toSheetsRow() [][]any {
-	output := make([]any, 8)
-	output[0] = m.Ship.Data.Name
-	output[1] = m.Match
-	output[2] = m.Destructions
-	output[3] = m.RankPointsEarned
-
-	output[4] = 0
-	output[5] = 0
-	output[6] = 0
-	switch m.Result {
-	case WinDestruction:
-		output[4] = 1
-	case WinPoints:
-		output[5] = 1
-	case Loss:
-		output[6] = 1
-	}
-
-	if m.Survived {
-		output[7] = 1
-	} else {
-		output[7] = 0
-	}
-	return [][]any{output}
-}
-
-type DRRTStandardMatchLog struct {
-	MatchNumber           int
-	Timestamp             time.Time
-	Ships                 []*rsmships.Ship
-	AllianceLength        int
-	Record                []*matchPerformance
-	ShipIndices           []int
-	PointsDamageInflicted []int
-	PointsDamageTaken     []int
-	Raw                   *lib.MatchLogRaw
-}
-// TODO: make the nametoidx variable an input argument
-func NewDRRTStandardMatchLogFromShips(raw *lib.MatchLogRaw, ships []*rsmships.Ship) (*DRRTStandardMatchLog, error) {
-	var mlog DRRTStandardMatchLog
-	mlog.Raw = raw
-	mlog.Timestamp = raw.CreatedTimestamp
-
-	// collect array of shipidxs
-	nametoidx := make(map[string]int)
-	for i, ship := range ships {
-		// NOTE: the ships' names must not use standard name format (name [by author])
-		// +1 because the match schedule index starts at 1 and not 0. GO loops start at 0.
-		nametoidx[ship.Data.Name] = i + 1
-	}
-
-	mlog.AllianceLength = len(raw.ShipListings) / 2
-	// Get the indices of each ship participating in this match log
-	// The first n ships are from the Red alliance, but may not be sorted in the order they appear in Reassembly's fleet screen.
-	mlog.ShipIndices = make([]int, len(raw.ShipListings))
-	mlog.Ships = make([]*rsmships.Ship, len(raw.ShipListings))
-	for i, shiplsting := range raw.ShipListings {
-		name := lib.ShipAuthorFromCommonNamefmt(shiplsting.Ship)[0]
-		idx, ok := nametoidx[name]
-		if !ok {
-			slog.Warn("Ship index cannot be found using map.", "name", name)
-			// TODO: you may want to return an error here.. but I don't know.
-		}
-		mlog.ShipIndices[i] = idx
-		mlog.Ships[i] = ships[idx]
-	}
-	
-	// ASSUMPTION: NOT a free-for-all (Red v Blue alliance)
-	// get the match number
-	// if the same for red and blue alliances: good!
-	redMatchNumber := lib.GetMatchNumberFromAllianceName(raw.StartListings[0].Name, false)
-	blueMatchNumber := lib.GetMatchNumberFromAllianceName(raw.StartListings[1].Name, true)
-	if redMatchNumber != blueMatchNumber {
-		return &mlog, errors.New("Red and Blue Alliance match numbers are different. Bad match log!")
-	}
-	mlog.MatchNumber = redMatchNumber // == blueMatchNumber
-	slog.Debug("found match log number from filenames", "matchNumber", mlog.MatchNumber)
-
-
-	// Map the ship's index value to its performance in the match
-	idxtoperformance := make(map[int]*matchPerformance)
-	// create an empty matchPerformance entry for each ship
-	for _, idx := range mlog.ShipIndices {
-		idxtoperformance[idx] = &matchPerformance{Ship: ships[idx], Match: mlog.MatchNumber}
-		slog.Debug("Add ship to match performance.", "author", ships[idx].Data.Author, "name", ships[idx].Data.Name, "idx", idx)
-	}
-
-
-	// TODO next time: 
-	// You need to assign the remaining fields to things.
-	// Start by finding a way to generate MatchPerformances for ships (create a
-	// hash map, I think).
-	// Take the Points field from the ResultListings.
-	// Create a function that generates a [][]any from this for passing into
-	// google sheets.
-	// Create a function for
-
-	return &mlog, nil
-}
 
 // func getShipIndexFromName(name string, ships []*rsmships.Ship) int {
 // 	for i, ship := range ships {
