@@ -11,15 +11,75 @@ import (
 	"os"
 	// "bufio"
 	"drrt-scripts/lib"
+	"github.com/SomeDebris/rsmships-go"
+	"time"
 
 	// "golang.org/x/oauth2"
 	// "golang.org/x/oauth2/google"
 	// "google.golang.org/api/option"
 	// "google.golang.org/api/sheets/v4"
 )
+type matchResult int
+const (
+	WinDestruction matchResult = iota
+	WinPoints
+	Loss
+)
+
+type matchPerformance struct {
+	Ship             *rsmships.Ship
+	Destructions     uint
+	RankPointsEarned uint
+	Result           matchResult
+	Survived         bool
+}
+func (m *matchPerformance) toSheetsRow() []any {
+	output := make([]any, 7)
+	output[0] = m.Ship.Data.Name
+	output[1] = m.Destructions
+	output[2] = m.RankPointsEarned
+
+	output[3] = 0
+	output[4] = 0
+	output[5] = 0
+	switch m.Result {
+	case WinDestruction:
+		output[3] = 1
+	case WinPoints:
+		output[4] = 1
+	case Loss:
+		output[5] = 1
+	}
+
+	if m.Survived {
+		output[6] = 1
+	} else {
+		output[6] = 0
+	}
+	return output
+}
+
+type DRRTStandardTerseMatchLog struct {
+	MatchNumber               int
+	Timestamp                 time.Time
+	RedAlliance               []*rsmships.Ship
+	BlueAlliance              []*rsmships.Ship
+	Record                    []*matchPerformance
+	RedPointsDamageInflicted  int
+	RedPointsDamageTaken      int
+	BluePointsDamageInflicted int
+	BluePointsDamageTaken     int
+	Raw                       *lib.MatchLogRaw
+}
+func NewDRRTStandardTerseMatchLog(raw *lib.MatchLogRaw) (*DRRTStandardTerseMatchLog, error) {
+	var mlog DRRTStandardTerseMatchLog
+	mlog.Raw = raw
+	mlog.Timestamp = raw.CreatedTimestamp
+	return &mlog, nil
+}
 
 func main() {
-	// boilerplate stuff for exit codes
+// boilerplate stuff for exit codes
 	exit_code := 0
 	defer os.Exit(exit_code)
 
@@ -46,4 +106,13 @@ func main() {
 		exit_code = 1
 		return
 	}
+	// TODO: use the lib.MatchSchedule type
+	scheduleindices, err := drrtdatasheet.GetMatchSheduleValues()
+	if err != nil {
+		slog.Error("Failed to get match schdule.", "err", err)
+		exit_code = 1
+		return
+	}
+
+	
 }
