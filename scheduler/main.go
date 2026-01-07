@@ -2,7 +2,6 @@ package main
 
 import (
 	"drrt-scripts/lib"
-	"encoding/csv"
 	"flag"
 	"fmt"
 	// "bufio"
@@ -11,7 +10,6 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"strconv"
 	"strings"
 	"sync"
 	"github.com/SomeDebris/rsmships-go"
@@ -36,33 +34,6 @@ func (m *MultipleShipsInFleetError) Error() string {
 	return "Fleet file has multiple ships defined. Only one ship should be defined in the file."
 }
 
-func get_inspected_ship_paths(dir string) ([]string, error) {
-	var ship_files []string
-
-	f, err := os.Open(dir)
-	if err != nil {
-		return ship_files, err
-	}
-	defer f.Close()
-
-	file_info, err := f.Readdir(-1)
-	if err != nil {
-		return ship_files, err
-	}
-
-	sort.Slice(file_info, func(i, j int) bool {
-		return file_info[i].ModTime().Before(file_info[j].ModTime())
-	})
-
-	for _, file := range file_info {
-		if !strings.EqualFold(filepath.Ext(file.Name()), ".json") {
-			continue
-		}
-		ship_files = append(ship_files, file.Name())
-	}
-
-	return ship_files, nil
-}
 
 
 
@@ -141,16 +112,21 @@ func main() {
 	}
 
 	// get a slice comprising paths to all ships
-	ship_paths, err := get_inspected_ship_paths(ships_directory)
+	ship_paths, err := lib.GetJSONFilesSortedByModTime(ships_directory)
 	if err != nil {
 		slog.Error("Cannot get inspected ship paths.", "err", err)
 		exit_code = 1
 		return
 	}
-
+	// get full path of each ship
+	fullshippaths := make([]string, len(ship_paths))
+	for i, path := range ship_paths {
+		fullshippaths[i] = filepath.Join(ships_directory, path)
+	}
 	slog.Info("Found paths for ship files.", "count", len(ship_paths))
-	for _, path := range ship_paths {
+	for i, path := range ship_paths {
 		slog.Debug("Ship path", "path", path)
+		slog.Debug("Full Ship path", "path", fullshippaths[i])
 	}
 
 	// check if there are less ships than can participate in a single match. Fail if this is true.
@@ -178,46 +154,10 @@ func main() {
 
 	ships := make([]rsmships.Ship, len(ship_paths))
 
+	// unmarshal ship files
 	var unmarshal_wait_group sync.WaitGroup
-
-	for i, path := range ship_paths {
-		unmarshal_wait_group.Add(1)
-
-		go func(i int, path string) {
-			defer unmarshal_wait_group.Done()
-			fullpath := filepath.Join(ships_directory, path)
-
-			isfleet, err := rsmships.IsReassemblyJSONFileFleet(fullpath)
-			if err != nil {
-				slog.Error("Failed preparation for unmarshalling ship", "path", fullpath, "err", err)
-				exit_code = 1
-				return
-			}
-
-			if isfleet {
-				fleet, err := rsmships.UnmarshalFleetFromFile(fullpath)
-				if err != nil {
-					slog.Error("Failed unmarshalling fleet", "path", fullpath, "err", err)
-					exit_code = 1
-					return
-				}
-				// Use the first blueprint in the fleet file
-				ships[i] = *fleet.Blueprints[0]
-				slog.Info("Unmarshalled ship from fleet.", "name", ships[i].Data.Name, "author", ships[i].Data.Author, "idx", i + 1, "fleet.Name", fleet.Name)
-			} else {
-				ships[i], err = rsmships.UnmarshalShipFromFile(fullpath)
-				if err != nil {
-					slog.Error("Failed unmarshalling ship", "path", fullpath, "err", err)
-					exit_code = 1
-					return
-				}
-				slog.Info("Unmarshalled ship", "name", ships[i].Data.Name, "author", ships[i].Data.Author, "idx", i + 1)
-			}
-		}(i, path)
-	}
-
+	lib.GoUnmarshalAllShipsFromPaths(&ships, fullshippaths, &unmarshal_wait_group)
 	schedule := make([]lib.DRRTStandardMatch, matchschedule.Length)
-	
 	unmarshal_wait_group.Wait()
 
 	slog.Info("Saving alliance fleet files", "dir", ships_directory)

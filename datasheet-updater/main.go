@@ -10,9 +10,15 @@ import (
 	"flag"
 	"os"
 	// "bufio"
+	"path/filepath"
 	"drrt-scripts/lib"
 	"github.com/SomeDebris/rsmships-go"
 	"time"
+	"sync"
+	// "cmp"
+	"errors"
+	"slices"
+	"regexp"
 
 	// "golang.org/x/oauth2"
 	// "golang.org/x/oauth2/google"
@@ -26,7 +32,9 @@ const (
 	Loss
 )
 
+
 type matchPerformance struct {
+	Match            uint
 	Ship             *rsmships.Ship
 	Destructions     uint
 	RankPointsEarned uint
@@ -34,49 +42,148 @@ type matchPerformance struct {
 	Survived         bool
 }
 func (m *matchPerformance) toSheetsRow() []any {
-	output := make([]any, 7)
+	output := make([]any, 8)
 	output[0] = m.Ship.Data.Name
-	output[1] = m.Destructions
-	output[2] = m.RankPointsEarned
+	output[1] = m.Match
+	output[2] = m.Destructions
+	output[3] = m.RankPointsEarned
 
-	output[3] = 0
 	output[4] = 0
 	output[5] = 0
+	output[6] = 0
 	switch m.Result {
 	case WinDestruction:
-		output[3] = 1
-	case WinPoints:
 		output[4] = 1
-	case Loss:
+	case WinPoints:
 		output[5] = 1
+	case Loss:
+		output[6] = 1
 	}
 
 	if m.Survived {
-		output[6] = 1
+		output[7] = 1
 	} else {
-		output[6] = 0
+		output[7] = 0
 	}
 	return output
 }
 
-type DRRTStandardTerseMatchLog struct {
-	MatchNumber               int
-	Timestamp                 time.Time
-	RedAlliance               []*rsmships.Ship
-	BlueAlliance              []*rsmships.Ship
-	Record                    []*matchPerformance
-	RedPointsDamageInflicted  int
-	RedPointsDamageTaken      int
-	BluePointsDamageInflicted int
-	BluePointsDamageTaken     int
-	Raw                       *lib.MatchLogRaw
+type DRRTStandardMatchLog struct {
+	MatchNumber           int
+	Timestamp             time.Time
+	Ships                 []*rsmships.Ship
+	AllianceLength        int
+	Record                []*matchPerformance
+	ShipIndices           []int
+	PointsDamageInflicted []int
+	PointsDamageTaken     []int
+	Raw                   *lib.MatchLogRaw
 }
-func NewDRRTStandardTerseMatchLog(raw *lib.MatchLogRaw) (*DRRTStandardTerseMatchLog, error) {
-	var mlog DRRTStandardTerseMatchLog
+// TODO: make the nametoidx variable an input argument
+func NewDRRTStandardMatchLogFromShipsSchedule(raw *lib.MatchLogRaw, ships []*rsmships.Ship, schedule [][]any) (*DRRTStandardMatchLog, error) {
+	var mlog DRRTStandardMatchLog
 	mlog.Raw = raw
 	mlog.Timestamp = raw.CreatedTimestamp
+
+	// collect array of shipidxs
+	nametoidx := make(map[string]int)
+	for i, ship := range ships {
+		// NOTE: the ships' names must not use standard name format (name [by author])
+		// +1 because the match schedule index starts at 1 and not 0. GO loops start at 0.
+		nametoidx[ship.Data.Name] = i + 1
+	}
+
+	// Red alliance are the first n ships, where n is the length of an alliance
+	// first: find the match this schedule represents. If it cannot be found in schedule, set MatchNumber to -1.
+	// TODO: if two ships have the same name but different authors, and are noted in standard namefmt (name [by author]), it'll fail.
+	mlog.AllianceLength = len(schedule[0]) / 2
+	if mlog.AllianceLength != len(raw.ShipListings)/2 {
+		err := errors.New("Schedule alliance length is not equivalent to number of ships playing in match schedule")
+		slog.Error("Schedule alliance length is not equivalent to number of ships playing in match schedule.", "err", err, "lengthschedule", mlog.AllianceLength, "lengthmlog", len(raw.ShipListings)/2)
+		return &mlog, err
+	}
+	// Get the indices of each ship participating in this match log
+	// The first n ships are from the Red alliance, but may not be sorted in the order they appear in Reassembly's fleet screen.
+	mlog.ShipIndices = make([]int, len(raw.ShipListings))
+	mlog.Ships = make([]*rsmships.Ship, len(raw.ShipListings))
+	for i, shiplsting := range raw.ShipListings {
+		name := lib.ShipAuthorFromCommonNamefmt(shiplsting.Ship)[0]
+		idx, ok := nametoidx[name]
+		if !ok {
+			slog.Warn("Ship index cannot be found using map.", "name", name)
+		}
+		mlog.ShipIndices[i] = idx
+		mlog.Ships[i] = ships[idx]
+	}
+
+
+
+
 	return &mlog, nil
 }
+
+// func getShipIndexFromName(name string, ships []*rsmships.Ship) int {
+// 	for i, ship := range ships {
+// 		ship_nameauthor := lib.ShipAuthorFromCommonNamefmt(ship.Data.Name)
+// 		if name == 
+// 	}
+// 	return -1
+// }
+func getMatchesOnAlliance(shipidx int, schedule [][]int, isBlue bool) ([]int, []bool) {
+	out := make([]int, 0)
+	participated := make([]bool, len(schedule))
+	n := len(schedule[0]) / 2
+	for i, match := range schedule {
+		contains := false
+		if isBlue {
+			contains = slices.Contains(match[n:(2*n-1)], shipidx)
+		} else {
+			contains = slices.Contains(match[0:(n-1)], shipidx)
+		}
+		if contains {
+			out = append(out, i+1)
+		}
+		participated[i] = contains
+	}
+	return out, participated
+}
+
+// Checks whether the ship indices in shipidxs are indeed members of the same
+// alliance in the Match Schedule.
+// If the ships did play together 
+func matchesPlayedTogether(shipidxs []int, schedule [][]int, isBlue bool) ([]int, bool) {
+	// contains columns of bools determining whether the ship was a memeber of an alliance.
+	isOnAlliance := make([][]bool, len(shipidxs))
+	alliancePresence := make([][]int, len(shipidxs))
+	for i, idx := range shipidxs {
+		alliancePresence[i], isOnAlliance[i] = getMatchesOnAlliance(idx, schedule, isBlue)
+	}
+
+	// matches all ships played as members of the same alliance
+	togetherMatches := make([]int, 0)
+	
+	// loop over the matches on the alliance played by ship 0
+	for _, matchShip0 := range alliancePresence[0] {
+		// loop over the remaining ships' alliance presences
+		allMembers := true
+		for _, presencesj := range alliancePresence[1:] {
+			// if any of the other ships do not play in this match, set
+			// allmembers to false
+			if !slices.Contains(presencesj, matchShip0) {
+				allMembers = false
+			}
+		}
+		// if all members play in this match, append it to the list of matches
+		// all ships play together
+		if allMembers {
+			togetherMatches = append(togetherMatches, matchShip0)
+		}
+	}
+	// return the list of matches that all ships play together and whether there
+	// are more than 0 matches that all ships play together.
+	return togetherMatches, len(togetherMatches) > 0
+}
+
 
 func main() {
 // boilerplate stuff for exit codes
@@ -85,8 +192,10 @@ func main() {
 
 	log_lvl := slog.LevelInfo
 
+	drrt_directory_arg := flag.String("drrt-directory", "/home/magnus/Documents/reassembly_ships/tournaments/DRRT/2026 Winter DRRT", "Set the directory the DRRT will be run in.")
 	log_file_name := flag.String("log-filename", "", "Send log messages to a file. If not set, log to standard error.")
 	flag.Parse()
+	ships_directory := filepath.Join(*drrt_directory_arg, "Ships")
 
 	// same tech used in scheduler/main.go
 	log_ref, log_writer_ref, err := lib.DRRTLoggerPreferences(*log_file_name, log_lvl)
@@ -106,7 +215,9 @@ func main() {
 		exit_code = 1
 		return
 	}
+
 	// TODO: use the lib.MatchSchedule type
+	// get ship indices of the match schedule from google sheets. This is uploaded by the Scheduler.
 	scheduleindices, err := drrtdatasheet.GetMatchSheduleValues()
 	if err != nil {
 		slog.Error("Failed to get match schdule.", "err", err)
@@ -114,5 +225,32 @@ func main() {
 		return
 	}
 
+	// TODO: slap this in a function to reduce repeated code
+	// get a slice comprising paths to all ships
+	ship_paths, err := lib.GetJSONFilesSortedByModTime(ships_directory)
+	if err != nil {
+		slog.Error("Cannot get inspected ship paths.", "err", err)
+		exit_code = 1
+		return
+	}
+	// get full path of each ship
+	fullshippaths := make([]string, len(ship_paths))
+	for i, path := range ship_paths {
+		fullshippaths[i] = filepath.Join(ships_directory, path)
+	}
+	slog.Info("Found paths for ship files.", "count", len(ship_paths))
+	for i, path := range ship_paths {
+		slog.Debug("Ship path", "path", path)
+		slog.Debug("Full Ship path", "path", fullshippaths[i])
+	}
+
+	ships := make([]rsmships.Ship, len(ship_paths))
+	// unmarshal ship files
+	var unmarshal_wait_group sync.WaitGroup
+	lib.GoUnmarshalAllShipsFromPaths(&ships, fullshippaths, &unmarshal_wait_group)
+	unmarshal_wait_group.Wait()
 	
+
+// we now have enough information to put match logs in context.
 }
+
