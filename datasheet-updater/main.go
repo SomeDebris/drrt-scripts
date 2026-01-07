@@ -18,7 +18,6 @@ import (
 	// "cmp"
 	"errors"
 	"slices"
-	"regexp"
 
 	// "golang.org/x/oauth2"
 	// "golang.org/x/oauth2/google"
@@ -34,10 +33,10 @@ const (
 
 
 type matchPerformance struct {
-	Match            uint
+	Match            int
 	Ship             *rsmships.Ship
-	Destructions     uint
-	RankPointsEarned uint
+	Destructions     int
+	RankPointsEarned int
 	Result           matchResult
 	Survived         bool
 }
@@ -118,6 +117,17 @@ func NewDRRTStandardMatchLogFromShips(raw *lib.MatchLogRaw, ships []*rsmships.Sh
 		return &mlog, errors.New("Red and Blue Alliance match numbers are different. Bad match log!")
 	}
 	mlog.MatchNumber = redMatchNumber // == blueMatchNumber
+	slog.Debug("found match log number from filenames", "matchNumber", mlog.MatchNumber)
+
+
+	// Map the ship's index value to its performance in the match
+	idxtoperformance := make(map[int]*matchPerformance)
+	// create an empty matchPerformance entry for each ship
+	for _, idx := range mlog.ShipIndices {
+		idxtoperformance[idx] = &matchPerformance{Ship: ships[idx], Match: mlog.MatchNumber}
+		slog.Debug("Add ship to match performance.", "author", ships[idx].Data.Author, "name", ships[idx].Data.Name, "idx", idx)
+	}
+
 
 	// TODO next time: 
 	// You need to assign the remaining fields to things.
