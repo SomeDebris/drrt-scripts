@@ -41,7 +41,7 @@ type matchPerformance struct {
 	Result           matchResult
 	Survived         bool
 }
-func (m *matchPerformance) toSheetsRow() []any {
+func (m *matchPerformance) toSheetsRow() [][]any {
 	output := make([]any, 8)
 	output[0] = m.Ship.Data.Name
 	output[1] = m.Match
@@ -65,7 +65,7 @@ func (m *matchPerformance) toSheetsRow() []any {
 	} else {
 		output[7] = 0
 	}
-	return output
+	return [][]any{output}
 }
 
 type DRRTStandardMatchLog struct {
@@ -80,7 +80,7 @@ type DRRTStandardMatchLog struct {
 	Raw                   *lib.MatchLogRaw
 }
 // TODO: make the nametoidx variable an input argument
-func NewDRRTStandardMatchLogFromShipsSchedule(raw *lib.MatchLogRaw, ships []*rsmships.Ship, schedule [][]any) (*DRRTStandardMatchLog, error) {
+func NewDRRTStandardMatchLogFromShips(raw *lib.MatchLogRaw, ships []*rsmships.Ship) (*DRRTStandardMatchLog, error) {
 	var mlog DRRTStandardMatchLog
 	mlog.Raw = raw
 	mlog.Timestamp = raw.CreatedTimestamp
@@ -93,15 +93,7 @@ func NewDRRTStandardMatchLogFromShipsSchedule(raw *lib.MatchLogRaw, ships []*rsm
 		nametoidx[ship.Data.Name] = i + 1
 	}
 
-	// Red alliance are the first n ships, where n is the length of an alliance
-	// first: find the match this schedule represents. If it cannot be found in schedule, set MatchNumber to -1.
-	// TODO: if two ships have the same name but different authors, and are noted in standard namefmt (name [by author]), it'll fail.
-	mlog.AllianceLength = len(schedule[0]) / 2
-	if mlog.AllianceLength != len(raw.ShipListings)/2 {
-		err := errors.New("Schedule alliance length is not equivalent to number of ships playing in match schedule")
-		slog.Error("Schedule alliance length is not equivalent to number of ships playing in match schedule.", "err", err, "lengthschedule", mlog.AllianceLength, "lengthmlog", len(raw.ShipListings)/2)
-		return &mlog, err
-	}
+	mlog.AllianceLength = len(raw.ShipListings) / 2
 	// Get the indices of each ship participating in this match log
 	// The first n ships are from the Red alliance, but may not be sorted in the order they appear in Reassembly's fleet screen.
 	mlog.ShipIndices = make([]int, len(raw.ShipListings))
@@ -111,13 +103,30 @@ func NewDRRTStandardMatchLogFromShipsSchedule(raw *lib.MatchLogRaw, ships []*rsm
 		idx, ok := nametoidx[name]
 		if !ok {
 			slog.Warn("Ship index cannot be found using map.", "name", name)
+			// TODO: you may want to return an error here.. but I don't know.
 		}
 		mlog.ShipIndices[i] = idx
 		mlog.Ships[i] = ships[idx]
 	}
+	
+	// ASSUMPTION: NOT a free-for-all (Red v Blue alliance)
+	// get the match number
+	// if the same for red and blue alliances: good!
+	redMatchNumber := lib.GetMatchNumberFromAllianceName(raw.StartListings[0].Name, false)
+	blueMatchNumber := lib.GetMatchNumberFromAllianceName(raw.StartListings[1].Name, true)
+	if redMatchNumber != blueMatchNumber {
+		return &mlog, errors.New("Red and Blue Alliance match numbers are different. Bad match log!")
+	}
+	mlog.MatchNumber = redMatchNumber // == blueMatchNumber
 
-
-
+	// TODO next time: 
+	// You need to assign the remaining fields to things.
+	// Start by finding a way to generate MatchPerformances for ships (create a
+	// hash map, I think).
+	// Take the Points field from the ResultListings.
+	// Create a function that generates a [][]any from this for passing into
+	// google sheets.
+	// Create a function for
 
 	return &mlog, nil
 }

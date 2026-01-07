@@ -61,8 +61,8 @@ const (
 )
 
 var (
-	mlog_matchnumber_regexcaptureRed  = regexp.MustCompile(mlog_qualsRedCaptureString)
-	mlog_matchnumber_regexcaptureBlue = regexp.MustCompile(mlog_qualsBlueCaptureString)
+	mlog_regex_matchnumberCaptureRed  = regexp.MustCompile(mlog_qualsRedCaptureString)
+	mlog_regex_matchnumberCaptureBlue = regexp.MustCompile(mlog_qualsBlueCaptureString)
 	mlog_regex_type                   = regexp.MustCompile(mlog_typeRegexCaptureString)
 	mlog_regex_shipauthor             = regexp.MustCompile(mlog_shipRegexCaptureString)
 	mlog_regex_map                    = map[string]*regexp.Regexp{
@@ -79,7 +79,27 @@ func ShipAuthorFromCommonNamefmt(name string) [2]string {
 	if fields == nil {
 		return [2]string{name, ""}
 	}
-	return [2]string{fields[0], fields[1]}
+	return [2]string{fields[1], fields[2]}
+}
+
+// Get the match number from the filename of the match log. This works for Red
+// Alliance fleets. Returns 0 when an error is encountered or no match can be
+// found.
+func GetMatchNumberFromAllianceName(allianceName string, isBlue bool) int {
+	var fields []string
+	if isBlue {
+		fields = mlog_regex_matchnumberCaptureBlue.FindStringSubmatch(allianceName)
+	} else {
+		fields = mlog_regex_matchnumberCaptureRed.FindStringSubmatch(allianceName)
+	}
+	if fields == nil {
+		return 0
+	}
+	out, err := strconv.Atoi(fields[1])
+	if err != nil {
+		return 0
+	}
+	return out
 }
 
 type MatchLogFleetListing struct {
