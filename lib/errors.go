@@ -45,3 +45,19 @@ func (e *MatchLogRegexError) AddContext(lineNumber int, path string) {
 	e.lineNumber = lineNumber
 	e.path = path
 }
+
+type MatchLogAllianceLengthMismatch struct {
+	redAllianceLength  int
+	blueAllianceLength int
+}
+func (e *MatchLogAllianceLengthMismatch) Error() string {
+	return "Red and blue alliances have different lengths."
+}
+func (e *MatchLogAllianceLengthMismatch) LogError(logger *slog.Logger) {
+	logger.Error(e.Error(), "redAllianceLength", e.redAllianceLength, "blueAllianceLength", e.blueAllianceLength)
+}
+func (e *MatchLogAllianceLengthMismatch) AddContext(redAllianceLength, blueAllianceLength int) {
+	e.redAllianceLength = redAllianceLength
+	e.blueAllianceLength = blueAllianceLength
+}
+
