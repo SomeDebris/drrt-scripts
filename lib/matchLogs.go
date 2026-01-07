@@ -38,10 +38,19 @@ const (
 	length_destructionListingSlice = 4
 )
 
+
 var (
 	mlog_regex_type = regexp.MustCompile(mlog_typeRegexCaptureString)
 	mlog_regex_shipauthor = regexp.MustCompile(mlog_shipRegexCaptureString)
 )
+
+func shipNameFromShipAuthorformat(name string) [2]string {
+	fields := mlog_regex_shipauthor.FindStringSubmatch(name)
+	if fields == nil {
+		return [2]string{name, ""}
+	}
+	return [2]string{fields[0], fields[1]}
+}
 
 /** example
 MLOG OPEN: 793.504312
