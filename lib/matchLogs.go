@@ -1,56 +1,18 @@
 package lib
 
 import (
-	"time"
 	"bufio"
+	"fmt"
 	"os"
 	"regexp"
 	"strconv"
-	"fmt"
+	"time"
 	// "slog"
-	"path/filepath"
 	"errors"
-	"sync"
+	"path/filepath"
 	"strings"
+	"sync"
 )
-
-const (
-	mlog_typeRegexCaptureString        = `^\[([A-Z]+)\]`
-	mlog_startRegexCaptureString       = `^\[START\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
-	mlog_shipRegexCaptureString        = `^\[SHIP\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
-	mlog_destructionRegexCaptureString = `^\[DESTRUCTION\] ship:\{(.*)\} fship:\{([0-9]*)\} destroyed:\{(.*)\} fdestroyed:\{([0-9]*)\}$`
-	mlog_resultRegexCaptureString      = `^\[RESULT\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
-	mlog_survivalRegexCaptureString    = `^\[SURVIVAL\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
-	mlog_shipauthorRegexCaptureString  = `^(.*) \[by (.*)\]$`
-
-	mlog_start       = `START`
-	mlog_ship        = `SHIP`
-	mlog_destruction = `DESTRUCTION`
-	mlog_result      = `RESULT`
-	mlog_survival    = `SURVIVAL`
-
-	length_fleetListingSlice  = 5
-	length_resultListingSlice = 5
-
-	length_shipListingSlice     = 2
-	length_survivalListingSlice = 2
-
-	length_destructionListingSlice = 4
-)
-
-
-var (
-	mlog_regex_type = regexp.MustCompile(mlog_typeRegexCaptureString)
-	mlog_regex_shipauthor = regexp.MustCompile(mlog_shipRegexCaptureString)
-)
-
-func shipNameFromShipAuthorformat(name string) [2]string {
-	fields := mlog_regex_shipauthor.FindStringSubmatch(name)
-	if fields == nil {
-		return [2]string{name, ""}
-	}
-	return [2]string{fields[0], fields[1]}
-}
 
 /** example
 MLOG OPEN: 793.504312
@@ -71,13 +33,54 @@ MLOG OPEN: 793.504312
 MLOG CLOSE: 855.581397
 */
 
-var mlog_regex_map = map[string]*regexp.Regexp{
+const (
+	mlog_typeRegexCaptureString        = `^\[([A-Z]+)\]`
+	mlog_startRegexCaptureString       = `^\[START\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
+	mlog_shipRegexCaptureString        = `^\[SHIP\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
+	mlog_destructionRegexCaptureString = `^\[DESTRUCTION\] ship:\{(.*)\} fship:\{([0-9]*)\} destroyed:\{(.*)\} fdestroyed:\{([0-9]*)\}$`
+	mlog_resultRegexCaptureString      = `^\[RESULT\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
+	mlog_survivalRegexCaptureString    = `^\[SURVIVAL\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
+	mlog_shipauthorRegexCaptureString  = `^(.+) \[by (.+)\]$`
+
+	mlog_qualsRedCaptureString  = `^Match ([0-9]+) - \^1The Red Alliance\^7$`
+	mlog_qualsBlueCaptureString = `^Match ([0-9]+) - \41The Blue Alliance\^7$`
+
+	mlog_start       = `START`
+	mlog_ship        = `SHIP`
+	mlog_destruction = `DESTRUCTION`
+	mlog_result      = `RESULT`
+	mlog_survival    = `SURVIVAL`
+
+	length_fleetListingSlice  = 5
+	length_resultListingSlice = 5
+
+	length_shipListingSlice     = 2
+	length_survivalListingSlice = 2
+
+	length_destructionListingSlice = 4
+)
+
+var (
+	mlog_matchnumber_regexcaptureRed  = regexp.MustCompile(mlog_qualsRedCaptureString)
+	mlog_matchnumber_regexcaptureBlue = regexp.MustCompile(mlog_qualsBlueCaptureString)
+	mlog_regex_type                   = regexp.MustCompile(mlog_typeRegexCaptureString)
+	mlog_regex_shipauthor             = regexp.MustCompile(mlog_shipRegexCaptureString)
+	mlog_regex_map                    = map[string]*regexp.Regexp{
 		mlog_start:       regexp.MustCompile(mlog_startRegexCaptureString),
 		mlog_ship:        regexp.MustCompile(mlog_shipRegexCaptureString),
 		mlog_destruction: regexp.MustCompile(mlog_destructionRegexCaptureString),
 		mlog_result:      regexp.MustCompile(mlog_resultRegexCaptureString),
 		mlog_survival:    regexp.MustCompile(mlog_survivalRegexCaptureString),
 	}
+)
+
+func ShipAuthorFromCommonNamefmt(name string) [2]string {
+	fields := mlog_regex_shipauthor.FindStringSubmatch(name)
+	if fields == nil {
+		return [2]string{name, ""}
+	}
+	return [2]string{fields[0], fields[1]}
+}
 
 type MatchLogFleetListing struct {
 	Faction         int
@@ -89,7 +92,7 @@ type MatchLogFleetListing struct {
 
 type MatchLogShipListing struct {
 	Fleet int
-	Ship string
+	Ship  string
 }
 
 type MatchLogDestructionListing struct {
@@ -99,6 +102,7 @@ type MatchLogDestructionListing struct {
 	Fdestroyed int
 }
 
+// Raw match log type. The data has been parsed out of the log file, but nothing has been done to the data yet.
 type MatchLogRaw struct {
 	CreatedTimestamp    time.Time
 	Path                string
@@ -123,24 +127,28 @@ func (mlograw *MatchLogRaw) appendStart(record MatchLogFleetListing, mutex *sync
 	mlograw.StartListings = append(mlograw.StartListings, record)
 	mutex.Unlock()
 }
+
 // Append a SHIP event.
 func (mlograw *MatchLogRaw) appendShip(record MatchLogShipListing, mutex *sync.Mutex) {
 	mutex.Lock()
 	mlograw.ShipListings = append(mlograw.ShipListings, record)
 	mutex.Unlock()
 }
+
 // Append a DESTRUCTION event.
 func (mlograw *MatchLogRaw) appendDestruction(record MatchLogDestructionListing, mutex *sync.Mutex) {
 	mutex.Lock()
 	mlograw.DestructionListings = append(mlograw.DestructionListings, record)
 	mutex.Unlock()
 }
+
 // Append a RESULT event.
 func (mlograw *MatchLogRaw) appendResult(record MatchLogFleetListing, mutex *sync.Mutex) {
 	mutex.Lock()
 	mlograw.ResultListings = append(mlograw.ResultListings, record)
 	mutex.Unlock()
 }
+
 // Append a SURVIVAL event.
 func (mlograw *MatchLogRaw) appendSurvival(record MatchLogShipListing, mutex *sync.Mutex) {
 	mutex.Lock()
@@ -157,9 +165,9 @@ func parseDestructionLine(line string) (MatchLogDestructionListing, error) {
 
 	if fields == nil {
 		return listing, &MatchLogRegexError{
-			event:      mlog_ship,
-			line:       line,
-			regex:      regex.String(),
+			event: mlog_ship,
+			line:  line,
+			regex: regex.String(),
 		}
 	}
 
@@ -168,9 +176,9 @@ func parseDestructionLine(line string) (MatchLogDestructionListing, error) {
 	if err != nil {
 		return listing, &MatchLogFieldError{
 			message: err.Error(),
-			event: mlog_destruction,
-			field: "fship",
-			line: line,
+			event:   mlog_destruction,
+			field:   "fship",
+			line:    line,
 		}
 	}
 	listing.Destroyed = fields[3]
@@ -178,9 +186,9 @@ func parseDestructionLine(line string) (MatchLogDestructionListing, error) {
 	if err != nil {
 		return listing, &MatchLogFieldError{
 			message: err.Error(),
-			event: mlog_destruction,
-			field: "fdestroyed",
-			line: line,
+			event:   mlog_destruction,
+			field:   "fdestroyed",
+			line:    line,
 		}
 	}
 
@@ -200,7 +208,7 @@ func GetTimeOfMatchLogFilename(path string) (time.Time, error) {
 	return time.Parse(REASSEMBLY_FILE_TIMESTAMP_FMT, timestamp)
 }
 
-//*
+// *
 func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 
 	match_log, err := os.Open(path)
@@ -213,14 +221,14 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 	mlog_raw.Path = path
 
 	/*
-	// get the last modified time of the file:
-	mlog_fileinfo, err := match_log.Stat()
-	if err != nil {
-		return mlog_raw, err
-	}
-	// Set the CreatedTimestamp value to the last modified time of the file
-	mlog_raw.CreatedTimestamp = mlog_fileinfo.ModTime()
-	// */
+		// get the last modified time of the file:
+		mlog_fileinfo, err := match_log.Stat()
+		if err != nil {
+			return mlog_raw, err
+		}
+		// Set the CreatedTimestamp value to the last modified time of the file
+		mlog_raw.CreatedTimestamp = mlog_fileinfo.ModTime()
+		// */
 	mlog_raw.CreatedTimestamp, err = GetTimeOfMatchLogFilename(path)
 	if err != nil {
 		return &mlog_raw, err
@@ -253,45 +261,45 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 			listing.Faction, err = strconv.Atoi(fields[1])
 			if err != nil {
 				return &mlog_raw, &MatchLogFieldError{
-					field: "faction",
-					event: mlog_start,
-					lineNumber:  mlog_RecordNumber,
-					line: line,
-					path: path,
+					field:      "faction",
+					event:      mlog_start,
+					lineNumber: mlog_RecordNumber,
+					line:       line,
+					path:       path,
 				}
 			}
 			listing.Name = fields[2]
 			listing.DamageTaken, err = strconv.Atoi(fields[3])
 			if err != nil {
 				return &mlog_raw, &MatchLogFieldError{
-					message: err.Error(),
-					field: "DT",
-					event: mlog_start,
-					lineNumber:  mlog_RecordNumber,
-					line: line,
-					path: path,
+					message:    err.Error(),
+					field:      "DT",
+					event:      mlog_start,
+					lineNumber: mlog_RecordNumber,
+					line:       line,
+					path:       path,
 				}
 			}
 			listing.DamageInflicted, err = strconv.Atoi(fields[4])
 			if err != nil {
 				return &mlog_raw, &MatchLogFieldError{
-					message: err.Error(),
-					field: "DI",
-					event: mlog_start,
-					lineNumber:  mlog_RecordNumber,
-					line: line,
-					path: path,
+					message:    err.Error(),
+					field:      "DI",
+					event:      mlog_start,
+					lineNumber: mlog_RecordNumber,
+					line:       line,
+					path:       path,
 				}
 			}
 			listing.Alive, err = strconv.Atoi(fields[5])
 			if err != nil {
 				return &mlog_raw, &MatchLogFieldError{
-					message: err.Error(),
-					field: "alive",
-					event: mlog_start,
-					lineNumber:  mlog_RecordNumber,
-					line: line,
-					path: path,
+					message:    err.Error(),
+					field:      "alive",
+					event:      mlog_start,
+					lineNumber: mlog_RecordNumber,
+					line:       line,
+					path:       path,
 				}
 			}
 			mlog_raw.appendStart(listing, &matchLogRawMutex_start)
@@ -311,12 +319,12 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 			listing.Fleet, err = strconv.Atoi(fields[1])
 			if err != nil {
 				return &mlog_raw, &MatchLogFieldError{
-					message: err.Error(),
-					event: mlog_ship,
-					field: "faction",
-					line: line,
+					message:    err.Error(),
+					event:      mlog_ship,
+					field:      "faction",
+					line:       line,
 					lineNumber: mlog_RecordNumber,
-					path: path,
+					path:       path,
 				}
 			}
 			listing.Ship = fields[2]
@@ -355,45 +363,45 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 			listing.Faction, err = strconv.Atoi(fields[1])
 			if err != nil {
 				return &mlog_raw, &MatchLogFieldError{
-					field: "faction",
-					event: mlog_result,
-					lineNumber:  mlog_RecordNumber,
-					line: line,
-					path: path,
+					field:      "faction",
+					event:      mlog_result,
+					lineNumber: mlog_RecordNumber,
+					line:       line,
+					path:       path,
 				}
 			}
 			listing.Name = fields[2]
 			listing.DamageTaken, err = strconv.Atoi(fields[3])
 			if err != nil {
 				return &mlog_raw, &MatchLogFieldError{
-					message: err.Error(),
-					field: "DT",
-					event: mlog_result,
-					lineNumber:  mlog_RecordNumber,
-					line: line,
-					path: path,
+					message:    err.Error(),
+					field:      "DT",
+					event:      mlog_result,
+					lineNumber: mlog_RecordNumber,
+					line:       line,
+					path:       path,
 				}
 			}
 			listing.DamageInflicted, err = strconv.Atoi(fields[4])
 			if err != nil {
 				return &mlog_raw, &MatchLogFieldError{
-					message: err.Error(),
-					field: "DI",
-					event: mlog_result,
-					lineNumber:  mlog_RecordNumber,
-					line: line,
-					path: path,
+					message:    err.Error(),
+					field:      "DI",
+					event:      mlog_result,
+					lineNumber: mlog_RecordNumber,
+					line:       line,
+					path:       path,
 				}
 			}
 			listing.Alive, err = strconv.Atoi(fields[5])
 			if err != nil {
 				return &mlog_raw, &MatchLogFieldError{
-					message: err.Error(),
-					field: "alive",
-					event: mlog_result,
-					lineNumber:  mlog_RecordNumber,
-					line: line,
-					path: path,
+					message:    err.Error(),
+					field:      "alive",
+					event:      mlog_result,
+					lineNumber: mlog_RecordNumber,
+					line:       line,
+					path:       path,
 				}
 			}
 			mlog_raw.appendResult(listing, &matchLogRawMutex_result)
@@ -413,12 +421,12 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 			listing.Fleet, err = strconv.Atoi(fields[1])
 			if err != nil {
 				return &mlog_raw, &MatchLogFieldError{
-					message: err.Error(),
-					event: mlog_survival,
-					field: "faction",
-					line: line,
+					message:    err.Error(),
+					event:      mlog_survival,
+					field:      "faction",
+					line:       line,
 					lineNumber: mlog_RecordNumber,
-					path: path,
+					path:       path,
 				}
 			}
 			listing.Ship = fields[2]
@@ -430,6 +438,5 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 	// TODO how does one get the timestamp at which a file was created?
 	return &mlog_raw, nil
 }
+
 // */
-
-
