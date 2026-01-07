@@ -187,7 +187,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 		destroyername := ShipAuthorFromCommonNamefmt(destruction.Ship)[0]
 		destroyernameCorrelator, ok := nametoidx[destroyername]
 		if !ok {
-			slog.Warn("Ship index of destroying ship cannot be found using map.","scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			slog.Warn("Ship index of destroying ship cannot be found using map.", "scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			// TODO: you may want to return an error here.. but I don't know.
 			continue
 		}
@@ -195,7 +195,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 		var p *matchPerformance
 		p, ok = idxtoperformance[destroyernameCorrelator.Idx]
 		if !ok {
-			slog.Warn("Cannot find performance of ship from index.","scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			slog.Warn("Cannot find performance of ship from index.", "scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			continue
 		}
 		// SCORING
@@ -208,7 +208,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 		name := ShipAuthorFromCommonNamefmt(survival.Ship)[0]
 		idxfac, ok := nametoidx[name]
 		if !ok {
-			slog.Warn("Ship index cannot be found using map.","scoring", "SURVIVAL", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			slog.Warn("Ship index cannot be found using map.", "scoring", "SURVIVAL", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			// TODO: you may want to return an error here.. but I don't know.
 		}
 		var p *matchPerformance
@@ -228,6 +228,15 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 	// initialize functions that will be used to send points to each alliance
 	var blueResultScorer func(p *matchPerformance)
 	var redResultScorer  func(p *matchPerformance)
+
+
+	if len(raw.ResultListings) <= 0 {
+		return &mlog, errors.New("Match log not finished: result lines not present.")
+	}
+	if len(raw.ResultListings) > 2 {
+		slog.Warn("More result lines than expected for standard DRRT match.", "scoring", "RESULT", "len", len(raw.ResultListings), "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+	}
+
 	// add RESULT line infomration
 	if raw.ResultListings[0].Alive <= 0 {
 		// red alliance loses on destruction
