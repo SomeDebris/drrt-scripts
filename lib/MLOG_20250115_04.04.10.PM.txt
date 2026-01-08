@@ -1,0 +1,18 @@
+MLOG OPEN: 31.811025
+[START] faction:{100} name:{Match 001 - ^1The Red Alliance^7} DT:{0} DI:{0} alive:{3}
+[SHIP] fleet:{100} ship:{Transcription 2025 [by joyous eighteen]}
+[SHIP] fleet:{100} ship:{Original Thinker [by MonsPubis]}
+[SHIP] fleet:{100} ship:{Muninn M6-B "LAIKA" [by Infamous YenYu]}
+[START] faction:{101} name:{Match 001 - ^4The Blue Alliance^7} DT:{0} DI:{0} alive:{3}
+[SHIP] fleet:{101} ship:{Spawk [by Splinter]}
+[SHIP] fleet:{101} ship:{Lethal K v3 [by Splinter]}
+[SHIP] fleet:{101} ship:{directional dismisser [by 1836 Nokia Mustang (CharredSkies)]}
+[DESTRUCTION] ship:{Muninn M6-B "LAIKA" [by Infamous YenYu]} fship:{100} destroyed:{Lethal K v3 [by Splinter]} fdestroyed:{101}
+[DESTRUCTION] ship:{Muninn M6-B "LAIKA" [by Infamous YenYu]} fship:{100} destroyed:{Spawk [by Splinter]} fdestroyed:{101}
+[DESTRUCTION] ship:{Muninn M6-B "LAIKA" [by Infamous YenYu]} fship:{100} destroyed:{directional dismisser [by 1836 Nokia Mustang (CharredSkies)]} fdestroyed:{101}
+[RESULT] faction:{100} name:{Match 001 - ^1The Red Alliance^7} DT:{200756} DI:{185891} alive:{3}
+[SURVIVAL] fleet:{100} ship:{Transcription 2025 [by joyous eighteen]}
+[SURVIVAL] fleet:{100} ship:{Original Thinker [by MonsPubis]}
+[SURVIVAL] fleet:{100} ship:{Muninn M6-B "LAIKA" [by Infamous YenYu]}
+[RESULT] faction:{101} name:{Match 001 - ^4The Blue Alliance^7} DT:{0} DI:{51176} alive:{0}
+MLOG CLOSE: 106.136567

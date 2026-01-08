@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"reflect"
 	"testing"
 	"time"
 )
@@ -67,7 +68,7 @@ func TestGetTimeOfMlogFname(t *testing.T) {
 }
 
 func TestParseMlog(t *testing.T) {
-	_, err := NewMatchLogRawFromPath(MLOG_FNAME)
+	mlog, err := NewMatchLogRawFromPath(MLOG_FNAME)
 	if err != nil {
 		t.Errorf("Encountered error: %v", err)
 	}
@@ -75,31 +76,53 @@ func TestParseMlog(t *testing.T) {
 		CreatedTimestamp: time.Date(2025, 1, 15, 16, 4, 10, 0, time.Local),
 		Path: MLOG_FNAME,
 		StartListings: []MatchLogFleetListing{
-			MatchLogFleetListing{Faction:100, Name:"Match 001 - ^1The Red Alliance^7", DamageTaken:0, DamageInflicted:0, Alive:3},
-			MatchLogFleetListing{Faction:101, Name:"Match 001 - ^4The Blue Alliance^7", DamageTaken:0, DamageInflicted:0, Alive:3},
+			{Faction:100, Name:"Match 001 - ^1The Red Alliance^7", DamageTaken:0, DamageInflicted:0, Alive:3},
+			{Faction:101, Name:"Match 001 - ^4The Blue Alliance^7", DamageTaken:0, DamageInflicted:0, Alive:3},
 		},
 		ShipListings: []MatchLogShipListing{
-			MatchLogShipListing{Fleet: 100, Ship:"Transcription 2025 [by joyous eighteen]"},
-			MatchLogShipListing{Fleet: 100, Ship:"Original Thinker [by MonsPubis]"},
-			MatchLogShipListing{Fleet: 100, Ship:`Muninn M6-B "LAIKA" [by Infamous YenYu]`},
-			MatchLogShipListing{Fleet: 101, Ship:`Spawk [by Splinter]`},
-			MatchLogShipListing{Fleet: 101, Ship:`Lethal K v3 [by Splinter]`},
-			MatchLogShipListing{Fleet: 101, Ship:`directional dismisser [by 1836 Nokia Mustang (CharredSkies)]`},
+			{Fleet: 100, Ship:"Transcription 2025 [by joyous eighteen]"},
+			{Fleet: 100, Ship:"Original Thinker [by MonsPubis]"},
+			{Fleet: 100, Ship:`Muninn M6-B "LAIKA" [by Infamous YenYu]`},
+			{Fleet: 101, Ship:`Spawk [by Splinter]`},
+			{Fleet: 101, Ship:`Lethal K v3 [by Splinter]`},
+			{Fleet: 101, Ship:`directional dismisser [by 1836 Nokia Mustang (CharredSkies)]`},
 		},
 		DestructionListings: []MatchLogDestructionListing{
-			MatchLogDestructionListing{Ship:`Muninn M6-B "LAIKA" [by Infamous YenYu]`, Fship:100, Destroyed:`Lethal K v3 [by Splinter]`, Fdestroyed:101},
-			MatchLogDestructionListing{Ship:`Muninn M6-B "LAIKA" [by Infamous YenYu]`, Fship:100, Destroyed:`Spawk [by Splinter]`, Fdestroyed:101},
-			MatchLogDestructionListing{Ship:`Muninn M6-B "LAIKA" [by Infamous YenYu]`, Fship:100, Destroyed:`directional dismisser [by 1836 Nokia Mustang (CharredSkies)]`, Fdestroyed:101},
+			{Ship:`Muninn M6-B "LAIKA" [by Infamous YenYu]`, Fship:100, Destroyed:`Lethal K v3 [by Splinter]`, Fdestroyed:101},
+			{Ship:`Muninn M6-B "LAIKA" [by Infamous YenYu]`, Fship:100, Destroyed:`Spawk [by Splinter]`, Fdestroyed:101},
+			{Ship:`Muninn M6-B "LAIKA" [by Infamous YenYu]`, Fship:100, Destroyed:`directional dismisser [by 1836 Nokia Mustang (CharredSkies)]`, Fdestroyed:101},
 		},
 		ResultListings: []MatchLogFleetListing{
-			MatchLogFleetListing{Faction:100, Name:"Match 001 - ^1The Red Alliance^7", DamageTaken:200756, DamageInflicted:185891, Alive:3},
-			MatchLogFleetListing{Faction:101, Name:"Match 001 - ^4The Blue Alliance^7", DamageTaken:0, DamageInflicted:51176, Alive:0},
+			{Faction:100, Name:"Match 001 - ^1The Red Alliance^7", DamageTaken:200756, DamageInflicted:185891, Alive:3},
+			{Faction:101, Name:"Match 001 - ^4The Blue Alliance^7", DamageTaken:0, DamageInflicted:51176, Alive:0},
 		},
 		SurvivalListings: []MatchLogShipListing{
-			MatchLogShipListing{Fleet: 100, Ship:"Transcription 2025 [by joyous eighteen]"},
-			MatchLogShipListing{Fleet: 100, Ship:"Original Thinker [by MonsPubis]"},
-			MatchLogShipListing{Fleet: 100, Ship:`Muninn M6-B "LAIKA" [by Infamous YenYu]`},
+			{Fleet: 100, Ship:"Transcription 2025 [by joyous eighteen]"},
+			{Fleet: 100, Ship:"Original Thinker [by MonsPubis]"},
+			{Fleet: 100, Ship:`Muninn M6-B "LAIKA" [by Infamous YenYu]`},
 		},
+	}
+	if !reflect.DeepEqual(*mlog, expectedmlog) {
+		t.Errorf("Parsed match log is not identical to expectation: expected ```%v```, got ```%v```", expectedmlog, *mlog)
+	}
+	if !reflect.DeepEqual((*mlog).CreatedTimestamp, expectedmlog.CreatedTimestamp) {
+		t.Errorf("Parsed match log Timestamp is not identical to expectation: expected `%s`, got `%s`", expectedmlog.CreatedTimestamp.String(), mlog.CreatedTimestamp.String())
+	}
+	if !reflect.DeepEqual((*mlog).Path, expectedmlog.Path) {
+		t.Errorf("Parsed match log path is not identical to expectation: expected `%s`, got `%s`", expectedmlog.Path, mlog.Path)
+	}
+
+	if !reflect.DeepEqual((*mlog).ShipListings, expectedmlog.ShipListings) {
+		t.Errorf("Parsed match log ship listing is not identical to expectation: expected `%v`, got `%v`", expectedmlog.ShipListings, mlog.ShipListings)
+	}
+	if !reflect.DeepEqual((*mlog).DestructionListings, expectedmlog.DestructionListings) {
+		t.Errorf("Parsed match log DestructionListings is not identical to expectation: expected `%v`, got `%v`", expectedmlog.DestructionListings, mlog.DestructionListings)
+	}
+	if !reflect.DeepEqual((*mlog).ResultListings, expectedmlog.ResultListings) {
+		t.Errorf("Parsed match log ResultListings is not identical to expectation: expected `%v`, got `%v`", expectedmlog.ResultListings, mlog.ResultListings)
+	}
+	if !reflect.DeepEqual((*mlog).SurvivalListings, expectedmlog.SurvivalListings) {
+		t.Errorf("Parsed match log SurvivalListings is not identical to expectation: expected `%v`, got `%v`", expectedmlog.SurvivalListings, mlog.SurvivalListings)
 	}
 }
 

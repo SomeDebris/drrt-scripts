@@ -36,7 +36,7 @@ type MatchLogRegexError struct {
 }
 
 func (e *MatchLogRegexError) Error() string {
-	return "Could not match line against regex."
+	return fmt.Sprintf("Could not match line %d against regex: %s", e.lineNumber, e.line)
 }
 func (e *MatchLogRegexError) LogError(logger *slog.Logger) {
 	logger.Error(e.Error(), "line", e.line, "event", e.event, "lineNumber", e.lineNumber, "path", e.path, "regex", e.regex)
