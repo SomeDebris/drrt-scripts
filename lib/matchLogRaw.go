@@ -39,10 +39,10 @@ const (
 	mlog_destructionRegexCaptureString = `^\[DESTRUCTION\] ship:\{(.*)\} fship:\{([0-9]*)\} destroyed:\{(.*)\} fdestroyed:\{([0-9]*)\}$`
 	mlog_resultRegexCaptureString      = `^\[RESULT\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
 	mlog_survivalRegexCaptureString    = `^\[SURVIVAL\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
-	mlog_shipauthorRegexCaptureString  = `^(.+) \[by (.+)\]$`
+	shipauthorRegexCaptureString  = `^(.+) \[by (.+)\]$`
 
-	mlog_qualsRedCaptureString  = `^Match ([0-9]+) - \^1The Red Alliance\^7$`
-	mlog_qualsBlueCaptureString = `^Match ([0-9]+) - \41The Blue Alliance\^7$`
+	qualsRedCaptureString  = `^Match ([0-9]+) - \^1The Red Alliance\^7$`
+	qualsBlueCaptureString = `^Match ([0-9]+) - \41The Blue Alliance\^7$`
 	MLOG_RED_FACTION            = 100
 	MLOG_BLUE_FACTION           = 101
 
@@ -62,10 +62,10 @@ const (
 )
 
 var (
-	mlog_regex_matchnumberCaptureRed  = regexp.MustCompile(mlog_qualsRedCaptureString)
-	mlog_regex_matchnumberCaptureBlue = regexp.MustCompile(mlog_qualsBlueCaptureString)
+	mlog_regex_matchnumberCaptureRed  = regexp.MustCompile(qualsRedCaptureString)
+	mlog_regex_matchnumberCaptureBlue = regexp.MustCompile(qualsBlueCaptureString)
 	mlog_regex_type                   = regexp.MustCompile(mlog_typeRegexCaptureString)
-	mlog_regex_shipauthor             = regexp.MustCompile(mlog_shipRegexCaptureString)
+	mlog_regex_shipauthor             = regexp.MustCompile(shipauthorRegexCaptureString)
 	mlog_regex_map                    = map[string]*regexp.Regexp{
 		mlog_start:       regexp.MustCompile(mlog_startRegexCaptureString),
 		mlog_ship:        regexp.MustCompile(mlog_shipRegexCaptureString),
