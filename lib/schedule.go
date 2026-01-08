@@ -162,7 +162,7 @@ func ReadScheduleAtPath(path string) (MatchSchedule, [][]string, error) {
 	}, records, nil
 }
 
-func GoUnmarshalAllShipsFromPaths(ships *[]rsmships.Ship, paths []string, wg *sync.WaitGroup) {
+func GoUnmarshalAllShipsFromPaths(ships *[]*rsmships.Ship, paths []string, wg *sync.WaitGroup) {
 	for i, path := range paths {
 		wg.Add(1)
 
@@ -180,14 +180,15 @@ func GoUnmarshalAllShipsFromPaths(ships *[]rsmships.Ship, paths []string, wg *sy
 					return
 				}
 				// Use the first blueprint in the fleet file
-				(*ships)[i] = *fleet.Blueprints[0]
+				(*ships)[i] = fleet.Blueprints[0]
 				slog.Info("Unmarshalled ship from fleet.", "name", (*ships)[i].Data.Name, "author", (*ships)[i].Data.Author, "idx", i + 1, "fleet.Name", fleet.Name)
 			} else {
-				(*ships)[i], err = rsmships.UnmarshalShipFromFile(path)
+				ship, err := rsmships.UnmarshalShipFromFile(path)
 				if err != nil {
 					slog.Error("Failed unmarshalling ship", "path", path, "err", err)
 					return
 				}
+				(*ships)[i] = &ship
 				slog.Info("Unmarshalled ship", "name", (*ships)[i].Data.Name, "author", (*ships)[i].Data.Author, "idx", i + 1)
 			}
 		}(i, path)
