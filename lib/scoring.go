@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"cmp"
 	"log/slog"
 	"slices"
 	"time"
@@ -298,9 +299,42 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	return &mlog, nil
 }
 
-func SortStandardMlogs(mlogs *[]*DRRTStandardMatchLog) *[]*DRRTStandardMatchLog {
+func SortStandardMlogs(mlogs *[]*DRRTStandardMatchLog) {
 	slices.SortStableFunc(*mlogs, func(a, b *DRRTStandardMatchLog) int {
 		return a.Timestamp.Compare(b.Timestamp)
 	})
-	return mlogs
+	slices.SortStableFunc(*mlogs, func(a, b *DRRTStandardMatchLog) int {
+		return cmp.Compare(a.MatchNumber, b.MatchNumber)
+	})
+}
+
+// this must be sorted already!
+func DeleteZeroNumberMlogs(mlogs *[]*DRRTStandardMatchLog) {
+	var mlogsout []*DRRTStandardMatchLog
+	for _, mlog := range *mlogs {
+		if mlog.MatchNumber <= 0 {
+			slog.Info("Deleting match log with index 0.", "path", mlog.Raw.Path, "time", mlog.Timestamp.String())
+			continue
+		}
+		mlogsout = append(mlogsout, mlog)
+	}
+	// overwrite the pointer
+	*mlogs = mlogsout
+}
+
+// this must be sorted by time
+// Looks at each match log. If two match logs have the same match number, keep the most recent one.
+func DeleteDuplicateMlogs(mlogs *[]*DRRTStandardMatchLog) {
+	var mlogsout []*DRRTStandardMatchLog
+	var encounteredMatchNumbers = []int{0}
+	for _, mlog := range *mlogs {
+		if slices.Contains(encounteredMatchNumbers, mlog.MatchNumber) {
+			slog.Info("Deleting match log with duplicate match numbers.", "path", mlog.Raw.Path, "time", mlog.Timestamp.String(), "duplicatessofar", encounteredMatchNumbers, "matchNumber", mlog.MatchNumber)
+			continue
+		}
+		encounteredMatchNumbers = append(encounteredMatchNumbers, mlog.MatchNumber)
+		mlogsout = append(mlogsout, mlog)
+	}
+	// overwrite the pointer
+	*mlogs = mlogsout
 }
