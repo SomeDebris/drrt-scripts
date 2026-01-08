@@ -241,7 +241,7 @@ func TestNewDRRTStandardMatchLogIncomplete(t *testing.T) {
 	}
 }
 
-//*
+/*
 // Test functionality of the DRRT Mlog signal pipe.
 func TestPipe(t *testing.T) {
 	_, err := ReadDRRTMlogPipe(DRRT_MLOG_SIGNAL_PIPE_PATH)
@@ -250,6 +250,13 @@ func TestPipe(t *testing.T) {
 	}
 }
 // */
+
+func TestReadMlogRawsFromPath(t *testing.T) {
+	_, err := ReadMlogRawsFromPath(REASSEMBLY_DATA_DIR)
+	if err != nil {
+		t.Errorf("encountered error: %v", err)
+	}
+}
 
 // func TestRawMlog(t *testing.T) {
 //
