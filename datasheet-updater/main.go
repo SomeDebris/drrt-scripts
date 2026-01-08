@@ -151,6 +151,8 @@ func main() {
 	lib.GoUnmarshalAllShipsFromPaths(&ships, fullshippaths, &unmarshal_wait_group)
 	unmarshal_wait_group.Wait()
 	
+	// TODO: open named pipe
+	// when I recieve a string on the named pipe, decide what I need to do.
 
 // we now have enough information to put match logs in context.
 }
