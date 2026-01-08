@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"errors"
 	"log/slog"
 	"time"
 
@@ -19,18 +18,17 @@ type DRRTShipStats struct {
 	ShipData            *rsmships.Ship
 }
 
-
 func (m *DRRTShipStats) RankingScore() float64 {
 	return m.RankPoints / float64(m.NumberMatchesPlayed)
 }
 
 type matchResult int
+
 const (
 	WinDestruction matchResult = iota
 	WinPoints
 	Loss
 )
-
 
 type matchPerformance struct {
 	Match            int
@@ -41,6 +39,7 @@ type matchPerformance struct {
 	Result           matchResult
 	Survived         bool
 }
+
 func (m *matchPerformance) scoreKill() {
 	m.Destructions += 1
 	m.RankPointsEarned += 1
@@ -135,7 +134,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	blueMatchNumber := GetMatchNumberFromAllianceName(raw.StartListings[1].Name, true)
 	if redMatchNumber != blueMatchNumber {
 		return &mlog, &MatchLogAllianceMatchNumberMismatchError{
-			redAllianceMatchNumber: redMatchNumber,
+			redAllianceMatchNumber:  redMatchNumber,
 			blueAllianceMatchNumber: blueMatchNumber,
 		}
 	}
@@ -143,16 +142,15 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	slog.Debug("found match log number from filenames", "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 
 	// Check the length of both alliances
-	redAllianceLength  := raw.StartListings[0].Alive
+	redAllianceLength := raw.StartListings[0].Alive
 	blueAllianceLength := raw.StartListings[1].Alive
 	if redAllianceLength != blueAllianceLength {
 		return &mlog, &MatchLogAllianceLengthMismatchError{
-			redAllianceLength: redAllianceLength,
+			redAllianceLength:  redAllianceLength,
 			blueAllianceLength: blueAllianceLength,
 		}
 	}
 	mlog.AllianceLength = redAllianceLength
-
 
 	// FIXME: currently, there is no sanity checking of match log input. A fleet
 	// line could say that an alliance has 4 members when only 3 are present,
@@ -180,7 +178,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	// Map the ship's index value to its performance in the match. This contains
 	// the same references as mlog.Records.
 	idxtoperformance := make(map[int]*matchPerformance)
-	mlog.Record = make([]*matchPerformance, mlog.AllianceLength * 2)
+	mlog.Record = make([]*matchPerformance, mlog.AllianceLength*2)
 	// create an empty matchPerformance entry for each ship
 	for i, idx := range mlog.ShipIndices {
 		// get the faction of the ship
@@ -210,10 +208,14 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 		// if a ship destroys another ship, increase ranking points earned and destructions by 1
 		p.scoreKill()
 	}
-	
+
 	// assertion:
 	if len(raw.SurvivalListings) <= 0 {
-		return &mlog, errors.New("Match log not finished: no survival lines.")
+		return &mlog, &MatchLogIncompleteError{
+			message:     "No SURVIVAL listings.",
+			matchNumber: mlog.MatchNumber,
+			path:        raw.Path,
+		}
 	}
 	// add surviving ship information
 	for _, survival := range raw.SurvivalListings {
@@ -232,24 +234,22 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 		// SCORING
 		p.scoreSurvived()
 	}
-	
+
 	// -- SCORING --
-	// Define which type of points the match shall be scored with. 
+	// Define which type of points the match shall be scored with.
 	pointsMethod := func(lst *MatchLogFleetListing) int {
 		return lst.DamageInflicted
 	}
 	// initialize functions that will be used to send points to each alliance
 	var blueResultScorer func(p *matchPerformance)
-	var redResultScorer  func(p *matchPerformance)
-
+	var redResultScorer func(p *matchPerformance)
 
 	// assertions:
 	if len(raw.ResultListings) <= 0 {
-		// FIXME: make this a real error type
 		return &mlog, &MatchLogIncompleteError{
-			message: "No result listings.",
+			message:     "No RESULT listings.",
 			matchNumber: mlog.MatchNumber,
-			path: raw.Path,
+			path:        raw.Path,
 		}
 	}
 	if len(raw.ResultListings) > 2 {
@@ -288,12 +288,11 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 
 	// fill the remaining fields
 	mlog.PointsDamageInflicted = make([]int, len(raw.ResultListings))
-	mlog.PointsDamageTaken     = make([]int, len(raw.ResultListings))
+	mlog.PointsDamageTaken = make([]int, len(raw.ResultListings))
 	for i, result := range raw.ResultListings {
 		mlog.PointsDamageInflicted[i] = result.DamageInflicted
-		mlog.PointsDamageTaken[i]     = result.DamageTaken
+		mlog.PointsDamageTaken[i] = result.DamageTaken
 	}
 
 	return &mlog, nil
 }
-
