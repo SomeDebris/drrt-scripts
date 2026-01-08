@@ -346,7 +346,7 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 				return &mlog_raw, &MatchLogFieldError{
 					message:    err.Error(),
 					event:      mlog_ship,
-					field:      "faction",
+					field:      "fleet",
 					line:       line,
 					lineNumber: mlog_RecordNumber,
 					path:       path,
@@ -448,7 +448,7 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 				return &mlog_raw, &MatchLogFieldError{
 					message:    err.Error(),
 					event:      mlog_survival,
-					field:      "faction",
+					field:      "fleet",
 					line:       line,
 					lineNumber: mlog_RecordNumber,
 					path:       path,
