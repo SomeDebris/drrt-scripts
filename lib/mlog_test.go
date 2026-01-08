@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"log"
 	"path/filepath"
 	"reflect"
 	"sync"
@@ -153,10 +154,11 @@ func TestNewDRRTStandardMatchLog(t *testing.T) {
 	}
 	
 	idxfac := getShipIdxFacMap(ships)
-	_, err = NewDRRTStandardMatchLogFromShips(raw, ships, idxfac)
+	mlog, err := NewDRRTStandardMatchLogFromShips(raw, ships, idxfac)
 	if err != nil {
 		t.Errorf("Encountered error while producing match log object: %v", err)
 	}
+	log.Printf("look. %v", &mlog)
 }
 
 // func TestRawMlog(t *testing.T) {
