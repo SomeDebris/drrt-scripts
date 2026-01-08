@@ -145,7 +145,7 @@ func main() {
 		slog.Debug("Full Ship path", "path", fullshippaths[i])
 	}
 
-	ships := make([]rsmships.Ship, len(ship_paths))
+	ships := make([]*rsmships.Ship, len(ship_paths))
 	// unmarshal ship files
 	var unmarshal_wait_group sync.WaitGroup
 	lib.GoUnmarshalAllShipsFromPaths(&ships, fullshippaths, &unmarshal_wait_group)
