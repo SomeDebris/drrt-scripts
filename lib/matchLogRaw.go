@@ -226,7 +226,7 @@ func GetTimeOfMatchLogFilename(path string) (time.Time, error) {
 	if !found {
 		return time.Time{}, fmt.Errorf("Cannot find extension `%s`.", MLOG_EXTENSION)
 	}
-	return time.Parse(REASSEMBLY_FILE_TIMESTAMP_FMT, timestamp)
+	return time.ParseInLocation(REASSEMBLY_FILE_TIMESTAMP_FMT, timestamp, time.Local)
 }
 
 // *
