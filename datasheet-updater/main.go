@@ -5,6 +5,7 @@ import (
 	// "encoding/json"
 	// "fmt"
 	"errors"
+	"fmt"
 	"log"
 	"log/slog"
 
@@ -115,8 +116,9 @@ func main() {
 	logfile := *log_ref
 	defer logfile.Close()
 	if log_writer_ref != nil {
-		logwriter := *log_writer_ref
-		defer logwriter.Flush()
+		logwriter := log_writer_ref
+		fmt.Printf("Yeah, uh, you are flushed.")
+		defer (*logwriter).Flush()
 	}
 
 	drrtdatasheet := lib.NewDRRTDatasheetDefaults()
@@ -172,7 +174,8 @@ func main() {
 	// and you've already run the scheduler
 	OuterLoop:
 	for {
-		data, err := lib.ReadDRRTMlogPipe("thing")
+		fmt.Println(lib.ANSI_BOLD + lib.ANSI_OKGREEN + "Waiting on pipe." + lib.ANSI_RESET)
+		data, err := lib.ReadDRRTMlogPipe("/tmp/drrt_mlog_signal_pipe")
 		if err != nil {
 			slog.Error("Encountered error reading mlog signal pipe.", "err", err)
 			exit_code = 1
@@ -180,11 +183,13 @@ func main() {
 		}
 		switch data {
 		case pipecmd_reload:
+			fmt.Println(lib.ANSI_BOLD + lib.ANSI_OKGREEN + "Got command: \"" + data + "\"" + lib.ANSI_RESET)
 			err = updateMatchLogs(drrtdatasheet, ships, nametoidx)
 			if err != nil {
 				slog.Error("Failed to update match logs.", "err", err)
 			}
 		case pipecmd_stop:
+			fmt.Println(lib.ANSI_BOLD + lib.ANSI_RED + "Got command: \"" + data + "\"" + lib.ANSI_RESET)
 			break OuterLoop
 		}
 		
