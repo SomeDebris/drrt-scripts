@@ -40,12 +40,12 @@ const (
 	mlog_destructionRegexCaptureString = `^\[DESTRUCTION\] ship:\{(.*)\} fship:\{([0-9]*)\} destroyed:\{(.*)\} fdestroyed:\{([0-9]*)\}$`
 	mlog_resultRegexCaptureString      = `^\[RESULT\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9]*)\} alive:\{([0-9]*)\}$`
 	mlog_survivalRegexCaptureString    = `^\[SURVIVAL\] fleet:\{([0-9]+)\} ship:\{(.*)\}$`
-	shipauthorRegexCaptureString  = `^(.+) \[by (.+)\]$`
+	shipauthorRegexCaptureString       = `^(.+) \[by (.+)\]$`
 
 	qualsRedCaptureString  = `^Match ([0-9]+) - \^1The Red Alliance\^7$`
-	qualsBlueCaptureString = `^Match ([0-9]+) - \41The Blue Alliance\^7$`
-	MLOG_RED_FACTION            = 100
-	MLOG_BLUE_FACTION           = 101
+	qualsBlueCaptureString = `^Match ([0-9]+) - \^4The Blue Alliance\^7$`
+	MLOG_RED_FACTION       = 100
+	MLOG_BLUE_FACTION      = 101
 
 	mlog_start       = `START`
 	mlog_ship        = `SHIP`
@@ -268,7 +268,6 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 		if fields_typefinding == nil {
 			continue
 		}
-		log.Printf("Matching against: %s", fields_typefinding[1])
 		switch fields_typefinding[1] {
 		// If line is a [START] Line
 		case mlog_start:
