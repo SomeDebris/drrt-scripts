@@ -232,6 +232,11 @@ func GetTimeOfMatchLogFilename(path string) (time.Time, error) {
 	return time.ParseInLocation(REASSEMBLY_FILE_TIMESTAMP_FMT, timestamp, time.Local)
 }
 
+func MlogValidFilename(path string) bool {
+	basename := filepath.Base(path)
+	return mlog_regex_fnameisvalidcheck.MatchString(basename)
+}
+
 func ReadMlogPaths(path string) ([]string, error) {
 	var mlogfilenames []string
 
@@ -245,10 +250,23 @@ func ReadMlogPaths(path string) ([]string, error) {
 	if err != nil {
 		return mlogfilenames, err
 	}
-
 	for _, entry := range datadirentries {
-		if !strings.EqualFold(filepath.Ext(entry.Name(), ".txt")
+		// if it's not a regular file, don't look at it
+		if !entry.Type().IsRegular() {
+			continue
+		}
+		// if the mlog name does not match the regex, don't look at it
+		if !MlogValidFilename(entry.Name()) {
+			continue
+		}
+		mlogfilenames = append(mlogfilenames, entry.Name())
 	}
+	if len(mlogfilenames) <= 0 {
+		return mlogfilenames, errors.New("No mlogs could be found.")
+	}
+
+	return mlogfilenames, nil
+}
 
 // *
 func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
