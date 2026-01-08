@@ -456,7 +456,7 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 				}
 			}
 			listing.Ship = fields[2]
-			mlog_raw.appendShip(listing, &matchLogRawMutex_survival)
+			mlog_raw.appendSurvival(listing, &matchLogRawMutex_survival)
 		default:
 			log.Printf("Failed to parse this line!: %s", line)
 			continue
