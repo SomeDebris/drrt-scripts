@@ -1,12 +1,17 @@
 package lib
 
 import (
+	"path/filepath"
 	"reflect"
+	"sync"
 	"testing"
 	"time"
+
+	"github.com/SomeDebris/rsmships-go"
 )
 
 const MLOG_FNAME = `MLOG_20250115_04.04.10.PM.txt`
+var shiptestdir = filepath.Join("..", "test-ships")
 
 
 
@@ -70,7 +75,8 @@ func TestGetTimeOfMlogFname(t *testing.T) {
 func TestParseMlog(t *testing.T) {
 	mlog, err := NewMatchLogRawFromPath(MLOG_FNAME)
 	if err != nil {
-		t.Errorf("Encountered error: %v", err)
+		t.Logf("Encountered error: %v", err)
+		t.FailNow()
 	}
 	expectedmlog := MatchLogRaw{
 		CreatedTimestamp: time.Date(2025, 1, 15, 16, 4, 10, 0, time.Local),
@@ -123,6 +129,33 @@ func TestParseMlog(t *testing.T) {
 	}
 	if !reflect.DeepEqual((*mlog).SurvivalListings, expectedmlog.SurvivalListings) {
 		t.Errorf("Parsed match log SurvivalListings is not identical to expectation: expected `%v`, got `%v`", expectedmlog.SurvivalListings, mlog.SurvivalListings)
+	}
+}
+
+
+func TestNewDRRTStandardMatchLog(t *testing.T) {
+	ship_paths, err := GetJSONFilesSortedByModTime(shiptestdir)
+	if err != nil {
+		t.Logf("Cannot get inspected ship paths: %v", err)
+		t.FailNow()
+	}
+	ships := make([]*rsmships.Ship, len(ship_paths))
+
+	// unmarshal ship files
+	var unmarshal_wait_group sync.WaitGroup
+	GoUnmarshalAllShipsFromPaths(&ships, ship_paths, &unmarshal_wait_group)
+	unmarshal_wait_group.Wait()
+
+	raw, err := NewMatchLogRawFromPath(MLOG_FNAME)
+	if err != nil {
+		t.Logf("Encountered error parsing matchlog: %v", err)
+		t.FailNow()
+	}
+	
+	idxfac := getShipIdxFacMap(ships)
+	_, err = NewDRRTStandardMatchLogFromShips(raw, ships, idxfac)
+	if err != nil {
+		t.Errorf("Encountered error while producing match log object: %v", err)
 	}
 }
 
