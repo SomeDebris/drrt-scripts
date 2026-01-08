@@ -9,8 +9,6 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
-	"sort"
-	"strings"
 	"sync"
 	"github.com/SomeDebris/rsmships-go"
 	"errors"
@@ -152,7 +150,7 @@ func main() {
 
 	slog.Debug("Starting unmarshalling ships.")
 
-	ships := make([]rsmships.Ship, len(ship_paths))
+	ships := make([]*rsmships.Ship, len(ship_paths))
 
 	// unmarshal ship files
 	var unmarshal_wait_group sync.WaitGroup
@@ -175,7 +173,7 @@ func main() {
 			blue := make([]*rsmships.Ship, *ships_per_alliance_arg)
 
 			for j, ship := range match {
-				appendme := ships[ship - 1]
+				appendme := *ships[ship - 1]
 				if (*append_authors_quals) {
 					appendme.Data.Name += " [by " +  appendme.Data.Author + "]"
 				}
