@@ -2,6 +2,7 @@ package lib
 
 import (
 	"log/slog"
+	"slices"
 	"time"
 
 	"github.com/SomeDebris/rsmships-go"
@@ -295,4 +296,11 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	}
 
 	return &mlog, nil
+}
+
+func SortStandardMlogs(mlogs *[]*DRRTStandardMatchLog) *[]*DRRTStandardMatchLog {
+	slices.SortStableFunc(*mlogs, func(a, b *DRRTStandardMatchLog) int {
+		return a.Timestamp.Compare(b.Timestamp)
+	})
+	return mlogs
 }
