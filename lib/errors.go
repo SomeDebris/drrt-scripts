@@ -60,3 +60,18 @@ func (e *MatchLogAllianceLengthMismatchError) AddContext(redAllianceLength, blue
 	e.redAllianceLength = redAllianceLength
 	e.blueAllianceLength = blueAllianceLength
 }
+
+type MatchLogAllianceMatchNumberMismatchError struct {
+	redAllianceMatchNumber  int
+	blueAllianceMatchNumber int
+}
+func (e *MatchLogAllianceMatchNumberMismatchError) Error() string {
+	return fmt.Sprintf("Red and blue alliances have different match numbers: red=\"%d\" blue=\"%d\"", e.redAllianceMatchNumber, e.blueAllianceMatchNumber)
+}
+func (e *MatchLogAllianceMatchNumberMismatchError) LogError(logger *slog.Logger) {
+	logger.Error(e.Error(), "redAllianceMatchNumber", e.redAllianceMatchNumber, "blueAllianceMatchNumber", e.blueAllianceMatchNumber)
+}
+func (e *MatchLogAllianceMatchNumberMismatchError) AddContext(redAllianceMatchNumber, blueAllianceMatchNumber int) {
+	e.redAllianceMatchNumber = redAllianceMatchNumber
+	e.blueAllianceMatchNumber = blueAllianceMatchNumber
+}
