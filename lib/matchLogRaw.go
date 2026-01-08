@@ -11,8 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
-	"github.com/SomeDebris/rsmships-go"
-	"log/slog"
 )
 
 /** example

@@ -106,6 +106,9 @@ type DRRTStandardMatchLog struct {
 	Raw                   *MatchLogRaw
 }
 
+// Create a map that connects a ship's name to its index in the schedule.
+// nameCorrelator secont argument also stores the ship's faction. This is in
+// case it is needed to parse a match log, and may be changed many times.
 func getShipIdxFacMap(ships []*rsmships.Ship) *map[string]*nameCorrelator {
 	nametoidx := make(map[string]*nameCorrelator)
 	for i, ship := range ships {
@@ -118,7 +121,7 @@ func getShipIdxFacMap(ships []*rsmships.Ship) *map[string]*nameCorrelator {
 
 // TODO: make the nametoidx variable an input argument
 // TODO: This function is long and unweildly
-func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) (*DRRTStandardMatchLog, error) {
+func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, nametoidx *map[string]*nameCorrelator) (*DRRTStandardMatchLog, error) {
 	var mlog DRRTStandardMatchLog
 	mlog.Raw = raw
 	mlog.Timestamp = raw.CreatedTimestamp
@@ -147,9 +150,6 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 	mlog.AllianceLength = redAllianceLength
 
 
-	// collect array of shipidxs
-	// TODO: possibly good idea to accept ship list from the spreadsheet and stop using actual ship datatypes?
-	nametoidx := getShipIdxFacMap(ships)
 	// FIXME: currently, there is no sanity checking of match log input. A fleet
 	// line could say that an alliance has 4 members when only 3 are present,
 	// and such.
@@ -225,7 +225,8 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 		// SCORING
 		p.scoreSurvived()
 	}
-
+	
+	// -- SCORING --
 	// Define which type of points the match shall be scored with. 
 	pointsMethod := func(lst *MatchLogFleetListing) int {
 		return lst.DamageInflicted
@@ -263,6 +264,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 		blueResultScorer = func(p *matchPerformance) { p.scorePointsWin() }
 		redResultScorer = func(p *matchPerformance) { p.scoreLoss() }
 	}
+	// -- SCORING --
 	for i, rec := range mlog.Record {
 		if i < mlog.AllianceLength {
 			// red alliance
@@ -273,16 +275,13 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship) 
 		}
 	}
 
-
-
-	// TODO next time: 
-	// You need to assign the remaining fields to things.
-	// Start by finding a way to generate MatchPerformances for ships (create a
-	// hash map, I think).
-	// Take the Points field from the ResultListings.
-	// Create a function that generates a [][]any from this for passing into
-	// google sheets.
-	// Create a function for
+	// fill the remaining fields
+	mlog.PointsDamageInflicted = make([]int, len(raw.ResultListings))
+	mlog.PointsDamageTaken     = make([]int, len(raw.ResultListings))
+	for i, result := range raw.ResultListings {
+		mlog.PointsDamageInflicted[i] = result.DamageInflicted
+		mlog.PointsDamageTaken[i]     = result.DamageTaken
+	}
 
 	return &mlog, nil
 }
