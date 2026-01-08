@@ -4,15 +4,16 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
-	"log/slog"
+	"slices"
 
+	"github.com/SomeDebris/rsmships-go"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"
-	"github.com/SomeDebris/rsmships-go"
 )
 
 const (
@@ -23,7 +24,7 @@ const (
 	CREDENTIALS_FNAME    = `credentials_drrt.json`
 	RANGE_MATCH_SCHEDULE = `Calc!A1:F`
 	RANGE_SHIP_ENTRY     = `Ships!A2:B`
-	RANGE_DATA_ENTRY     = `DATA_ENTRY!A2:J`
+	RANGE_DATA_ENTRY     = `DATA_ENTRY!A2:K`
 )
 
 var DatasheetService *sheets.Service = nil
@@ -177,7 +178,12 @@ func (m *DRRTDatasheet) UpdateValues(therange string, values [][]any) (*sheets.U
 	call.ValueInputOption("USER_ENTERED")
 	return call.Do()
 }
-
+func (m *DRRTDatasheet) AppendValues(therange string, values [][]any) (*sheets.AppendValuesResponse, error) {
+	valrange := sheets.ValueRange{Values: values}
+	call := m.Service.Spreadsheets.Values.Append(m.Id, therange, &valrange)
+	call.ValueInputOption("USER_ENTERED")
+	return call.Do()
+}
 // Call a "Clear" on the sheet at the given range.
 func (m *DRRTDatasheet) ClearValues(therange string) (*sheets.ClearValuesResponse, error) {
 	req := sheets.ClearValuesRequest{}
@@ -190,7 +196,7 @@ func (m *DRRTDatasheet) BatchUpdateValues(theranges []string, values [][][]any) 
 		return nil, fmt.Errorf("length of ranges is not equivalent to length of values.")
 	}
 	valueranges := make([]*sheets.ValueRange, len(theranges))
-	for i, _ := range valueranges {
+	for i := range valueranges {
 		valueranges[i] = &sheets.ValueRange{Values: values[i], Range: theranges[i]}
 	}
 	req := sheets.BatchUpdateValuesRequest{Data: valueranges, ValueInputOption: "USER_ENTERED"}
@@ -208,6 +214,15 @@ func (m *DRRTDatasheet) BatchClearValues(theranges []string) (*sheets.BatchClear
 
 func (m *DRRTDatasheet) ClearMatchSchedule() (*sheets.ClearValuesResponse, error) {
 	return m.ClearValues(m.MatchScheduleRange)
+}
+
+func (m *DRRTDatasheet) UpdateMatchLogs(mlogs []*DRRTStandardMatchLog) (*sheets.UpdateValuesResponse, error) {
+	mlogsheetinputs := make([][][]any, len(mlogs))
+	for i, mlog := range mlogs {
+		mlogsheetinputs[i] = mlog.ToSheetsBlock()
+	}
+	sheetsdata := slices.Concat(mlogsheetinputs...)
+	return m.UpdateValues(m.LogRange, sheetsdata)
 }
 
 // TODO: make the clear request into an update request that replaces the cells
