@@ -2,6 +2,7 @@ package lib
 
 import (
 	"testing"
+	"time"
 )
 
 const MLOG_FNAME = `MLOG_20250115_04.04.10.PM.txt`
@@ -44,6 +45,24 @@ func TestGetMatchNumberBluePassedRed(t *testing.T) {
 	target := 0
 	if out != 0 {
 		t.Errorf("Failed to return failure (0) value: %d should be %d", out, target)
+	}
+}
+
+func TestGetTimeOfMlogFname(t *testing.T) {
+	correcttime := time.Date(2025, 1, 15, 16, 4, 10, 0, time.Local)
+	outtime, err := GetTimeOfMatchLogFilename(MLOG_FNAME)
+	if err != nil {
+		t.Errorf("Encountered error: %v", err)
+	}
+	switch correcttime.Compare(outtime) {
+	case -1:
+		t.Errorf("Failed to parse time: Correct time (%s) is before time specified in %s (%s).", correcttime.String(), MLOG_FNAME, outtime.String())
+	case 0:
+		return
+	case 1:
+		t.Errorf("Failed to parse time: Correct time (%s) is after time specified in %s (%s).", correcttime.String(), MLOG_FNAME, outtime.String())
+	default:
+		t.Errorf("Failed to parse time: Correct time (%s) was not compared in the expected way to the time specified in %s (%s).", correcttime.String(), MLOG_FNAME, outtime.String())
 	}
 }
 
