@@ -4,19 +4,23 @@ import (
 	// "context"
 	// "encoding/json"
 	// "fmt"
+	"errors"
 	"log"
 	"log/slog"
+
 	// "net/http"
 	"flag"
 	"os"
+
 	// "bufio"
-	"path/filepath"
 	"drrt-scripts/lib"
-	"github.com/SomeDebris/rsmships-go"
+	"path/filepath"
 	"sync"
+
+	"github.com/SomeDebris/rsmships-go"
+
 	// "cmp"
 	"slices"
-
 	// "golang.org/x/oauth2"
 	// "golang.org/x/oauth2/google"
 	// "google.golang.org/api/option"
@@ -26,7 +30,7 @@ import (
 // func getShipIndexFromName(name string, ships []*rsmships.Ship) int {
 // 	for i, ship := range ships {
 // 		ship_nameauthor := lib.ShipAuthorFromCommonNamefmt(ship.Data.Name)
-// 		if name == 
+// 		if name ==
 // 	}
 // 	return -1
 // }
@@ -119,13 +123,13 @@ func main() {
 
 	// TODO: use the lib.MatchSchedule type
 	// get ship indices of the match schedule from google sheets. This is uploaded by the Scheduler.
-	scheduleindices, err := drrtdatasheet.GetMatchSheduleValues()
-	if err != nil {
-		slog.Error("Failed to get match schdule.", "err", err)
-		exit_code = 1
-		return
-	}
-
+	// scheduleindices, err := drrtdatasheet.GetMatchSheduleValues()
+	// if err != nil {
+	// 	slog.Error("Failed to get match schdule.", "err", err)
+	// 	exit_code = 1
+	// 	return
+	// }
+	//
 	// TODO: slap this in a function to reduce repeated code
 	// get a slice comprising paths to all ships
 	ship_paths, err := lib.GetJSONFilesSortedByModTime(ships_directory)
@@ -151,10 +155,55 @@ func main() {
 	lib.GoUnmarshalAllShipsFromPaths(&ships, fullshippaths, &unmarshal_wait_group)
 	unmarshal_wait_group.Wait()
 	
+	mlogsraw, err := lib.ReadMlogRawsFromPath("/home/magnus/.local/share/Reassembly/data")
+	if err != nil {
+		slog.Error("Error while reading match logs.", "err", err)
+		exit_code = 1
+		return
+	}
+	
+	// get DRRTStandardMatchLogs
+	nametoidx := lib.GetShipIdxFacMap(ships)
+	var stdMatchLogs []*lib.DRRTStandardMatchLog
+	for _, mlograw := range mlogsraw {
+		mlogparsed, err := lib.NewDRRTStandardMatchLogFromShips(mlograw, ships, nametoidx)
+		if err != nil {
+			// check the error type. Many of these do not cause problems; they just should be ignored.:
+			var mlogincomplete *lib.MatchLogIncompleteError
+			if errors.As(err, &mlogincomplete) {
+				mlogincomplete.LogError(slog.Default())
+				continue
+			}
+			var mlogbadmatchnumbers *lib.MatchLogAllianceMatchNumberMismatchError
+			if errors.As(err, &mlogbadmatchnumbers) {
+				mlogbadmatchnumbers.LogError(slog.Default())
+				continue
+			}
+			var mlogbadlength *lib.MatchLogAllianceLengthMismatchError
+			if errors.As(err, &mlogbadlength) {
+				mlogbadlength.LogError(slog.Default())
+				continue
+			}
+			slog.Error("Error while scoring match log.", "err", err, "path", mlograw.Path)
+			continue
+		}
+		slog.Info("Successfully scored match log.", "path", mlograw.Path, "matchNumber", mlogparsed.MatchNumber)
+		stdMatchLogs = append(stdMatchLogs, mlogparsed)
+	}
+
+	// clean up match logs
+	lib.SortStandardMlogs(&stdMatchLogs)
+	lib.DeleteDuplicateMlogs(&stdMatchLogs)
+	_, err = drrtdatasheet.UpdateMatchLogs(stdMatchLogs)
+	if err != nil {
+		slog.Error("Error updating match logs in spreadsheet.", "err", err)
+	}
+
+	
 	// TODO: open named pipe
 	// when I recieve a string on the named pipe, decide what I need to do.
-	// create function for reading all match logs
-	// create function for sorting slice of match logs based on match number and date
+	// create function for reading all match logs DONE
+	// create function for sorting slice of match logs based on match number and date DONE
 	// create function for removing duplicate match logs
 	// crontrol flow should copy python script
 

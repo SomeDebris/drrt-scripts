@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -237,10 +238,10 @@ func MlogValidFilename(path string) bool {
 	return mlog_regex_fnameisvalidcheck.MatchString(basename)
 }
 
-func ReadMlogPaths(path string) ([]string, error) {
+func GetMlogFnames(dir string) ([]string, error) {
 	var mlogfilenames []string
 
-	f, err := os.Open(path)
+	f, err := os.Open(dir)
 	if err != nil {
 		return mlogfilenames, err
 	}
@@ -266,6 +267,32 @@ func ReadMlogPaths(path string) ([]string, error) {
 	}
 
 	return mlogfilenames, nil
+}
+
+
+func ReadMlogRawsFromPath(dir string) ([]*MatchLogRaw, error) {
+	fnames, err := GetMlogFnames(dir)
+	if err != nil {
+		return []*MatchLogRaw{}, err
+	}
+	mlogs := make([]*MatchLogRaw, len(fnames))
+	var wg sync.WaitGroup
+	for i, fname := range fnames {
+		wg.Add(1)
+
+		go func(i int, path string) {
+			defer wg.Done()
+			mlog, errgo := NewMatchLogRawFromPath(path)
+			if errgo != nil {
+				slog.Error("Failed parsing match log.", "err", err, "path", path, "idx", i)
+				return
+			}
+			mlogs[i] = mlog
+			slog.Info("Parsed match log.", "path", path, "idx", i)
+		}(i, filepath.Join(dir, fname))
+	}
+	wg.Wait()
+	return mlogs, nil
 }
 
 // *
@@ -507,7 +534,7 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 		}
 	}
 
-	// We have successfully assembled a mlog_raw. from this, we shall make a DRRTStandardTerseMatchLog.
+	// We have successfully assembled a mlog_raw. from this, we shall make a DRRTStandardMatchLog.
 	// TODO how does one get the timestamp at which a file was created?
 	return &mlog_raw, nil
 }

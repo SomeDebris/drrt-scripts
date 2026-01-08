@@ -121,7 +121,7 @@ func (m *DRRTStandardMatchLog) ToSheetsBlock() [][]any {
 // Create a map that connects a ship's name to its index in the schedule.
 // nameCorrelator secont argument also stores the ship's faction. This is in
 // case it is needed to parse a match log, and may be changed many times.
-func getShipIdxFacMap(ships []*rsmships.Ship) *map[string]int {
+func GetShipIdxFacMap(ships []*rsmships.Ship) *map[string]int {
 	nametoidx := make(map[string]int)
 	for i, ship := range ships {
 		// NOTE: the ships' names must not use standard name format (name [by author])

@@ -229,7 +229,7 @@ func TestNewDRRTStandardMatchLogIncomplete(t *testing.T) {
 		t.FailNow()
 	}
 	
-	idxfac := getShipIdxFacMap(ships)
+	idxfac := GetShipIdxFacMap(ships)
 
 	_, err = NewDRRTStandardMatchLogFromShips(raw, ships, idxfac)
 	if err != nil {
@@ -241,9 +241,10 @@ func TestNewDRRTStandardMatchLogIncomplete(t *testing.T) {
 	}
 }
 
-/*
+//*
 // Test functionality of the DRRT Mlog signal pipe.
 func TestPipe(t *testing.T) {
+	t.SkipNow()
 	_, err := ReadDRRTMlogPipe(DRRT_MLOG_SIGNAL_PIPE_PATH)
 	if err != nil {
 		t.Errorf("Error encountered while trying to read pipe: %v", err)
@@ -252,10 +253,13 @@ func TestPipe(t *testing.T) {
 // */
 
 func TestReadMlogRawsFromPath(t *testing.T) {
-	_, err := ReadMlogRawsFromPath(REASSEMBLY_DATA_DIR)
+	_, err := ReadMlogRawsFromPath(`/home/magnus/.local/share/Reassembly/old-mlogs/Tue_Jan_14_11.36.22_PM_PST_2025`)
 	if err != nil {
 		t.Errorf("encountered error: %v", err)
 	}
+	// for _, mlog := range mlogs {
+	// 	t.Logf("Mlog entry: %v", *mlog)
+	// }
 }
 
 // func TestRawMlog(t *testing.T) {
