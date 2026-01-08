@@ -160,7 +160,7 @@ func TestNewDRRTStandardMatchLog(t *testing.T) {
 		t.FailNow()
 	}
 	
-	idxfac := getShipIdxFacMap(ships)
+	idxfac := GetShipIdxFacMap(ships)
 
 	mlog, err := NewDRRTStandardMatchLogFromShips(raw, ships, idxfac)
 	if err != nil {

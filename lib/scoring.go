@@ -2,6 +2,7 @@ package lib
 
 import (
 	"cmp"
+	"fmt"
 	"log/slog"
 	"slices"
 	"time"
@@ -178,8 +179,8 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 		var idx int
 		idx, ok := (*nametoidx)[name]
 		if !ok {
-			slog.Warn("Ship index cannot be found using map.", "scoring", "SHIP", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
-			continue
+			slog.Error("Ship index cannot be found using map.", "scoring", "SHIP", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			return &mlog, fmt.Errorf("Ship index cannot be found using map: %s", name)
 			// TODO: you may want to return an error here.. but I don't know.
 		}
 		mlog.ShipIndices[i] = idx
@@ -206,15 +207,15 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 		idx, ok := (*nametoidx)[destroyername]
 		if !ok {
 			slog.Warn("Ship index of destroying ship cannot be found using map.", "scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			return &mlog, fmt.Errorf("Ship index cannot be found using map: %s", destroyername)
 			// TODO: you may want to return an error here.. but I don't know.
-			continue
 		}
 		// assign values to the matchPerformance of the ship whose idx was found
 		var p *matchPerformance
 		p, ok = idxtoperformance[idx]
 		if !ok {
 			slog.Warn("Cannot find performance of ship from index.", "scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
-			continue
+			return &mlog, fmt.Errorf("Cannot find performance of ship from index: %s", destroyername)
 		}
 		// SCORING
 		// if a ship destroys another ship, increase ranking points earned and destructions by 1
@@ -250,7 +251,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	// -- SCORING --
 	// Define which type of points the match shall be scored with.
 	pointsMethod := func(lst *MatchLogFleetListing) int {
-		return lst.DamageInflicted
+		return lst.DamageTaken
 	}
 	// initialize functions that will be used to send points to each alliance
 	var blueResultScorer func(p *matchPerformance)
@@ -311,7 +312,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 
 func SortStandardMlogs(mlogs *[]*DRRTStandardMatchLog) {
 	slices.SortStableFunc(*mlogs, func(a, b *DRRTStandardMatchLog) int {
-		return a.Timestamp.Compare(b.Timestamp)
+		return b.Timestamp.Compare(a.Timestamp)
 	})
 	slices.SortStableFunc(*mlogs, func(a, b *DRRTStandardMatchLog) int {
 		return cmp.Compare(a.MatchNumber, b.MatchNumber)
