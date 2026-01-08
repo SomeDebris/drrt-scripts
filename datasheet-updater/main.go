@@ -27,6 +27,11 @@ import (
 	// "google.golang.org/api/sheets/v4"
 )
 
+const (
+	pipecmd_reload = `reload`
+	pipecmd_stop   = `stop`
+)
+
 // func getShipIndexFromName(name string, ships []*rsmships.Ship) int {
 // 	for i, ship := range ships {
 // 		ship_nameauthor := lib.ShipAuthorFromCommonNamefmt(ship.Data.Name)
@@ -129,7 +134,7 @@ func main() {
 	// 	exit_code = 1
 	// 	return
 	// }
-	//
+//
 	// TODO: slap this in a function to reduce repeated code
 	// get a slice comprising paths to all ships
 	ship_paths, err := lib.GetJSONFilesSortedByModTime(ships_directory)
@@ -154,16 +159,47 @@ func main() {
 	var unmarshal_wait_group sync.WaitGroup
 	lib.GoUnmarshalAllShipsFromPaths(&ships, fullshippaths, &unmarshal_wait_group)
 	unmarshal_wait_group.Wait()
-	
-	mlogsraw, err := lib.ReadMlogRawsFromPath("/home/magnus/.local/share/Reassembly/data")
+
+	nametoidx := lib.GetShipIdxFacMap(ships)
+	err = updateMatchLogs(drrtdatasheet, ships, nametoidx)
 	if err != nil {
-		slog.Error("Error while reading match logs.", "err", err)
+		slog.Error("Failed to update match logs for the first time.", "err", err)
 		exit_code = 1
 		return
 	}
 	
+	// ASSUMPTION: you're running quals
+	// and you've already run the scheduler
+	OuterLoop:
+	for {
+		data, err := lib.ReadDRRTMlogPipe("thing")
+		if err != nil {
+			slog.Error("Encountered error reading mlog signal pipe.", "err", err)
+			exit_code = 1
+			return
+		}
+		switch data {
+		case pipecmd_reload:
+			err = updateMatchLogs(drrtdatasheet, ships, nametoidx)
+			if err != nil {
+				slog.Error("Failed to update match logs.", "err", err)
+			}
+		case pipecmd_stop:
+			break OuterLoop
+		}
+		
+	}
+
+	slog.Info("Done!")
+}
+
+func updateMatchLogs(sheet *lib.DRRTDatasheet, ships []*rsmships.Ship, nametoidx *map[string]int) error {
+	mlogsraw, err := lib.ReadMlogRawsFromPath("/home/magnus/.local/share/Reassembly/data")
+	if err != nil {
+		slog.Error("Error while reading match logs.", "err", err)
+		return err
+	}
 	// get DRRTStandardMatchLogs
-	nametoidx := lib.GetShipIdxFacMap(ships)
 	var stdMatchLogs []*lib.DRRTStandardMatchLog
 	for _, mlograw := range mlogsraw {
 		mlogparsed, err := lib.NewDRRTStandardMatchLogFromShips(mlograw, ships, nametoidx)
@@ -190,23 +226,14 @@ func main() {
 		slog.Info("Successfully scored match log.", "path", mlograw.Path, "matchNumber", mlogparsed.MatchNumber)
 		stdMatchLogs = append(stdMatchLogs, mlogparsed)
 	}
-
 	// clean up match logs
 	lib.SortStandardMlogs(&stdMatchLogs)
 	lib.DeleteDuplicateMlogs(&stdMatchLogs)
-	_, err = drrtdatasheet.UpdateMatchLogs(stdMatchLogs)
+	_, err = sheet.UpdateMatchLogs(stdMatchLogs)
 	if err != nil {
 		slog.Error("Error updating match logs in spreadsheet.", "err", err)
+		return err
 	}
 
-	
-	// TODO: open named pipe
-	// when I recieve a string on the named pipe, decide what I need to do.
-	// create function for reading all match logs DONE
-	// create function for sorting slice of match logs based on match number and date DONE
-	// create function for removing duplicate match logs
-	// crontrol flow should copy python script
-
-// we now have enough information to put match logs in context.
+	return nil
 }
-
