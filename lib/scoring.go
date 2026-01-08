@@ -132,8 +132,10 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	redMatchNumber := GetMatchNumberFromAllianceName(raw.StartListings[0].Name, false)
 	blueMatchNumber := GetMatchNumberFromAllianceName(raw.StartListings[1].Name, true)
 	if redMatchNumber != blueMatchNumber {
-		// FIXME: make this a real error type
-		return &mlog, errors.New("Red and Blue Alliance match numbers are different. Bad match log!")
+		return &mlog, &MatchLogAllianceMatchNumberMismatchError{
+			redAllianceMatchNumber: redMatchNumber,
+			blueAllianceMatchNumber: blueMatchNumber,
+		}
 	}
 	mlog.MatchNumber = redMatchNumber // == blueMatchNumber
 	slog.Debug("found match log number from filenames", "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
