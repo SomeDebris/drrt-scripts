@@ -190,7 +190,8 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 
 	// assign faction numbers to each of the fleets
 	for _, idxfac := range *nametoidx {
-		p := idxtoperformance[idxfac.Idx]
+		p, ok := idxtoperformance[idxfac.Idx]
+		slog.Warn("come on guys. I thought you knew better, don't copy that floppy!", "idx", idxfac.Idx, "fac", idxfac.Faction)
 		p.Faction = idxfac.Faction
 	}
 
