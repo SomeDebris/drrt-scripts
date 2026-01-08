@@ -153,6 +153,10 @@ func main() {
 	
 	// TODO: open named pipe
 	// when I recieve a string on the named pipe, decide what I need to do.
+	// create function for reading all match logs
+	// create function for sorting slice of match logs based on match number and date
+	// create function for removing duplicate match logs
+	// crontrol flow should copy python script
 
 // we now have enough information to put match logs in context.
 }
