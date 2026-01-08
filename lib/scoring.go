@@ -61,7 +61,7 @@ func (m *matchPerformance) scoreLoss() {
 }
 
 func (m *matchPerformance) toSheetsRow() [][]any {
-	output := make([]any, 8)
+	output := make([]any, 9)
 	output[0] = m.Ship.Data.Name
 	output[1] = m.Match
 	output[2] = m.Destructions
@@ -84,6 +84,7 @@ func (m *matchPerformance) toSheetsRow() [][]any {
 	} else {
 		output[7] = 0
 	}
+	output[8] = int(m.Result)
 	return [][]any{output}
 }
 
@@ -114,7 +115,8 @@ func getShipIdxFacMap(ships []*rsmships.Ship) *map[string]*nameCorrelator {
 	for i, ship := range ships {
 		// NOTE: the ships' names must not use standard name format (name [by author])
 		// NOTE: value is 1 less than match schedule values; schedule starts at 1 and not 0. internally, use 0 minimum. Print 1+ this value.
-		nametoidx[ship.Data.Name] = &nameCorrelator{i, 0}
+		nameauthor := ShipAuthorFromCommonNamefmt(ship.Data.Name)
+		nametoidx[nameauthor[0]] = &nameCorrelator{i, 0}
 	}
 	return &nametoidx
 }
@@ -166,6 +168,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 		idxfac, ok := (*nametoidx)[name]
 		if !ok {
 			slog.Warn("Ship index cannot be found using map.", "scoring", "SHIP", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
+			continue
 			// TODO: you may want to return an error here.. but I don't know.
 		}
 		mlog.ShipIndices[i] = idxfac.Idx
@@ -183,6 +186,12 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 		mlog.Record[i] = &matchPerformance{Ship: ships[idx], Match: mlog.MatchNumber}
 		idxtoperformance[idx] = mlog.Record[i]
 		slog.Debug("Add ship to match performance.", "author", ships[idx].Data.Author, "name", ships[idx].Data.Name, "idx", idx, "path", raw.Path)
+	}
+
+	// assign faction numbers to each of the fleets
+	for _, idxfac := range *nametoidx {
+		p := idxtoperformance[idxfac.Idx]
+		p.Faction = idxfac.Faction
 	}
 
 	// add the [DESTRUCTION] mlog information to the datatype
