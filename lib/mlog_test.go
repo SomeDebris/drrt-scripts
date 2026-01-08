@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"log"
 	"path/filepath"
 	"reflect"
 	"sync"
@@ -36,21 +35,21 @@ func TestGetMatchNumberRedCorrectfmt(t *testing.T) {
 func TestGetMatchNumberRedPassedBlue(t *testing.T) {
 	out := GetMatchNumberFromAllianceName("Match 001 - ^1The Red Alliance^7", true)
 	target := 0
-	if out != 0 {
+	if out != target {
 		t.Errorf("Failed to return failure (0) value: %d should be %d", out, target)
 	}
 }
 func TestGetMatchNumberBlueCorrectfmt(t *testing.T) {
 	out := GetMatchNumberFromAllianceName("Match 001 - ^4The Blue Alliance^7", true)
-	target := 0
-	if out != 0 {
+	target := 1
+	if out != target {
 		t.Errorf("Failed to get correct match number: %d should be %d", out, target)
 	}
 }
 func TestGetMatchNumberBluePassedRed(t *testing.T) {
 	out := GetMatchNumberFromAllianceName("Match 001 - ^4The Blue Alliance^7", false)
 	target := 0
-	if out != 0 {
+	if out != target {
 		t.Errorf("Failed to return failure (0) value: %d should be %d", out, target)
 	}
 }
@@ -140,11 +139,15 @@ func TestNewDRRTStandardMatchLog(t *testing.T) {
 		t.Logf("Cannot get inspected ship paths: %v", err)
 		t.FailNow()
 	}
+	fullshippaths := make([]string, len(ship_paths))
+	for i, path := range ship_paths {
+		fullshippaths[i] = filepath.Join(shiptestdir, path)
+	}
 	ships := make([]*rsmships.Ship, len(ship_paths))
 
 	// unmarshal ship files
 	var unmarshal_wait_group sync.WaitGroup
-	GoUnmarshalAllShipsFromPaths(&ships, ship_paths, &unmarshal_wait_group)
+	GoUnmarshalAllShipsFromPaths(&ships, fullshippaths, &unmarshal_wait_group)
 	unmarshal_wait_group.Wait()
 
 	raw, err := NewMatchLogRawFromPath(MLOG_FNAME)
@@ -154,11 +157,41 @@ func TestNewDRRTStandardMatchLog(t *testing.T) {
 	}
 	
 	idxfac := getShipIdxFacMap(ships)
+	t.Logf("This is the value of the idxfac thing: %v", idxfac)
 	mlog, err := NewDRRTStandardMatchLogFromShips(raw, ships, idxfac)
 	if err != nil {
-		t.Errorf("Encountered error while producing match log object: %v", err)
+		t.Logf("Encountered error while producing match log object: %v", err)
+		t.FailNow()
 	}
-	log.Printf("look. %v", &mlog)
+	t.Logf("look. %v", mlog)
+	target := DRRTStandardMatchLog{
+		MatchNumber:1,
+		Timestamp:raw.CreatedTimestamp,
+		Ships: []*rsmships.Ship{
+			ships[(*idxfac)["Transcription 2025"].Idx],
+			ships[(*idxfac)["Original Thinker"].Idx],
+			ships[(*idxfac)["Muninn M6-B \"LAIKA\""].Idx],
+			ships[(*idxfac)["Spawk"].Idx],
+			ships[(*idxfac)["Lethal K v3"].Idx],
+			ships[(*idxfac)["directional dismisser"].Idx],
+		},
+		AllianceLength: 3,
+		Record: []*matchPerformance{
+			{Match: 1, Ship: ships[(*idxfac)["Transcription 2025"].Idx],    Faction: 100, Destructions:0, RankPointsEarned:2, Survived: true, Result:WinDestruction},
+			{Match: 1, Ship: ships[(*idxfac)["Original Thinker"].Idx],      Faction: 100, Destructions:0, RankPointsEarned:2, Survived: true, Result:WinDestruction},
+			{Match: 1, Ship: ships[(*idxfac)["Muninn M6-B \"LAIKA\""].Idx], Faction: 100, Destructions:3, RankPointsEarned:5, Survived: true, Result:WinDestruction},
+			{Match: 1, Ship: ships[(*idxfac)["Spawk"].Idx],                 Faction: 101, Destructions:0, RankPointsEarned:0, Survived: false, Result:Loss},
+			{Match: 1, Ship: ships[(*idxfac)["Lethal K v3"].Idx],           Faction: 101, Destructions:0, RankPointsEarned:0, Survived: false, Result:Loss},
+			{Match: 1, Ship: ships[(*idxfac)["directional dismisser"].Idx], Faction: 101, Destructions:0, RankPointsEarned:0, Survived: false, Result:Loss},
+		},
+		ShipIndices: []int{7, 2, 5, 3, 6, 4},
+		PointsDamageInflicted: []int{185891, 51176},
+		PointsDamageTaken: []int{200756, 0},
+		Raw: raw,
+	}
+	if !reflect.DeepEqual(*mlog, target) {
+		t.Errorf("Parsed match log is not identical to expectation: expected ```%v```, got ```%v```", target, *mlog)
+	}
 }
 
 // func TestRawMlog(t *testing.T) {
