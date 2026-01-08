@@ -157,7 +157,7 @@ func TestNewDRRTStandardMatchLog(t *testing.T) {
 	}
 	
 	idxfac := getShipIdxFacMap(ships)
-	t.Logf("This is the value of the idxfac thing: %v", idxfac)
+
 	mlog, err := NewDRRTStandardMatchLogFromShips(raw, ships, idxfac)
 	if err != nil {
 		t.Logf("Encountered error while producing match log object: %v", err)
@@ -192,18 +192,13 @@ func TestNewDRRTStandardMatchLog(t *testing.T) {
 	if !reflect.DeepEqual(*mlog, target) {
 		t.Errorf("Parsed match log is not identical to expectation: expected ```%v```, got ```%v```", target, *mlog)
 	}
-	if !reflect.DeepEqual((*mlog).MatchNumber, target.MatchNumber) {
-		t.Errorf("Parsed match log MatchNumber is not identical to expectation: expected ```%v```, got ```%v```", target.MatchNumber, (*mlog).MatchNumber)
-	}
-	if !reflect.DeepEqual((*mlog).Record, target.Record) {
-		t.Errorf("Parsed match log Record is not identical to expectation: expected ```%v```, got ```%v```", target.Record, (*mlog).Record)
-	}
 
-	for _, perf := range mlog.Record {
+	for i, perf := range mlog.Record {
 		t.Logf("%v", perf.toSheetsRow())
-	}
-	for _, perf := range target.Record {
-		t.Logf("%v", perf.toSheetsRow())
+		t.Logf("%v", target.Record[i].toSheetsRow())
+		if !reflect.DeepEqual(perf, target.Record[i]) {
+			t.Errorf("Parsed matchPerformance is not identical to expectation: expected ```%v```, got ```%v```", target.Record[i], perf)
+		}
 	}
 }
 

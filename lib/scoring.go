@@ -110,8 +110,8 @@ type DRRTStandardMatchLog struct {
 // Create a map that connects a ship's name to its index in the schedule.
 // nameCorrelator secont argument also stores the ship's faction. This is in
 // case it is needed to parse a match log, and may be changed many times.
-func getShipIdxFacMap(ships []*rsmships.Ship) *map[string]*nameCorrelator {
-	nametoidx := make(map[string]*nameCorrelator)
+func getShipIdxFacMap(ships []*rsmships.Ship) *map[string]int {
+	nametoidx := make(map[string]int)
 	for i, ship := range ships {
 		// NOTE: the ships' names must not use standard name format (name [by author])
 		// NOTE: value is 1 less than match schedule values; schedule starts at 1 and not 0. internally, use 0 minimum. Print 1+ this value.
@@ -123,7 +123,7 @@ func getShipIdxFacMap(ships []*rsmships.Ship) *map[string]*nameCorrelator {
 
 // TODO: make the nametoidx variable an input argument
 // TODO: This function is long and unweildly
-func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, nametoidx *map[string]*nameCorrelator) (*DRRTStandardMatchLog, error) {
+func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, nametoidx *map[string]int) (*DRRTStandardMatchLog, error) {
 	var mlog DRRTStandardMatchLog
 	mlog.Raw = raw
 	mlog.Timestamp = raw.CreatedTimestamp
@@ -162,18 +162,19 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	// The first n ships are from the Red alliance, but may not be sorted in the order they appear in Reassembly's fleet screen.
 	mlog.ShipIndices = make([]int, len(raw.ShipListings))
 	mlog.Ships = make([]*rsmships.Ship, len(raw.ShipListings))
+	factions := make([]int, len(raw.ShipListings))
 	for i, shiplsting := range raw.ShipListings {
 		name := ShipAuthorFromCommonNamefmt(shiplsting.Ship)[0]
-		var idxfac *nameCorrelator
-		idxfac, ok := (*nametoidx)[name]
+		var idx int
+		idx, ok := (*nametoidx)[name]
 		if !ok {
 			slog.Warn("Ship index cannot be found using map.", "scoring", "SHIP", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			continue
 			// TODO: you may want to return an error here.. but I don't know.
 		}
-		mlog.ShipIndices[i] = idxfac.Idx
-		mlog.Ships[i] = ships[idxfac.Idx]
-		idxfac.Faction = shiplsting.Fleet
+		mlog.ShipIndices[i] = idx
+		mlog.Ships[i] = ships[idx]
+		factions[i] = shiplsting.Fleet
 	}
 
 	// Map the ship's index value to its performance in the match. This contains
@@ -183,22 +184,16 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	// create an empty matchPerformance entry for each ship
 	for i, idx := range mlog.ShipIndices {
 		// get the faction of the ship
-		mlog.Record[i] = &matchPerformance{Ship: ships[idx], Match: mlog.MatchNumber}
-		idxtoperformance[idx] = mlog.Record[i]
+		p := &matchPerformance{Ship: ships[idx], Match: mlog.MatchNumber, Faction: factions[i]}
+		mlog.Record[i] = p
+		idxtoperformance[idx] = p
 		slog.Debug("Add ship to match performance.", "author", ships[idx].Data.Author, "name", ships[idx].Data.Name, "idx", idx, "path", raw.Path)
-	}
-
-	// assign faction numbers to each of the fleets
-	for _, idxfac := range *nametoidx {
-		p, ok := idxtoperformance[idxfac.Idx]
-		slog.Warn("come on guys. I thought you knew better, don't copy that floppy!", "idx", idxfac.Idx, "fac", idxfac.Faction)
-		p.Faction = idxfac.Faction
 	}
 
 	// add the [DESTRUCTION] mlog information to the datatype
 	for _, destruction := range raw.DestructionListings {
 		destroyername := ShipAuthorFromCommonNamefmt(destruction.Ship)[0]
-		destroyernameCorrelator, ok := (*nametoidx)[destroyername]
+		idx, ok := (*nametoidx)[destroyername]
 		if !ok {
 			slog.Warn("Ship index of destroying ship cannot be found using map.", "scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			// TODO: you may want to return an error here.. but I don't know.
@@ -206,7 +201,7 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 		}
 		// assign values to the matchPerformance of the ship whose idx was found
 		var p *matchPerformance
-		p, ok = idxtoperformance[destroyernameCorrelator.Idx]
+		p, ok = idxtoperformance[idx]
 		if !ok {
 			slog.Warn("Cannot find performance of ship from index.", "scoring", "DESTRUCTION", "name", destroyername, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			continue
@@ -223,13 +218,13 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	// add surviving ship information
 	for _, survival := range raw.SurvivalListings {
 		name := ShipAuthorFromCommonNamefmt(survival.Ship)[0]
-		idxfac, ok := (*nametoidx)[name]
+		idx, ok := (*nametoidx)[name]
 		if !ok {
 			slog.Warn("Ship index cannot be found using map.", "scoring", "SURVIVAL", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			// TODO: you may want to return an error here.. but I don't know.
 		}
 		var p *matchPerformance
-		p, ok = idxtoperformance[idxfac.Idx]
+		p, ok = idxtoperformance[idx]
 		if !ok {
 			slog.Warn("Cannot find performance of ship from index.", "scoring", "SURVIVAL", "name", name, "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
 			continue

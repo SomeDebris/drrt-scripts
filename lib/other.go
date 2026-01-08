@@ -57,7 +57,7 @@ func Array2DToEmptyInterface[T any](in [][]T) [][]any {
 	return out
 }
 
-func getShipAuthorNamePairInterface(ships []rsmships.Ship) [][]any {
+func getShipAuthorNamePairInterface(ships []*rsmships.Ship) [][]any {
 	var out [][]any = make([][]any, len(ships))
 	for i, ship := range ships {
 		var shipauthorpair []any = make([]any, 2)

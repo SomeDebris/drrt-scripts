@@ -232,7 +232,7 @@ func (m *DRRTDatasheet) UpdateMatchSchedule(schedule [][]any) error {
 	return nil
 }
 
-func (m *DRRTDatasheet) UpdateShipsList(ships []rsmships.Ship) error {
+func (m *DRRTDatasheet) UpdateShipsList(ships []*rsmships.Ship) error {
 	theupdate := getShipAuthorNamePairInterface(ships)
 	respupdate, err := m.UpdateValues(m.ShipEntryRange, theupdate)
 	if err != nil {
@@ -243,7 +243,7 @@ func (m *DRRTDatasheet) UpdateShipsList(ships []rsmships.Ship) error {
 	return nil
 }
 
-func (m *DRRTDatasheet) UpdateShipsAndMatchSchedule(ships []rsmships.Ship, schedule [][]any) error {
+func (m *DRRTDatasheet) UpdateShipsAndMatchSchedule(ships []*rsmships.Ship, schedule [][]any) error {
 	shipauthornamepairs := getShipAuthorNamePairInterface(ships)
 	resp, err := m.BatchUpdateValues([]string{m.MatchScheduleRange, m.ShipEntryRange}, [][][]any{schedule, shipauthornamepairs})
 	if err != nil {
