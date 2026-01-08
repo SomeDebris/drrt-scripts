@@ -61,32 +61,31 @@ func (m *matchPerformance) scoreLoss() {
 	m.Result = Loss
 }
 
-func (m *matchPerformance) toSheetsRow() [][]any {
-	output := make([]any, 9)
+func (m *matchPerformance) toSheetsRow() []any {
+	output := make([]any, 8)
 	output[0] = m.Ship.Data.Name
-	output[1] = m.Match
-	output[2] = m.Destructions
-	output[3] = m.RankPointsEarned
+	output[1] = m.Destructions
+	output[2] = m.RankPointsEarned
 
+	output[3] = 0
 	output[4] = 0
 	output[5] = 0
-	output[6] = 0
 	switch m.Result {
 	case WinDestruction:
-		output[4] = 1
+		output[3] = 1
 	case WinPoints:
-		output[5] = 1
+		output[4] = 1
 	case Loss:
-		output[6] = 1
+		output[5] = 1
 	}
 
 	if m.Survived {
-		output[7] = 1
+		output[6] = 1
 	} else {
-		output[7] = 0
+		output[6] = 0
 	}
-	output[8] = int(m.Result)
-	return [][]any{output}
+	output[7] = m.Match
+	return output
 }
 
 // Tiny structure for storing the index of a ship and the ship's faction. This
@@ -107,6 +106,17 @@ type DRRTStandardMatchLog struct {
 	PointsDamageTaken     []int
 	Raw                   *MatchLogRaw
 }
+func (m *DRRTStandardMatchLog) ToSheetsBlock() [][]any {
+	out := make([][]any, len(m.Record))
+	for i, record := range m.Record {
+		performancerow := record.toSheetsRow()
+		performancerow = append(performancerow, m.Raw.Path)
+		performancerow = append(performancerow, m.Timestamp.String())
+		out[i] = performancerow
+	}
+	return out
+}
+
 
 // Create a map that connects a ship's name to its index in the schedule.
 // nameCorrelator secont argument also stores the ship's faction. This is in
