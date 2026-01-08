@@ -75,3 +75,21 @@ func (e *MatchLogAllianceMatchNumberMismatchError) AddContext(redAllianceMatchNu
 	e.redAllianceMatchNumber = redAllianceMatchNumber
 	e.blueAllianceMatchNumber = blueAllianceMatchNumber
 }
+
+type MatchLogIncompleteError struct {
+	message     string
+	path        string
+	matchNumber int
+}
+func (e *MatchLogIncompleteError) Error() string {
+	return "Match log is incomplete: " + e.message
+}
+func (e *MatchLogIncompleteError) LogError(logger *slog.Logger) {
+	logger.Error(e.Error(), "msg", e.message, "path", e.path, "matchNumber", e.matchNumber)
+}
+func (e *MatchLogIncompleteError) AddContext(message, path string, matchNumber int) {
+	e.message = message
+	e.path = path
+	e.matchNumber = matchNumber
+}
+

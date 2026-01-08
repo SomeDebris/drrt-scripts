@@ -10,7 +10,10 @@ import (
 	"github.com/SomeDebris/rsmships-go"
 )
 
-const MLOG_FNAME = `MLOG_20250115_04.04.10.PM.txt`
+const (
+	MLOG_FNAME            = `MLOG_20250115_04.04.10.PM.txt`
+	MLOG_FNAME_INCOMPLETE = `MLOG_20270114_04.04.10.PM.txt`
+)
 var shiptestdir = filepath.Join("..", "test-ships")
 
 
@@ -199,6 +202,38 @@ func TestNewDRRTStandardMatchLog(t *testing.T) {
 		if !reflect.DeepEqual(perf, target.Record[i]) {
 			t.Errorf("Parsed matchPerformance is not identical to expectation: expected ```%v```, got ```%v```", target.Record[i], perf)
 		}
+	}
+}
+
+func TestNewDRRTStandardMatchLogIncomplete(t *testing.T) {
+	ship_paths, err := GetJSONFilesSortedByModTime(shiptestdir)
+	if err != nil {
+		t.Logf("Cannot get inspected ship paths: %v", err)
+		t.FailNow()
+	}
+	fullshippaths := make([]string, len(ship_paths))
+	for i, path := range ship_paths {
+		fullshippaths[i] = filepath.Join(shiptestdir, path)
+	}
+	ships := make([]*rsmships.Ship, len(ship_paths))
+
+	// unmarshal ship files
+	var unmarshal_wait_group sync.WaitGroup
+	GoUnmarshalAllShipsFromPaths(&ships, fullshippaths, &unmarshal_wait_group)
+	unmarshal_wait_group.Wait()
+
+	raw, err := NewMatchLogRawFromPath(MLOG_FNAME_INCOMPLETE)
+	if err != nil {
+		t.Logf("Encountered error parsing matchlog: %v", err)
+		t.FailNow()
+	}
+	
+	idxfac := getShipIdxFacMap(ships)
+
+	_, err = NewDRRTStandardMatchLogFromShips(raw, ships, idxfac)
+	if err != nil {
+		t.Logf("Encountered error while producing match log object: %v", err)
+		t.FailNow()
 	}
 }
 

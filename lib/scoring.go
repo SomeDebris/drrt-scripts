@@ -246,7 +246,11 @@ func NewDRRTStandardMatchLogFromShips(raw *MatchLogRaw, ships []*rsmships.Ship, 
 	// assertions:
 	if len(raw.ResultListings) <= 0 {
 		// FIXME: make this a real error type
-		return &mlog, errors.New("Match log not finished: result lines not present.")
+		return &mlog, &MatchLogIncompleteError{
+			message: "No result listings.",
+			matchNumber: mlog.MatchNumber,
+			path: raw.Path,
+		}
 	}
 	if len(raw.ResultListings) > 2 {
 		slog.Warn("More result lines than expected for standard DRRT match.", "scoring", "RESULT", "len", len(raw.ResultListings), "matchNumber", mlog.MatchNumber, "mlogTimestamp", mlog.Timestamp.String(), "path", raw.Path)
