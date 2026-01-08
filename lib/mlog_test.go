@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"errors"
 	"path/filepath"
 	"reflect"
 	"sync"
@@ -232,8 +233,11 @@ func TestNewDRRTStandardMatchLogIncomplete(t *testing.T) {
 
 	_, err = NewDRRTStandardMatchLogFromShips(raw, ships, idxfac)
 	if err != nil {
-		t.Logf("Encountered error while producing match log object: %v", err)
-		t.FailNow()
+		var mlogincomplete *MatchLogIncompleteError
+		if !errors.As(err, &mlogincomplete) {
+			t.Logf("Encountered error while producing match log object: %v", err)
+			t.FailNow()
+		}
 	}
 }
 

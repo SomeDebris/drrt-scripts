@@ -87,8 +87,7 @@ func (e *MatchLogIncompleteError) Error() string {
 func (e *MatchLogIncompleteError) LogError(logger *slog.Logger) {
 	logger.Error(e.Error(), "msg", e.message, "path", e.path, "matchNumber", e.matchNumber)
 }
-func (e *MatchLogIncompleteError) AddContext(message, path string, matchNumber int) {
-	e.message = message
+func (e *MatchLogIncompleteError) AddContext(path string, matchNumber int) {
 	e.path = path
 	e.matchNumber = matchNumber
 }
