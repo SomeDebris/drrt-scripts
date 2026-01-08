@@ -2,15 +2,16 @@ package lib
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
-	"time"
-	"errors"
-	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 )
 
 /** example
@@ -35,9 +36,9 @@ MLOG CLOSE: 855.581397
 const (
 	mlog_typeRegexCaptureString        = `^\[([A-Z]+)\]`
 	mlog_startRegexCaptureString       = `^\[START\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
-	mlog_shipRegexCaptureString        = `^\[SHIP\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
+	mlog_shipRegexCaptureString        = `^\[SHIP\] fleet:\{([0-9]+)\} ship:\{(.*)\}$`
 	mlog_destructionRegexCaptureString = `^\[DESTRUCTION\] ship:\{(.*)\} fship:\{([0-9]*)\} destroyed:\{(.*)\} fdestroyed:\{([0-9]*)\}$`
-	mlog_resultRegexCaptureString      = `^\[RESULT\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
+	mlog_resultRegexCaptureString      = `^\[RESULT\] fleet:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
 	mlog_survivalRegexCaptureString    = `^\[SURVIVAL\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
 	shipauthorRegexCaptureString  = `^(.+) \[by (.+)\]$`
 
@@ -263,8 +264,12 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 		line := match_log_scanner.Text()
 
 		mlog_RecordNumber++
-
-		switch string(mlog_regex_type.FindString(line)) {
+		fields_typefinding := mlog_regex_type.FindStringSubmatch(line)
+		if fields_typefinding == nil {
+			continue
+		}
+		log.Printf("Matching against: %s", fields_typefinding[1])
+		switch fields_typefinding[1] {
 		// If line is a [START] Line
 		case mlog_start:
 			fields := mlog_regex_map[mlog_start].FindStringSubmatch(line)
@@ -452,6 +457,16 @@ func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
 			}
 			listing.Ship = fields[2]
 			mlog_raw.appendShip(listing, &matchLogRawMutex_survival)
+		default:
+			log.Printf("Failed to parse this line!: %s", line)
+			continue
+			// return &mlog_raw, &MatchLogRegexError{
+			// 	event: "NONE",
+			// 	line: line,
+			// 	lineNumber: mlog_RecordNumber,
+			// 	path: path,
+			// 	regex: mlog_regex_type.String(),
+			// }
 		}
 	}
 
