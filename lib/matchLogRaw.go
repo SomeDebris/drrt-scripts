@@ -41,6 +41,7 @@ const (
 	mlog_resultRegexCaptureString      = `^\[RESULT\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9]*)\} alive:\{([0-9]*)\}$`
 	mlog_survivalRegexCaptureString    = `^\[SURVIVAL\] fleet:\{([0-9]+)\} ship:\{(.*)\}$`
 	shipauthorRegexCaptureString       = `^(.+) \[by (.+)\]$`
+	mlog_fnameRegexCaptureString       = `^MLOG_[0-9]{8}_([0-9]{2}\.){3}[AP]M.txt$`
 
 	qualsRedCaptureString  = `^Match ([0-9]+) - \^1The Red Alliance\^7$`
 	qualsBlueCaptureString = `^Match ([0-9]+) - \^4The Blue Alliance\^7$`
@@ -67,6 +68,7 @@ var (
 	mlog_regex_matchnumberCaptureBlue = regexp.MustCompile(qualsBlueCaptureString)
 	mlog_regex_type                   = regexp.MustCompile(mlog_typeRegexCaptureString)
 	mlog_regex_shipauthor             = regexp.MustCompile(shipauthorRegexCaptureString)
+	mlog_regex_fnameisvalidcheck      = regexp.MustCompile(mlog_fnameRegexCaptureString)
 	mlog_regex_map                    = map[string]*regexp.Regexp{
 		mlog_start:       regexp.MustCompile(mlog_startRegexCaptureString),
 		mlog_ship:        regexp.MustCompile(mlog_shipRegexCaptureString),
@@ -183,7 +185,7 @@ func parseDestructionLine(line string) (MatchLogDestructionListing, error) {
 	var err error
 	regex := mlog_regex_map[mlog_destruction]
 
-	fields := regex.FindStringSubmatch(line)
+fields := regex.FindStringSubmatch(line)
 
 	if fields == nil {
 		return listing, &MatchLogRegexError{
@@ -229,6 +231,24 @@ func GetTimeOfMatchLogFilename(path string) (time.Time, error) {
 	}
 	return time.ParseInLocation(REASSEMBLY_FILE_TIMESTAMP_FMT, timestamp, time.Local)
 }
+
+func ReadMlogPaths(path string) ([]string, error) {
+	var mlogfilenames []string
+
+	f, err := os.Open(path)
+	if err != nil {
+		return mlogfilenames, err
+	}
+	defer f.Close()
+
+	datadirentries, err := f.ReadDir(-1)
+	if err != nil {
+		return mlogfilenames, err
+	}
+
+	for _, entry := range datadirentries {
+		if !strings.EqualFold(filepath.Ext(entry.Name(), ".txt")
+	}
 
 // *
 func NewMatchLogRawFromPath(path string) (*MatchLogRaw, error) {
