@@ -116,7 +116,7 @@ func getShipIdxFacMap(ships []*rsmships.Ship) *map[string]int {
 		// NOTE: the ships' names must not use standard name format (name [by author])
 		// NOTE: value is 1 less than match schedule values; schedule starts at 1 and not 0. internally, use 0 minimum. Print 1+ this value.
 		nameauthor := ShipAuthorFromCommonNamefmt(ship.Data.Name)
-		nametoidx[nameauthor[0]] = &nameCorrelator{i, 0}
+		nametoidx[nameauthor[0]] = i
 	}
 	return &nametoidx
 }
