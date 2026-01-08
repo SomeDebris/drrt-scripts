@@ -38,8 +38,8 @@ const (
 	mlog_startRegexCaptureString       = `^\[START\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
 	mlog_shipRegexCaptureString        = `^\[SHIP\] fleet:\{([0-9]+)\} ship:\{(.*)\}$`
 	mlog_destructionRegexCaptureString = `^\[DESTRUCTION\] ship:\{(.*)\} fship:\{([0-9]*)\} destroyed:\{(.*)\} fdestroyed:\{([0-9]*)\}$`
-	mlog_resultRegexCaptureString      = `^\[RESULT\] fleet:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
-	mlog_survivalRegexCaptureString    = `^\[SURVIVAL\] faction:\{([0-9]+)\} ship:\{(.*)\}$`
+	mlog_resultRegexCaptureString      = `^\[RESULT\] faction:\{([0-9]+)\} name:\{(.*)\} DT:\{([0-9]*)\} DI:\{([0-9])*\} alive:\{([0-9]*)\}$`
+	mlog_survivalRegexCaptureString    = `^\[SURVIVAL\] fleet:\{([0-9]+)\} ship:\{(.*)\}$`
 	shipauthorRegexCaptureString  = `^(.+) \[by (.+)\]$`
 
 	qualsRedCaptureString  = `^Match ([0-9]+) - \^1The Red Alliance\^7$`
