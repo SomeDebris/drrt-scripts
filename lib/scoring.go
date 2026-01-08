@@ -11,18 +11,35 @@ import (
 )
 
 type DRRTShipStats struct {
-	Name                string  `json:"name"`
-	Author              string  `json:"author"`
-	RankPoints          float64 `json:"rps"`
-	NumberMatchesPlayed int     `json:"matchesPlayed"`
+	Name                string `json:"name"`
+	Author              string `json:"author"`
+	RankPoints          int    `json:"rps"`
+	NumberMatchesPlayed int    `json:"matchesPlayed"`
 	QualsSeed           int
-	Faction             int
-	P                   int
 	ShipData            *rsmships.Ship
 }
 
 func (m *DRRTShipStats) RankingScore() float64 {
-	return m.RankPoints / float64(m.NumberMatchesPlayed)
+	return float64(m.RankPoints) / float64(m.NumberMatchesPlayed)
+}
+
+// haha new all
+func NewDRRTShipStats(idx int, ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog) *DRRTShipStats {
+	var stats DRRTShipStats
+	stats.ShipData = ships[idx]
+	stats.Name = ships[idx].Data.Name
+	stats.Author = ships[idx].Data.Author
+	stats.QualsSeed = idx + 1
+	for _, mlog := range mlogs {
+		idxx := slices.Index(mlog.ShipIndices, idx)
+		if idxx <= -1 {
+			// ship not present in match
+			continue
+		}
+		stats.NumberMatchesPlayed++
+		stats.RankPoints += mlog.Record[idxx].RankPointsEarned
+	}
+	return &stats
 }
 
 type matchResult int
