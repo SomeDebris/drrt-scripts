@@ -27,13 +27,13 @@ var (
 )
 
 type MlogOverlayParse struct {
-	Ranks       []int
-	RankBoxes   []string
-	Names       []string
-	Authors     []string
-	RankPoints  []int
-	VictoryText []string
-	MatchNumber int
+	Ranks           []int
+	RankBoxes       []string
+	Names           []string
+	Authors         []string
+	RankPoints      []int
+	VictoryText     []string
+	MatchNumber     int
 	NextMatchNumber int
 }
 
@@ -48,9 +48,9 @@ func NewMlogOverlayParse(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTSt
 	out.RankPoints = make([]int, lastmlog.AllianceLength * 2)
 
 	if lastmlog.Record[0].Result == Loss {
-		out.VictoryText = []string{"LOSS", "VICTORY"}
+		out.VictoryText = []string{"LOSS", "VICTORY!"}
 	} else {
-		out.VictoryText = []string{"VICTORY", "LOSS"}
+		out.VictoryText = []string{"VICTORY!", "LOSS"}
 	}
 
 	out.MatchNumber = lastmlog.MatchNumber
@@ -148,7 +148,7 @@ func UpdateGame(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardMat
 	}
 }
 func UpdateVictory(ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
-	p := *NewMlogOverlayParse(ships, mlogs[len(mlogs)-1].ShipIndices, mlogs, ranks, false)
+	p := *NewMlogOverlayParse(ships, mlogs[len(mlogs)-1].ShipIndices, mlogs, ranks, true)
 	t, err := template.New("victory_TEMPLATE.html").ParseFiles(victory_template_path)
 	if err != nil {
 		slog.Error("Failed to parse template.", "err", err)
