@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"log/slog"
+	"strconv"
 
 	// "net/http"
 	"flag"
@@ -260,11 +261,17 @@ func updateMatchLogs(sheet *lib.DRRTDatasheet, ships []*rsmships.Ship, nametoidx
 func shipidxsfromSchedule(idx int, schedule [][]any) []int {
 	out := make([]int, len(schedule[idx]))
 	for i, val := range schedule[idx] {
-		p, ok := val.(int)
+		pstr, ok := val.(string)
 		if !ok {
+			slog.Error("Rank from sheets cannot be interpreted as string.", "pstr", pstr)
 			out[i] = 0
 		}
-		out[i] = p
+		p, err := strconv.Atoi(pstr)
+		if err != nil {
+			slog.Error("Rank from sheets cannot be parsed INTO an integer.", "err", err)
+			continue
+		}
+		out[i] = p - 1
 	}
 	return out
 }
