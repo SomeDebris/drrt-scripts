@@ -1,49 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- @font-face {{ -->
+<!-- @font-face { -->
 <!--     font-family: "Helvetica Bold Oblique"; -->
 <!--     font-weight: oblique; -->
 <!--     src: url("file://C:/Users/mags2/Downloads/HelveticaLTStd-BlkCondObl.otf"); -->
-<!-- }} -->
+<!-- } -->
 <style>
 
-@font-face {{
+@font-face {
     font-family: "Helvetica LT Std CORRECTED";
     font-style: normal;
     font-weight: oblique;
     src: url("file:///home/magnus/.local/share/fonts/HelveticaLTStd-BlkCond.otf");
     ascent-override: 90%;
-}}
+}
 
-@property --initial {{ }}
-@property --final {{ }}
+@property --initial { }
+@property --final { }
 
-@keyframes red-alliance-keyframes {{
-    0%, 45%, 100% {{
+@keyframes red-alliance-keyframes {
+    0%, 45%, 100% {
         left: var(--initial);
         opacity: 100%;
-    }}
+    }
 
-    50%, 95% {{
+    50%, 95% {
         left: var(--final);
         opacity: 0%;
-    }}
-}}
+    }
+}
 
-@keyframes blue-alliance-keyframes {{
-    0%, 45%, 100% {{
+@keyframes blue-alliance-keyframes {
+    0%, 45%, 100% {
         left: var(--final);
         opacity: 0%;
-    }}
+    }
 
-    50%, 95% {{
+    50%, 95% {
         left: var(--initial);
         opacity: 100%;
-    }}
-}}
+    }
+}
 
-.alliance {{
+.alliance {
     position: absolute;
     left: var(--initial);
     top: 226px;
@@ -57,20 +57,20 @@
     animation-duration: 20s;
     animation-iteration-count: infinite;
     animation-direction: normal;
-}}
+}
 
-.red-alliance {{
+.red-alliance {
     background-color: rgba(200, 0, 0, 0.5);
-}}
-.blue-alliance {{
+}
+.blue-alliance {
     animation-name: blue-alliance-keyframes;
     left: var(--final);
     opacity: 0%;
 
     background-color: rgba(0, 0, 200, 0.4);
-}}
+}
 
-body {{
+body {
     font-family: "Helvetica LT Std", sans-serif;
     background: black;
     color: white;
@@ -78,32 +78,32 @@ body {{
     
     --initial: 1520px;
     --final: 1920px;
-}}
+}
 
-div {{
+div {
     white-space: nowrap;
-}}
+}
 
 
-.alliance h1 {{
+.alliance h1 {
     grid-column-start: 1;
     grid-column-end: 3;
-}}
+}
 
-.alliance {{
+.alliance {
     // width: 400px;
 
     display: grid;
     grid-template-columns: 42px auto;
-}}
+}
 
-/*.red-alliance {{
+/*.red-alliance {
     position: absolute;
     top: 0; left: 0;
-}}*/
+}*/
 
 /* Font sizes may be set here*/
-.ship {{
+.ship {
     font-size: 19pt;
     overflow: hidden;
     display: grid;
@@ -111,24 +111,24 @@ div {{
     font-family: "Helvetica LT Std Cond Blk", "Helvetica LT Std", sans-serif;
     font-style: oblique;
     font-weight: bold;
-}}
+}
 
 
-h1 {{
+h1 {
     margin: 0px;
     margin-bottom: -4px;
     font-family: "Helvetica LT Std Cond Blk", "Helvetica LT Std", sans-serif;
     font-style: oblique;
     font-size: 24pt;
-}}
-.author {{
+}
+.author {
     font-size: 8pt;
     margin-top: -4px;
     font-style: normal;
     font-weight: bold;
-}}
+}
 
-.rank {{
+.rank {
     font-size: 19pt;
     padding: 0px;
 
@@ -144,79 +144,79 @@ h1 {{
     background-size: 36px 48px;
     background-repeat: no-repeat;
     background-position: center;
-}}
+}
 
-.name {{
+.name {
     white-space: nowrap;
     overflow: hidden;
-}}
+}
 
-.rps {{
+.rps {
     font-style: normal;
     display: flex;
     justify-content: end;
-}}
+}
 
-.member {{
+.member {
     overflow: hidden;
     margin-top: 7px;
     margin-bottom: 5px;
-}}
+}
 
-.scoot {{
+.scoot {
     margin-top: 6px;
-}}
+}
 
-.name span {{
+.name span {
     //overflow: hidden;
     display: inline-block;
-}}
+}
 
-.name .animate {{
+.name .animate {
     position: relative; 
     animation: leftright 6s infinite normal linear;
-}}
-@keyframes leftright {{
-    0%, 15% {{
+}
+@keyframes leftright {
+    0%, 15% {
         transform: translateX(0%);
         left: 0%;
-    }}
-    85%, 100% {{
+    }
+    85%, 100% {
         transform: translateX(-110%);
         left: 110%;
-    }}
-}}
+    }
+}
 
-.fader {{
+.fader {
   position: absolute;
   top: 0;
   height: 100%;
   width: 25px;
-}}
-.fader.fader-left {{
+}
+.fader.fader-left {
   left: 0;
   background: linear-gradient(to left, transparent, #56ab2f);
-}}
-.fader.fader-right {{
+}
+.fader.fader-right {
   right: 0;
   background: linear-gradient(to right, transparent, #56ab2f);
-}}
+}
 
-#rank_up_captain {{ background-image: url("Yellow_Up.png"); }}
-#rank_down_captain {{ background-image: url("Yellow_Down.png"); }}
-#rank_neutral_captain {{ background-image: url("Yellow_Middle.png"); }}
-#rank_up {{ background-image: url("White_Up.png"); }}
-#rank_down {{ background-image: url("White_Down.png"); }}
-#rank_neutral {{ background-image: url("White_Middle.png"); }}
+#rank_up_captain { background-image: url("Yellow_Up.png"); }
+#rank_down_captain { background-image: url("Yellow_Down.png"); }
+#rank_neutral_captain { background-image: url("Yellow_Middle.png"); }
+#rank_up { background-image: url("White_Up.png"); }
+#rank_down { background-image: url("White_Down.png"); }
+#rank_neutral { background-image: url("White_Middle.png"); }
 
 
-/*.wow {{
+/*.wow {
     font-family: "Helvetica LT Std CORRECTED", sans-serif;
     border: 1px solid white;
     text-align: center;
     padding: 0px 0px 0px 0px;
     width: 30px;
-}}*/
+}*/
 </style>
 <!-- <script type="text/javascript" src="http://livejs.com/live.js"></script> -->
 </head>
@@ -224,101 +224,101 @@ h1 {{
 <body>
 
     <div class="red-alliance alliance">
-        <h1>RED ALLIANCE {red_victory_txt}</h1>
+        <h1>RED ALLIANCE {{index .VictoryText 0}}</h1>
 
-        <div id="{rank_red1_box}" class="rank">
+        <div id="{{index .RanksBoxes 0}}" class="rank">
             <div class="scoot">
-                {rank_red1}
+                {{index .Ranks 0}}
             </div>
         </div>
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>{name_red1}</span>
+                    <span>{{index .Names 0}}</span>
                 </div>
-                <div class="rps">{rp_red1}</div>
+                <div class="rps">{{index .RankPoints 0}}</div>
             </div>
-            <div class="author">{author_red1}</div>
+            <div class="author">{{index .Authors 0}}</div>
         </div>
 
-        <div id="{rank_red2_box}" class="rank">
+        <div id="{{index .RankBoxes 1}}" class="rank">
             <div class="scoot">
-                {rank_red2}
+                {{index .Ranks 1}}
             </div>
         </div>
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>{name_red2}</span>
+                    <span>{{index .Names 1}}</span>
                 </div>
-                <div class="rps">{rp_red2}</div>
+                <div class="rps">{{index .RankPoints 1}}</div>
             </div>
-            <div class="author">{author_red2}</div>
+            <div class="author">{{index .Authors 1}}</div>
         </div>
 
-        <div id="{rank_red3_box}" class="rank">
+        <div id="{{index .RankBoxes 2}}" class="rank">
             <div class="scoot">
-                {rank_red3}
+                {{index .Ranks 2}}
             </div>
         </div>
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>{name_red3}</span>
+                    <span>{{index .Names 2}}</span>
                 </div>
-                <div class="rps">{rp_red3}</div>
+                <div class="rps">{{index .RankPoints 2}}</div>
             </div>
-            <div class="author">{author_red3}</div>
+            <div class="author">{{index .Authors 2}}</div>
         </div>
 
     </div>
 
     <div class="blue-alliance alliance">
-        <h1>BLUE ALLIANCE {blue_victory_txt}</h1>
+        <h1>BLUE ALLIANCE {{index .VictoryText 1}}</h1>
 
-        <div id="{rank_blue1_box}" class="rank">
+        <div id="{{index .RankBoxes 3}}" class="rank">
             <div class="scoot">
-                {rank_blue1}
+                {{index .Ranks 3}}
             </div>
         </div>
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>{name_blue1}</span>
+                    <span>{{index .Names 3}}</span>
                 </div>
-                <div class="rps">{rp_blue1}</div>
+                <div class="rps">{{index .RankPoints 3}}</div>
             </div>
-            <div class="author">{author_blue1}</div>
+            <div class="author">{{index .Authors 3}}</div>
         </div>
 
-        <div id="{rank_blue2_box}" class="rank">
+        <div id="{{index .RankBoxes 4}}" class="rank">
             <div class="scoot">
-                {rank_blue2}
+                {{index .Ranks 4}}
             </div>
         </div>
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>{name_blue2}</span>
+                    <span>{{index .Names 4}}</span>
                 </div>
-                <div class="rps">{rp_blue2}</div>
+                <div class="rps">{{index .RankPoints 4}}</div>
             </div>
-            <div class="author">{author_blue2}</div>
+            <div class="author">{{index .Authors 4}}</div>
         </div>
 
-        <div id="{rank_blue3_box}" class="rank">
+        <div id="{{index .RankBoxes 5}}" class="rank">
             <div class="scoot">
-                {rank_blue3}
+                {{index .Ranks 5}}
             </div>
         </div>
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>{name_blue3}</span>
+                    <span>{{index .Names 5}}</span>
                 </div>
-                <div class="rps">{rp_blue3}</div>
+                <div class="rps">{{index .RankPoints 5}}</div>
             </div>
-            <div class="author">{author_blue3}</div>
+            <div class="author">{{index .Authors 5}}</div>
         </div>
 
     </div>
@@ -326,11 +326,11 @@ h1 {{
     let container = document.querySelectorAll(".name");
     let text = document.querySelectorAll(".name span");
 
-    for (var i = 0; i < container.length; i++) {{
-        if (container[i].clientWidth < text[i].offsetWidth) {{
+    for (var i = 0; i < container.length; i++) {
+        if (container[i].clientWidth < text[i].offsetWidth) {
             text[i].classList.add("animate");
-        }}
-    }}
+        }
+    }
 
 </script>
 </body>
