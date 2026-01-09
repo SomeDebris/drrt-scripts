@@ -93,8 +93,8 @@ func (m *MatchSchedule) WriteScheduleToFileSurrogates(path string) error {
 
 
 func WriteMatchFleets(match DRRTStandardMatch, directory string) error {
-	redpath := filepath.Join(directory, Replacer_Out_Filename.Replace(fmt.Sprintf("%s_%s.json.gz", match.RedAlliance.Name, match.TournamentName)))
-	bluepath := filepath.Join(directory, Replacer_Out_Filename.Replace(fmt.Sprintf("%s_%s.json.gz", match.BlueAlliance.Name, match.TournamentName)))
+	redpath  := filepath.Join(directory, fmt.Sprintf("%s_%s.json.gz", Replacer_Out_Filename.Replace(match.RedAlliance.Name),  Replacer_Out_Filename.Replace(match.TournamentName)))
+	bluepath := filepath.Join(directory, fmt.Sprintf("%s_%s.json.gz", Replacer_Out_Filename.Replace(match.BlueAlliance.Name), Replacer_Out_Filename.Replace(match.TournamentName)))
 
 	err := rsmships.MarshalFleetToFileGzip(redpath, match.RedAlliance)
 	if err != nil {
