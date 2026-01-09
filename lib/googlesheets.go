@@ -25,6 +25,7 @@ const (
 	RANGE_MATCH_SCHEDULE = `Calc!A1:F`
 	RANGE_SHIP_ENTRY     = `Ships!A2:B`
 	RANGE_DATA_ENTRY     = `DATA_ENTRY!A2:K`
+	RANGE_RANKS          = `Ranks!A2:B`
 )
 
 var DatasheetService *sheets.Service = nil
@@ -34,16 +35,18 @@ type DRRTDatasheet struct {
 	MatchScheduleRange string          `json:"matchScheduleRange,omitempty"`
 	ShipEntryRange     string          `json:"shipEntryRange,omitempty"`
 	LogRange           string          `json:"logRange"`
+	RanksRange         string          `json:"ranksRange"`
 	Service            *sheets.Service `json:"-"`
 }
 // TODO: add function for marshalling this to JSON
 
-func NewDRRTDatasheet(id string, matchschedulerange string, shipentryrange string, logrange string) *DRRTDatasheet {
+func NewDRRTDatasheet(id, matchschedulerange, shipentryrange, logrange, ranksrange string) *DRRTDatasheet {
 	p := new(DRRTDatasheet)
 	p.Id = id
 	p.MatchScheduleRange = matchschedulerange
 	p.ShipEntryRange = shipentryrange
 	p.LogRange = logrange
+	p.RanksRange = ranksrange
 	srv, err := getSheetsService()
 	if err != nil {
 		slog.Warn("Failed to get google sheets service. Cannot assign value to this field.", "err", err)
@@ -54,7 +57,7 @@ func NewDRRTDatasheet(id string, matchschedulerange string, shipentryrange strin
 }
 
 func NewDRRTDatasheetDefaults() *DRRTDatasheet {
-	return NewDRRTDatasheet(DRRT_SPREADSHEET_ID, RANGE_MATCH_SCHEDULE, RANGE_SHIP_ENTRY, RANGE_DATA_ENTRY)
+	return NewDRRTDatasheet(DRRT_SPREADSHEET_ID, RANGE_MATCH_SCHEDULE, RANGE_SHIP_ENTRY, RANGE_DATA_ENTRY, RANGE_RANKS)
 }
 
 
@@ -289,3 +292,29 @@ func (m *DRRTDatasheet) GetMatchSheduleValues() ([][]any, error) {
 	slog.Info("Got match schedule from sheet.", "rangerecieved", vals.Range, "HTTPStatusCode", vals.ServerResponse.HTTPStatusCode, "scheduleLength", len(schedule))
 	return schedule, nil
 }
+
+func (m *DRRTDatasheet) GetRanks() (map[string]int, error) {
+	out := make(map[string]int)
+	vals, err := m.GetValues(m.RanksRange)
+	if err != nil {
+		slog.Error("Error getting ranks range from DRRT Datasheet.", "err", err)
+		return out, err
+	}
+	rankname := vals.Values
+	slog.Info("Got ranks from sheet.", "rangerecieved", vals.Range, "HTTPStatusCode", vals.ServerResponse.HTTPStatusCode, "ranknameLength", len(rankname))
+	for _, row := range rankname {
+		rankint, ok := row[0].(int)
+		if !ok {
+			slog.Warn("Rank from sheets cannot be interpreted as integer.", "rank", row[0])
+			continue
+		}
+		name, ok := row[1].(string)
+		if !ok {
+			slog.Warn("name from sheets cannot be interpreted as string.", "rank", row[0])
+			continue
+		}
+		out[name] = rankint
+	}
+	return out, nil
+}
+
