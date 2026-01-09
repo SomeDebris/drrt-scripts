@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"slices"
+	"strconv"
 
 	"github.com/SomeDebris/rsmships-go"
 	"golang.org/x/oauth2"
@@ -303,9 +304,14 @@ func (m *DRRTDatasheet) GetRanks() (map[string]int, error) {
 	rankname := vals.Values
 	slog.Info("Got ranks from sheet.", "rangerecieved", vals.Range, "HTTPStatusCode", vals.ServerResponse.HTTPStatusCode, "ranknameLength", len(rankname))
 	for _, row := range rankname {
-		rankint, ok := row[0].(int)
+		rankstr, ok := row[0].(string)
 		if !ok {
 			slog.Warn("Rank from sheets cannot be interpreted as integer.", "rank", row[0])
+			continue
+		}
+		rankint, err := strconv.Atoi(rankstr)
+		if err != nil {
+			slog.Error("Rank from sheets cannot be parsed INTO an integer.", "err", err)
 			continue
 		}
 		name, ok := row[1].(string)
