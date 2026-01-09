@@ -130,12 +130,12 @@ func main() {
 
 	// TODO: use the lib.MatchSchedule type
 	// get ship indices of the match schedule from google sheets. This is uploaded by the Scheduler.
-	// scheduleindices, err := drrtdatasheet.GetMatchSheduleValues()
-	// if err != nil {
-	// 	slog.Error("Failed to get match schdule.", "err", err)
-	// 	exit_code = 1
-	// 	return
-	// }
+	scheduleindices, err := drrtdatasheet.GetMatchSheduleValues()
+	if err != nil {
+		slog.Error("Failed to get match schdule.", "err", err)
+		exit_code = 1
+		return
+	}
 //
 	// TODO: slap this in a function to reduce repeated code
 	// get a slice comprising paths to all ships
@@ -163,9 +163,16 @@ func main() {
 	unmarshal_wait_group.Wait()
 
 	nametoidx := lib.GetShipIdxFacMap(ships)
-	err = updateMatchLogs(drrtdatasheet, ships, nametoidx)
+	mlogs, err := updateMatchLogs(drrtdatasheet, ships, nametoidx)
 	if err != nil {
 		slog.Error("Failed to update match logs for the first time.", "err", err)
+		exit_code = 1
+		return
+	}
+		
+	ranks, err := drrtdatasheet.GetRanks()
+	if err != nil {
+		slog.Error("Failed to get ranks.", "err", err)
 		exit_code = 1
 		return
 	}
@@ -184,10 +191,17 @@ func main() {
 		switch data {
 		case pipecmd_reload:
 			fmt.Println(lib.ANSI_BOLD + lib.ANSI_OKGREEN + "Got command: \"" + data + "\"" + lib.ANSI_RESET)
-			err = updateMatchLogs(drrtdatasheet, ships, nametoidx)
+			mlogs, err = updateMatchLogs(drrtdatasheet, ships, nametoidx)
 			if err != nil {
 				slog.Error("Failed to update match logs.", "err", err)
 			}
+			ranks, err = drrtdatasheet.GetRanks()
+			if err != nil {
+				slog.Error("Failed to get ranks.", "err", err)
+			}
+			lib.UpdateNextUp(ships, shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices), mlogs, ranks)
+			lib.UpdateGame(ships, shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices), mlogs, ranks)
+			lib.UpdateVictory(ships, mlogs, ranks)
 		case pipecmd_stop:
 			fmt.Println(lib.ANSI_BOLD + lib.ANSI_RED + "Got command: \"" + data + "\"" + lib.ANSI_RESET)
 			break OuterLoop
@@ -198,11 +212,11 @@ func main() {
 	slog.Info("Done!")
 }
 
-func updateMatchLogs(sheet *lib.DRRTDatasheet, ships []*rsmships.Ship, nametoidx *map[string]int) error {
+func updateMatchLogs(sheet *lib.DRRTDatasheet, ships []*rsmships.Ship, nametoidx *map[string]int) ([]*lib.DRRTStandardMatchLog, error) {
 	mlogsraw, err := lib.ReadMlogRawsFromPath("/home/magnus/.local/share/Reassembly/data")
 	if err != nil {
 		slog.Error("Error while reading match logs.", "err", err)
-		return err
+		return nil, err
 	}
 	// get DRRTStandardMatchLogs
 	var stdMatchLogs []*lib.DRRTStandardMatchLog
@@ -237,8 +251,20 @@ func updateMatchLogs(sheet *lib.DRRTDatasheet, ships []*rsmships.Ship, nametoidx
 	_, err = sheet.UpdateMatchLogs(stdMatchLogs)
 	if err != nil {
 		slog.Error("Error updating match logs in spreadsheet.", "err", err)
-		return err
+		return stdMatchLogs, err
 	}
 
-	return nil
+	return stdMatchLogs, nil
+}
+
+func shipidxsfromSchedule(idx int, schedule [][]any) []int {
+	out := make([]int, len(schedule[idx]))
+	for i, val := range schedule[idx] {
+		p, ok := val.(int)
+		if !ok {
+			out[i] = 0
+		}
+		out[i] = p
+	}
+	return out
 }
