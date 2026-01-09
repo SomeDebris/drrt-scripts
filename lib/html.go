@@ -1,8 +1,11 @@
 package lib
 
 import (
+	"bufio"
 	"cmp"
+	"html/template"
 	"log/slog"
+	"os"
 	"path/filepath"
 
 	"github.com/SomeDebris/rsmships-go"
@@ -30,10 +33,12 @@ type MlogOverlayParse struct {
 	Authors     []string
 	RankPoints  []int
 	VictoryText []string
+	MatchNumber int
+	NextMatchNumber int
 }
 
 // disgusting
-func NewMlogOverlayParse(ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog, ranks map[string]int, showrankdelta bool) *MlogOverlayParse {
+func NewMlogOverlayParse(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int, showrankdelta bool) *MlogOverlayParse {
 	var out MlogOverlayParse
 	lastmlog := mlogs[len(mlogs)-1]
 	out.Ranks      = make([]int, lastmlog.AllianceLength * 2)
@@ -48,8 +53,12 @@ func NewMlogOverlayParse(ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog, 
 		out.VictoryText = []string{"VICTORY", "LOSS"}
 	}
 
+	out.MatchNumber = lastmlog.MatchNumber
+	out.NextMatchNumber = lastmlog.MatchNumber + 1
 
-	for i, ship := range lastmlog.Ships {
+
+	for i, idx := range shipidxs {
+		ship := ships[idx]
 		out.Names[i] = ShipAuthorFromCommonNamefmt(ship.Data.Name)[0]
 		out.Authors[i] = ship.Data.Author
 		rank, ok := ranks[out.Names[i]]
@@ -96,4 +105,65 @@ func NewMlogOverlayParse(ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog, 
 	}
 
 	return &out
+}
+
+func UpdateNextUp(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
+	p := NewMlogOverlayParse(ships, shipidxs, mlogs, ranks, false)
+	t, err := template.New("next").ParseFiles(next_template_path)
+	if err != nil {
+		slog.Error("Failed to parse template.", "err", err)
+	}
+	outfile, err := os.Open(filepath.Join("html", "next.html"))
+	if err != nil {
+		slog.Error("Failed to open template output file", "err", err)
+	}
+	defer outfile.Close()
+
+	writer := bufio.NewWriter(outfile)
+	defer writer.Flush()
+
+	err = t.Execute(writer, p)
+	if err != nil {
+		slog.Error("Failed to save template output", "err", err)
+	}
+}
+func UpdateGame(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
+	p := NewMlogOverlayParse(ships, shipidxs, mlogs, ranks, false)
+	t, err := template.New("game").ParseFiles(next_template_path)
+	if err != nil {
+		slog.Error("Failed to parse template.", "err", err)
+	}
+	outfile, err := os.Open(filepath.Join("html", "game.html"))
+	if err != nil {
+		slog.Error("Failed to open template output file", "err", err)
+	}
+	defer outfile.Close()
+
+	writer := bufio.NewWriter(outfile)
+	defer writer.Flush()
+
+	err = t.Execute(writer, p)
+	if err != nil {
+		slog.Error("Failed to save template output", "err", err)
+	}
+}
+func UpdateVictory(ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
+	p := NewMlogOverlayParse(ships, mlogs[len(mlogs)-1].ShipIndices, mlogs, ranks, false)
+	t, err := template.New("game").ParseFiles(next_template_path)
+	if err != nil {
+		slog.Error("Failed to parse template.", "err", err)
+	}
+	outfile, err := os.Open(filepath.Join("html", "victory.html"))
+	if err != nil {
+		slog.Error("Failed to open template output file", "err", err)
+	}
+	defer outfile.Close()
+
+	writer := bufio.NewWriter(outfile)
+	defer writer.Flush()
+
+	err = t.Execute(writer, p)
+	if err != nil {
+		slog.Error("Failed to save template output", "err", err)
+	}
 }
