@@ -129,7 +129,7 @@ func UpdateNextUp(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardM
 }
 func UpdateGame(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
 	p := NewMlogOverlayParse(ships, shipidxs, mlogs, ranks, false)
-	t, err := template.New("game").ParseFiles(next_template_path)
+	t, err := template.New("game").ParseFiles(game_template_path)
 	if err != nil {
 		slog.Error("Failed to parse template.", "err", err)
 	}
@@ -149,7 +149,7 @@ func UpdateGame(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardMat
 }
 func UpdateVictory(ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
 	p := NewMlogOverlayParse(ships, mlogs[len(mlogs)-1].ShipIndices, mlogs, ranks, false)
-	t, err := template.New("game").ParseFiles(next_template_path)
+	t, err := template.New("victory").ParseFiles(victory_template_path)
 	if err != nil {
 		slog.Error("Failed to parse template.", "err", err)
 	}
