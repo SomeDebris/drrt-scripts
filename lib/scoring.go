@@ -80,7 +80,7 @@ func (m *matchPerformance) scoreLoss() {
 }
 
 func (m *matchPerformance) toSheetsRow() []any {
-	output := make([]any, 8)
+	output := make([]any, 9)
 	output[0] = m.Ship.Data.Name
 	output[1] = m.Destructions
 	output[2] = m.RankPointsEarned
@@ -103,6 +103,7 @@ func (m *matchPerformance) toSheetsRow() []any {
 		output[6] = 0
 	}
 	output[7] = m.Match
+	output[8] = m.Faction
 	return output
 }
 

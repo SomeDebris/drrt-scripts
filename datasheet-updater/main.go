@@ -34,6 +34,7 @@ const (
 	pipecmd_stop   = `stop`
 )
 
+
 // func getShipIndexFromName(name string, ships []*rsmships.Ship) int {
 // 	for i, ship := range ships {
 // 		ship_nameauthor := lib.ShipAuthorFromCommonNamefmt(ship.Data.Name)
@@ -106,6 +107,7 @@ func main() {
 
 	drrt_directory_arg := flag.String("drrt-directory", "/home/magnus/Documents/reassembly_ships/tournaments/DRRT/2026 Winter DRRT", "Set the directory the DRRT will be run in.")
 	log_file_name := flag.String("log-filename", "", "Send log messages to a file. If not set, log to standard error.")
+	pipewatch_arg := flag.String("pipe", lib.DRRT_MLOG_SIGNAL_PIPE_PATH, "Send log messages to a file. If not set, log to standard error.")
 	flag.Parse()
 	ships_directory := filepath.Join(*drrt_directory_arg, "Ships")
 
@@ -164,34 +166,29 @@ func main() {
 	unmarshal_wait_group.Wait()
 
 	nametoidx := lib.GetShipIdxFacMap(ships)
-	mlogs, err := updateMatchLogs(drrtdatasheet, ships, nametoidx)
-	if err != nil {
-		slog.Error("Failed to update match logs for the first time.", "err", err)
-		exit_code = 1
-		return
-	}
+	// mlogs, err := updateMatchLogs(drrtdatasheet, ships, nametoidx)
+	// if err != nil {
+	// 	slog.Error("Failed to update match logs for the first time.", "err", err)
+	// }
 		
-	ranks, err := drrtdatasheet.GetRanks()
-	if err != nil {
-		slog.Error("Failed to get ranks.", "err", err)
-		exit_code = 1
-		return
-	}
+
+	var mlogs []*lib.DRRTStandardMatchLog
+	ranks := make(map[string]int)
 	
 	// ASSUMPTION: you're running quals
 	// and you've already run the scheduler
 	OuterLoop:
 	for {
 		fmt.Println(lib.ANSI_BOLD + lib.ANSI_OKGREEN + "Waiting on pipe." + lib.ANSI_RESET)
-		data, err := lib.ReadDRRTMlogPipe("/tmp/drrt_mlog_signal_pipe")
+		data, err := lib.ReadDRRTMlogPipe(*pipewatch_arg)
 		if err != nil {
 			slog.Error("Encountered error reading mlog signal pipe.", "err", err)
 			exit_code = 1
 			return
 		}
+		fmt.Println(lib.ANSI_BOLD + lib.ANSI_OKGREEN + "Got command: \"" + data + "\"" + lib.ANSI_RESET)
 		switch data {
 		case pipecmd_reload:
-			fmt.Println(lib.ANSI_BOLD + lib.ANSI_OKGREEN + "Got command: \"" + data + "\"" + lib.ANSI_RESET)
 			mlogs, err = updateMatchLogs(drrtdatasheet, ships, nametoidx)
 			if err != nil {
 				slog.Error("Failed to update match logs.", "err", err)
@@ -204,8 +201,10 @@ func main() {
 			lib.UpdateGame(ships, shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices), mlogs, ranks)
 			lib.UpdateVictory(ships, mlogs, ranks)
 		case pipecmd_stop:
-			fmt.Println(lib.ANSI_BOLD + lib.ANSI_RED + "Got command: \"" + data + "\"" + lib.ANSI_RESET)
+			fmt.Println(lib.ANSI_BOLD + lib.ANSI_WHITE + "Stopping." + lib.ANSI_RESET)
 			break OuterLoop
+		default:
+			fmt.Println(lib.ANSI_BOLD + lib.ANSI_FAIL + "Command \"" + data + "\" is not known." + lib.ANSI_RESET)
 		}
 		
 	}
@@ -213,6 +212,7 @@ func main() {
 	slog.Info("Done!")
 }
 
+// Returns the latest list of match logs and uploads them to the sheet
 func updateMatchLogs(sheet *lib.DRRTDatasheet, ships []*rsmships.Ship, nametoidx *map[string]int) ([]*lib.DRRTStandardMatchLog, error) {
 	mlogsraw, err := lib.ReadMlogRawsFromPath("/home/magnus/.local/share/Reassembly/data")
 	if err != nil {
