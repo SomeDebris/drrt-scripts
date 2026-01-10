@@ -126,7 +126,6 @@ func main() {
 	defer logfile.Close()
 	if log_writer_ref != nil {
 		logwriter := log_writer_ref
-		fmt.Printf("Yeah, uh, you are flushed.")
 		defer (*logwriter).Flush()
 	}
 
@@ -195,6 +194,7 @@ func main() {
 		fmt.Println(lib.ANSI_BOLD + lib.ANSI_OKGREEN + "Got command: \"" + data + "\"" + lib.ANSI_RESET)
 		switch data {
 		case pipecmd_reload:
+			slog.Info("Recieved Reload command", "pipecmd", data)
 			mlogs, err = updateMatchLogs(*mlog_dir_arg, drrtdatasheet, ships, nametoidx)
 			if err != nil {
 				slog.Error("Failed to update match logs.", "err", err)
@@ -207,13 +207,15 @@ func main() {
 			lib.UpdateNextUpQualifications(*nextupSavePath, ships, nextidxs, mlogs, ranks)
 			lib.UpdateGameQualifications(*gameSavePath, ships, nextidxs, mlogs, ranks)
 			lib.UpdateVictoryQualifications(*victorySavePath, ships, mlogs, ranks)
+			slog.Info("Saved html templates", "pipecmd", data)
 		case pipecmd_stop:
 			fmt.Println(lib.ANSI_BOLD + lib.ANSI_WHITE + "Stopping." + lib.ANSI_RESET)
+			slog.Info("Recieved stop command", "pipecmd", data)
 			break OuterLoop
 		default:
 			fmt.Println(lib.ANSI_BOLD + lib.ANSI_FAIL + "Command \"" + data + "\" is not known." + lib.ANSI_RESET)
 		}
-		
+		(*log_writer_ref).Flush()
 	}
 
 	slog.Info("Done!")

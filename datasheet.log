@@ -1,0 +1,543 @@
+time=2026-01-09T17:58:04.817-08:00 level=INFO msg="Got match schedule from sheet." rangerecieved=Calc!A1:F1000 HTTPStatusCode=200 scheduleLength=45
+time=2026-01-09T17:58:04.817-08:00 level=INFO msg="Found paths for ship files." count=27
+time=2026-01-09T17:58:04.821-08:00 level=INFO msg="Unmarshalled ship" name=Nanite author=Kepler idx=9
+time=2026-01-09T17:58:04.825-08:00 level=INFO msg="Unmarshalled ship" name=Anthill author=Ribbons0121R121 idx=27
+time=2026-01-09T17:58:04.825-08:00 level=INFO msg="Unmarshalled ship" name="With Protection" author=ImperiX idx=20
+time=2026-01-09T17:58:04.825-08:00 level=INFO msg="Unmarshalled ship" name="Big Iron 2.1" author=Dukeslayer idx=18
+time=2026-01-09T17:58:04.825-08:00 level=INFO msg="Unmarshalled ship from fleet." name=F-DRIVER author=YenYu idx=14 fleet.Name="F-DRIVER [by YenYu]"
+time=2026-01-09T17:58:04.825-08:00 level=INFO msg="Unmarshalled ship" name=Torrent author=ImperiX idx=21
+time=2026-01-09T17:58:04.826-08:00 level=INFO msg="Unmarshalled ship" name=Frostlite author=Dalrethliant idx=12
+time=2026-01-09T17:58:04.826-08:00 level=INFO msg="Unmarshalled ship" name="The Long Try" author=Dukeslayer idx=26
+time=2026-01-09T17:58:04.826-08:00 level=INFO msg="Unmarshalled ship" name="Luexks: The Good Guy" author=Luexks idx=17
+time=2026-01-09T17:58:04.826-08:00 level=INFO msg="Unmarshalled ship" name="The Throngler" author=Dazlezle idx=15
+time=2026-01-09T17:58:04.827-08:00 level=INFO msg="Unmarshalled ship from fleet." name=Harassment author=sumplkrum idx=2 fleet.Name="Harassment [by sumplkrum]"
+time=2026-01-09T17:58:04.827-08:00 level=INFO msg="Unmarshalled ship" name="Octal v2.3" author="Debris Field" idx=7
+time=2026-01-09T17:58:04.827-08:00 level=INFO msg="Unmarshalled ship" name="Ignorance is Wisdom" author=MonsPubis idx=6
+time=2026-01-09T17:58:04.827-08:00 level=INFO msg="Unmarshalled ship" name="Muninn M7" author=YenYu idx=13
+time=2026-01-09T17:58:04.827-08:00 level=INFO msg="Unmarshalled ship" name=Malefique author=Lucifer idx=25
+time=2026-01-09T17:58:04.828-08:00 level=INFO msg="Unmarshalled ship" name="PHLASH Aniti-Kiter" author="joyous eighteen" idx=24
+time=2026-01-09T17:58:04.828-08:00 level=INFO msg="Unmarshalled ship" name="Funny Hah Hah" author=Kepler idx=8
+time=2026-01-09T17:58:04.829-08:00 level=INFO msg="Unmarshalled ship" name="Lucid Dreamer" author=Dalrethliant idx=11
+time=2026-01-09T17:58:04.830-08:00 level=INFO msg="Unmarshalled ship" name=De-Trident author=Bluefish1818 idx=19
+time=2026-01-09T17:58:04.830-08:00 level=INFO msg="Unmarshalled ship" name=Avarice author=Lucifer idx=22
+time=2026-01-09T17:58:04.831-08:00 level=INFO msg="Unmarshalled ship" name="Sword of Milos" author=MonsPubis idx=5
+time=2026-01-09T17:58:04.831-08:00 level=INFO msg="Unmarshalled ship" name="Luexks: The Bad Guy" author=Luexks idx=16
+time=2026-01-09T17:58:04.831-08:00 level=INFO msg="Unmarshalled ship" name="Omni-Directional Carrier" author=XDERP7 idx=4
+time=2026-01-09T17:58:04.832-08:00 level=INFO msg="Unmarshalled ship" name="Lethal Kinetics 4 - Uncompleted Heretic" author=Splinter idx=23
+time=2026-01-09T17:58:04.834-08:00 level=INFO msg="Unmarshalled ship" name="Mandelbrot's Interceptor" author=Bluefish1818 idx=10
+time=2026-01-09T17:58:04.835-08:00 level=INFO msg="Unmarshalled ship" name=Diabol author="Lucifer and Kaboom!" idx=3
+time=2026-01-09T17:58:04.836-08:00 level=INFO msg="Unmarshalled ship" name=SprayHazzard author=sumplkrum idx=1
+time=2026-01-09T17:58:04.836-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Recieved Reload command" pipecmd=reload
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt idx=1
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt idx=16
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt idx=14
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt idx=6
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt idx=22
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt idx=3
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt idx=10
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt idx=18
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt idx=20
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt idx=8
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt idx=19
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt idx=9
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt idx=0
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt idx=2
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt idx=12
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt idx=11
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt idx=15
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt idx=7
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt idx=21
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt idx=13
+time=2026-01-09T17:58:08.120-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt idx=17
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt idx=4
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt idx=5
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt matchNumber=15
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt matchNumber=10
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt matchNumber=12
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt matchNumber=2
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt matchNumber=5
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt matchNumber=18
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt matchNumber=7
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt matchNumber=1
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt matchNumber=8
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt matchNumber=19
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt matchNumber=21
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt matchNumber=3
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt matchNumber=13
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt matchNumber=20
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt matchNumber=11
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt matchNumber=16
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt matchNumber=4
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt matchNumber=17
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt matchNumber=22
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt matchNumber=6
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt matchNumber=14
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt matchNumber=9
+time=2026-01-09T17:58:08.121-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt matchNumber=23
+time=2026-01-09T17:58:08.701-08:00 level=INFO msg="Got ranks from sheet." rangerecieved=Ranks!A2:B1000 HTTPStatusCode=200 ranknameLength=27
+time=2026-01-09T17:58:08.703-08:00 level=INFO msg="Saved html templates" pipecmd=reload
+time=2026-01-09T17:58:08.703-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Recieved Reload command" pipecmd=reload
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt idx=22
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt idx=11
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt idx=0
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt idx=1
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt idx=6
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt idx=13
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt idx=8
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt idx=9
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt idx=14
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt idx=20
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt idx=15
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt idx=10
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt idx=16
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt idx=3
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt idx=19
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt idx=12
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt idx=2
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt idx=17
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt idx=4
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt idx=21
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt idx=7
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt idx=5
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt idx=18
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt matchNumber=15
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt matchNumber=10
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt matchNumber=12
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt matchNumber=2
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt matchNumber=5
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt matchNumber=18
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt matchNumber=7
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt matchNumber=1
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt matchNumber=8
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt matchNumber=19
+time=2026-01-09T17:58:25.472-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt matchNumber=21
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt matchNumber=3
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt matchNumber=13
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt matchNumber=20
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt matchNumber=11
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt matchNumber=16
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt matchNumber=4
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt matchNumber=17
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt matchNumber=22
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt matchNumber=6
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt matchNumber=14
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt matchNumber=9
+time=2026-01-09T17:58:25.473-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt matchNumber=23
+time=2026-01-09T17:58:26.007-08:00 level=INFO msg="Got ranks from sheet." rangerecieved=Ranks!A2:B1000 HTTPStatusCode=200 ranknameLength=27
+time=2026-01-09T17:58:26.008-08:00 level=INFO msg="Saved html templates" pipecmd=reload
+time=2026-01-09T17:58:26.008-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Recieved Reload command" pipecmd=reload
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt idx=2
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt idx=0
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt idx=18
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt idx=1
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt idx=12
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt idx=17
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt idx=22
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt idx=13
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt idx=15
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt idx=20
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt idx=21
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt idx=16
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt idx=7
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt idx=4
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt idx=3
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt idx=10
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt idx=19
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt idx=8
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt idx=14
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt idx=11
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt idx=5
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt idx=6
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt idx=9
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt matchNumber=15
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt matchNumber=10
+time=2026-01-09T17:58:30.080-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt matchNumber=12
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt matchNumber=2
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt matchNumber=5
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt matchNumber=18
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt matchNumber=7
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt matchNumber=1
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt matchNumber=8
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt matchNumber=19
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt matchNumber=21
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt matchNumber=3
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt matchNumber=13
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt matchNumber=20
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt matchNumber=11
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt matchNumber=16
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt matchNumber=4
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt matchNumber=17
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt matchNumber=22
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt matchNumber=6
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt matchNumber=14
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt matchNumber=9
+time=2026-01-09T17:58:30.081-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt matchNumber=23
+time=2026-01-09T17:58:30.625-08:00 level=INFO msg="Got ranks from sheet." rangerecieved=Ranks!A2:B1000 HTTPStatusCode=200 ranknameLength=27
+time=2026-01-09T17:58:30.625-08:00 level=INFO msg="Saved html templates" pipecmd=reload
+time=2026-01-09T17:58:30.626-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Recieved Reload command" pipecmd=reload
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt idx=0
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt idx=2
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt idx=4
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt idx=22
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt idx=3
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt idx=1
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt idx=13
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt idx=15
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt idx=17
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt idx=8
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt idx=14
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt idx=21
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt idx=20
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt idx=19
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt idx=10
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt idx=11
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt idx=18
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt idx=7
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt idx=12
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt idx=5
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt idx=16
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt idx=9
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt idx=6
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt matchNumber=15
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt matchNumber=10
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt matchNumber=12
+time=2026-01-09T17:58:32.304-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt matchNumber=2
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt matchNumber=5
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt matchNumber=18
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt matchNumber=7
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt matchNumber=1
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt matchNumber=8
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt matchNumber=19
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt matchNumber=21
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt matchNumber=3
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt matchNumber=13
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt matchNumber=20
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt matchNumber=11
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt matchNumber=16
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt matchNumber=4
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt matchNumber=17
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt matchNumber=22
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt matchNumber=6
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt matchNumber=14
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt matchNumber=9
+time=2026-01-09T17:58:32.305-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt matchNumber=23
+time=2026-01-09T17:58:32.800-08:00 level=INFO msg="Got ranks from sheet." rangerecieved=Ranks!A2:B1000 HTTPStatusCode=200 ranknameLength=27
+time=2026-01-09T17:58:32.802-08:00 level=INFO msg="Saved html templates" pipecmd=reload
+time=2026-01-09T17:58:32.802-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Recieved Reload command" pipecmd=reload
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt idx=0
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt idx=22
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt idx=2
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt idx=1
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt idx=17
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt idx=12
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt idx=20
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt idx=21
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt idx=14
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt idx=19
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt idx=7
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt idx=9
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt idx=4
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt idx=18
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt idx=15
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt idx=10
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt idx=13
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt idx=11
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt idx=16
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt idx=5
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt idx=8
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt idx=3
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt idx=6
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt matchNumber=15
+time=2026-01-09T17:58:34.584-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt matchNumber=10
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt matchNumber=12
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt matchNumber=2
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt matchNumber=5
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt matchNumber=18
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt matchNumber=7
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt matchNumber=1
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt matchNumber=8
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt matchNumber=19
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt matchNumber=21
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt matchNumber=3
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt matchNumber=13
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt matchNumber=20
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt matchNumber=11
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt matchNumber=16
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt matchNumber=4
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt matchNumber=17
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt matchNumber=22
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt matchNumber=6
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt matchNumber=14
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt matchNumber=9
+time=2026-01-09T17:58:34.585-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt matchNumber=23
+time=2026-01-09T17:58:35.146-08:00 level=INFO msg="Got ranks from sheet." rangerecieved=Ranks!A2:B1000 HTTPStatusCode=200 ranknameLength=27
+time=2026-01-09T17:58:35.147-08:00 level=INFO msg="Saved html templates" pipecmd=reload
+time=2026-01-09T17:58:35.147-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Recieved Reload command" pipecmd=reload
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt idx=1
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt idx=6
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt idx=22
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt idx=0
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt idx=13
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt idx=7
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt idx=12
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt idx=9
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt idx=11
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt idx=5
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt idx=2
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt idx=3
+time=2026-01-09T17:58:35.792-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt idx=18
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt idx=4
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt idx=10
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt idx=16
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt idx=20
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt idx=21
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt idx=17
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt idx=14
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt idx=15
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt idx=8
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt idx=19
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt matchNumber=15
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt matchNumber=10
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt matchNumber=12
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt matchNumber=2
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt matchNumber=5
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt matchNumber=18
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt matchNumber=7
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt matchNumber=1
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt matchNumber=8
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt matchNumber=19
+time=2026-01-09T17:58:35.793-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt matchNumber=21
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt matchNumber=3
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt matchNumber=13
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt matchNumber=20
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt matchNumber=11
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt matchNumber=16
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt matchNumber=4
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt matchNumber=17
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt matchNumber=22
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt matchNumber=6
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt matchNumber=14
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt matchNumber=9
+time=2026-01-09T17:58:35.794-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt matchNumber=23
+time=2026-01-09T17:58:36.290-08:00 level=INFO msg="Got ranks from sheet." rangerecieved=Ranks!A2:B1000 HTTPStatusCode=200 ranknameLength=27
+time=2026-01-09T17:58:36.291-08:00 level=INFO msg="Saved html templates" pipecmd=reload
+time=2026-01-09T17:58:36.291-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Recieved Reload command" pipecmd=reload
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt idx=22
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt idx=1
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt idx=5
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt idx=7
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt idx=14
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt idx=0
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt idx=10
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt idx=2
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt idx=8
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt idx=3
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt idx=15
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt idx=6
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt idx=4
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt idx=12
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt idx=9
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt idx=13
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt idx=11
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt idx=18
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt idx=20
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt idx=16
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt idx=17
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt idx=21
+time=2026-01-09T17:58:36.544-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt idx=19
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt matchNumber=15
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt matchNumber=10
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt matchNumber=12
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt matchNumber=2
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt matchNumber=5
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt matchNumber=18
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt matchNumber=7
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt matchNumber=1
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt matchNumber=8
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt matchNumber=19
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt matchNumber=21
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt matchNumber=3
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt matchNumber=13
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt matchNumber=20
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt matchNumber=11
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt matchNumber=16
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt matchNumber=4
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt matchNumber=17
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt matchNumber=22
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt matchNumber=6
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt matchNumber=14
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt matchNumber=9
+time=2026-01-09T17:58:36.545-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt matchNumber=23
+time=2026-01-09T17:58:37.118-08:00 level=INFO msg="Got ranks from sheet." rangerecieved=Ranks!A2:B1000 HTTPStatusCode=200 ranknameLength=27
+time=2026-01-09T17:58:37.119-08:00 level=INFO msg="Saved html templates" pipecmd=reload
+time=2026-01-09T17:58:37.119-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:37.400-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:37.400-08:00 level=INFO msg="Recieved Reload command" pipecmd=reload
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt idx=8
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt idx=1
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt idx=4
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt idx=7
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt idx=0
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt idx=5
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt idx=6
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt idx=15
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt idx=20
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt idx=21
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt idx=3
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt idx=2
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt idx=13
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt idx=19
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt idx=22
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt idx=17
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt idx=18
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt idx=10
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt idx=12
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt idx=9
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt idx=14
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt idx=16
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt idx=11
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt matchNumber=15
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt matchNumber=10
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt matchNumber=12
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt matchNumber=2
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt matchNumber=5
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt matchNumber=18
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt matchNumber=7
+time=2026-01-09T17:58:37.401-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt matchNumber=1
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt matchNumber=8
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt matchNumber=19
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt matchNumber=21
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt matchNumber=3
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt matchNumber=13
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt matchNumber=20
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt matchNumber=11
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt matchNumber=16
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt matchNumber=4
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt matchNumber=17
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt matchNumber=22
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt matchNumber=6
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt matchNumber=14
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt matchNumber=9
+time=2026-01-09T17:58:37.402-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt matchNumber=23
+time=2026-01-09T17:58:37.907-08:00 level=INFO msg="Got ranks from sheet." rangerecieved=Ranks!A2:B1000 HTTPStatusCode=200 ranknameLength=27
+time=2026-01-09T17:58:37.908-08:00 level=INFO msg="Saved html templates" pipecmd=reload
+time=2026-01-09T17:58:37.908-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:38.192-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:38.192-08:00 level=INFO msg="Recieved Reload command" pipecmd=reload
+time=2026-01-09T17:58:38.192-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt idx=22
+time=2026-01-09T17:58:38.192-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt idx=3
+time=2026-01-09T17:58:38.192-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt idx=1
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt idx=0
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt idx=21
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt idx=2
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt idx=9
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt idx=8
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt idx=12
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt idx=7
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt idx=15
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt idx=20
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt idx=14
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt idx=16
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt idx=10
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt idx=13
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt idx=19
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt idx=18
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt idx=4
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt idx=17
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt idx=5
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt idx=11
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt idx=6
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt matchNumber=15
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt matchNumber=10
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt matchNumber=12
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt matchNumber=2
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt matchNumber=5
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt matchNumber=18
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt matchNumber=7
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt matchNumber=1
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt matchNumber=8
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt matchNumber=19
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt matchNumber=21
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt matchNumber=3
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt matchNumber=13
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt matchNumber=20
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt matchNumber=11
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt matchNumber=16
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt matchNumber=4
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt matchNumber=17
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt matchNumber=22
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt matchNumber=6
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt matchNumber=14
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt matchNumber=9
+time=2026-01-09T17:58:38.193-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt matchNumber=23
+time=2026-01-09T17:58:38.723-08:00 level=INFO msg="Got ranks from sheet." rangerecieved=Ranks!A2:B1000 HTTPStatusCode=200 ranknameLength=27
+time=2026-01-09T17:58:38.725-08:00 level=INFO msg="Saved html templates" pipecmd=reload
+time=2026-01-09T17:58:38.725-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:38.725-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:38.725-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:40.328-08:00 level=INFO msg="Done reading from pipe."
+time=2026-01-09T17:58:40.328-08:00 level=INFO msg="Recieved Reload command" pipecmd=reload
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt idx=0
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt idx=4
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt idx=9
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt idx=2
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt idx=1
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt idx=22
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt idx=15
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt idx=6
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt idx=8
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt idx=7
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt idx=13
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt idx=16
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt idx=18
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt idx=14
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt idx=5
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt idx=3
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt idx=10
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt idx=21
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt idx=19
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt idx=17
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt idx=11
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt idx=12
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Parsed match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt idx=20
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.09.53.PM.txt matchNumber=15
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.54.00.PM.txt matchNumber=10
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.59.30.PM.txt matchNumber=12
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.28.58.PM.txt matchNumber=2
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.35.27.PM.txt matchNumber=5
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.20.10.PM.txt matchNumber=18
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.42.45.PM.txt matchNumber=7
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.25.05.PM.txt matchNumber=1
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.47.18.PM.txt matchNumber=8
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.22.11.PM.txt matchNumber=19
+time=2026-01-09T17:58:40.329-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.29.36.PM.txt matchNumber=21
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.30.54.PM.txt matchNumber=3
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.02.01.PM.txt matchNumber=13
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.26.39.PM.txt matchNumber=20
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.57.28.PM.txt matchNumber=11
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.12.21.PM.txt matchNumber=16
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.32.53.PM.txt matchNumber=4
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.16.13.PM.txt matchNumber=17
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.32.37.PM.txt matchNumber=22
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.39.28.PM.txt matchNumber=6
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.06.06.PM.txt matchNumber=14
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_07.51.30.PM.txt matchNumber=9
+time=2026-01-09T17:58:40.330-08:00 level=INFO msg="Successfully scored match log." path=/home/magnus/.local/share/Reassembly/data/MLOG_20260108_08.35.04.PM.txt matchNumber=23
+time=2026-01-09T17:58:40.797-08:00 level=INFO msg="Got ranks from sheet." rangerecieved=Ranks!A2:B1000 HTTPStatusCode=200 ranknameLength=27
+time=2026-01-09T17:58:40.806-08:00 level=INFO msg="Saved html templates" pipecmd=reload
+time=2026-01-09T17:58:40.806-08:00 level=INFO msg="Trying to open mlog signal pipe." path=/tmp/drrt_mlog_signal_pipe
+time=2026-01-09T17:58:40.806-08:00 level=INFO msg="Done reading from pipe."
