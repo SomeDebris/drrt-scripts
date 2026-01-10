@@ -136,7 +136,7 @@ func main() {
 		return
 	}
 
-	// TODO: use the lib.MatchSchedule type
+	// TODO: use the [lib.MatchSchedule] type
 	// get ship indices of the match schedule from google sheets. This is uploaded by the Scheduler.
 	scheduleindices, err := drrtdatasheet.GetMatchSheduleValues()
 	if err != nil {
@@ -215,7 +215,6 @@ func main() {
 		default:
 			fmt.Println(lib.ANSI_BOLD + lib.ANSI_FAIL + "Command \"" + data + "\" is not known." + lib.ANSI_RESET)
 		}
-		(*log_writer_ref).Flush()
 	}
 
 	slog.Info("Done!")
