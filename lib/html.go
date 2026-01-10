@@ -22,9 +22,12 @@ const (
 )
 
 var (
-	victory_template_path = filepath.Join(`html`, `victory_TEMPLATE.html`)
-	game_template_path    = filepath.Join(`html`, `game_TEMPLATE.html`)
-	next_template_path    = filepath.Join(`html`, `next_TEMPLATE.html`)
+	VICTORY_TEMPLATE_PATH = filepath.Join(`html`, `victory_TEMPLATE.html`)
+	GAME_TEMPLATE_PATH    = filepath.Join(`html`, `game_TEMPLATE.html`)
+	NEXT_TEMPLATE_PATH    = filepath.Join(`html`, `next_TEMPLATE.html`)
+	victory_template      = template.Must(template.New("victory_TEMPLATE.html").ParseFiles(VICTORY_TEMPLATE_PATH))
+	game_template         = template.Must(template.New("game_TEMPLATE.html").ParseFiles(GAME_TEMPLATE_PATH))
+	next_template         = template.Must(template.New("next_TEMPLATE.html").ParseFiles(NEXT_TEMPLATE_PATH))
 )
 
 type StreamTemplateData struct {
@@ -120,13 +123,12 @@ func formatRankPointAdditions(rankpointadd int) string {
 	}
 }
 
+// TODO
+// func NewStreamTemplateDataPlayoffs(alliances []*rsmships.Fleet)
+
 
 func UpdateNextUpQualifications(outputPath string, ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
 	p := *NewStreamTemplateDataQualifications(ships, shipIdxsToDisplay, mlogs, ranks, false)
-	t, err := template.New("next_TEMPLATE.html").ParseFiles(next_template_path)
-	if err != nil {
-		slog.Error("Failed to parse template.", "err", err)
-	}
 	outfile, err := os.Create(outputPath)
 	if err != nil {
 		slog.Error("Failed to open template output file", "err", err)
@@ -136,17 +138,13 @@ func UpdateNextUpQualifications(outputPath string, ships []*rsmships.Ship, shipI
 	writer := bufio.NewWriter(outfile)
 	defer writer.Flush()
 
-	err = t.Execute(writer, p)
+	err = next_template.Execute(writer, p)
 	if err != nil {
 		slog.Error("Failed to save template output", "err", err)
 	}
 }
 func UpdateGameQualifications(outputPath string, ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
 	p := *NewStreamTemplateDataQualifications(ships, shipIdxsToDisplay, mlogs, ranks, false)
-	t, err := template.New("game_TEMPLATE.html").ParseFiles(game_template_path)
-	if err != nil {
-		slog.Error("Failed to parse template.", "err", err)
-	}
 	outfile, err := os.Create(outputPath)
 	if err != nil {
 		slog.Error("Failed to open template output file", "err", err)
@@ -156,17 +154,13 @@ func UpdateGameQualifications(outputPath string, ships []*rsmships.Ship, shipIdx
 	writer := bufio.NewWriter(outfile)
 	defer writer.Flush()
 
-	err = t.Execute(writer, p)
+	err = game_template.Execute(writer, p)
 	if err != nil {
 		slog.Error("Failed to save template output", "err", err)
 	}
 }
 func UpdateVictoryQualifications(outputPath string, ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
 	p := *NewStreamTemplateDataQualifications(ships, mlogs[len(mlogs)-1].ShipIndices, mlogs, ranks, true)
-	t, err := template.New("victory_TEMPLATE.html").ParseFiles(victory_template_path)
-	if err != nil {
-		slog.Error("Failed to parse template.", "err", err)
-	}
 	outfile, err := os.Create(outputPath)
 	if err != nil {
 		slog.Error("Failed to open template output file", "err", err)
@@ -176,7 +170,7 @@ func UpdateVictoryQualifications(outputPath string, ships []*rsmships.Ship, mlog
 	writer := bufio.NewWriter(outfile)
 	defer writer.Flush()
 
-	err = t.Execute(writer, p)
+	err = victory_template.Execute(writer, p)
 	if err != nil {
 		slog.Error("Failed to save template output", "err", err)
 	}
