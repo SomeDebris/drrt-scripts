@@ -110,8 +110,8 @@ func main() {
 	mlog_dir_arg := flag.String("mlog-directory", lib.REASSEMBLY_DATA_DIR, "Send log messages to a file. If not set, log to standard error.")
 
 	nextupSavePath := flag.String("html-nextup", filepath.Join("html", "next.html"), "Specify path of \"next up\" OBS html template.")
-	gameSavePath := flag.String("html-game", filepath.Join("html", "next.html"), "Specify path of \"game\" OBS html template.")
-	victorySavePath := flag.String("html-victory", filepath.Join("html", "next.html"), "Specify path of \"victory\" OBS html template.")
+	gameSavePath := flag.String("html-game", filepath.Join("html", "game.html"), "Specify path of \"game\" OBS html template.")
+	victorySavePath := flag.String("html-victory", filepath.Join("html", "victory.html"), "Specify path of \"victory\" OBS html template.")
 
 	pipewatch_arg := flag.String("pipe", lib.DRRT_MLOG_SIGNAL_PIPE_PATH, "Send log messages to a file. If not set, log to standard error.")
 	flag.Parse()

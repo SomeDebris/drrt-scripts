@@ -19,55 +19,33 @@
 @property --initial { }
 @property --final { }
 
-@keyframes red-alliance-keyframes {
-    0%, 45%, 100% {
-        left: var(--initial);
-        opacity: 100%;
-    }
+.matchnumber {
+    font-family: "Helvetica LT Std Cond Blk", "Helvetica LT Std", sans-serif;
+    font-style: oblique;
+    font-weight: bold;
+    position:absolute;
+    bottom: 15px;
+    left: 1380px;
 
-    50%, 95% {
-        left: var(--final);
-        opacity: 0%;
-    }
-}
-
-@keyframes blue-alliance-keyframes {
-    0%, 45%, 100% {
-        left: var(--final);
-        opacity: 0%;
-    }
-
-    50%, 95% {
-        left: var(--initial);
-        opacity: 100%;
-    }
+    font-size: 100px;
 }
 
 .alliance {
     position: absolute;
-    left: var(--initial);
-    top: 226px;
+    top: 310px;
     opacity: 100%;
 
-    border: 4px solid white;
-    padding: 8px 10px 8px 8px;
-
-
-    animation-name: red-alliance-keyframes;
-    animation-duration: 20s;
-    animation-iteration-count: infinite;
-    animation-direction: normal;
+    display: grid;
+    grid-template-columns: 80px 500px;
 }
 
 .red-alliance {
-    background-color: rgba(200, 0, 0, 0.5);
+    left: 125px;
 }
 .blue-alliance {
-    animation-name: blue-alliance-keyframes;
-    left: var(--final);
-    opacity: 0%;
-
-    background-color: rgba(0, 0, 200, 0.4);
+    text-align:right;
+    right: 125px;
+    grid-template-columns: 500px 80px;
 }
 
 body {
@@ -90,21 +68,12 @@ div {
     grid-column-end: 3;
 }
 
-.alliance {
-    
-
-    display: grid;
-    grid-template-columns: 42px auto;
-}
-
  
 
  
 .ship {
-    font-size: 19pt;
+    font-size: 32pt;
     overflow: hidden;
-    display: grid;
-    grid-template-columns: 266px 30px;
     font-family: "Helvetica LT Std Cond Blk", "Helvetica LT Std", sans-serif;
     font-style: oblique;
     font-weight: bold;
@@ -119,14 +88,14 @@ h1 {
     font-size: 24pt;
 }
 .author {
-    font-size: 8pt;
+    font-size: 12pt;
     margin-top: -4px;
     font-style: normal;
     font-weight: bold;
 }
 
 .rank {
-    font-size: 19pt;
+    font-size: 36pt;
     padding: 0px;
 
     font-family: "Helvetica LT Std Cond Blk", "Helvetica LT Std", sans-serif;
@@ -138,14 +107,17 @@ h1 {
     font-stretch: condensed;
 
     background-image: url("White_Middle.png");
-    background-size: 36px 48px;
+    background-size: 72px 96px;
     background-repeat: no-repeat;
     background-position: center;
 }
 
+.blue-alliance .ship {
+    padding-right: 0.5rem;
+}
+
 .name {
     white-space: nowrap;
-    overflow: hidden;
 }
 
 .rps {
@@ -155,13 +127,12 @@ h1 {
 }
 
 .member {
-    overflow: hidden;
-    margin-top: 7px;
-    margin-bottom: 5px;
+    margin-top: 14px;
+    margin-bottom: 13px;
 }
 
 .scoot {
-    margin-top: 6px;
+    margin-top: 12px;
 }
 
 .name span {
@@ -169,9 +140,14 @@ h1 {
     display: inline-block;
 }
 
-.name .animate {
+.red-alliance .name .animate {
     position: relative; 
     animation: leftright 6s infinite normal linear;
+}
+
+.blue-alliance .name .animate {
+    position: relative; 
+    animation: rightleft 6s infinite normal linear;
 }
 @keyframes leftright {
     0%, 15% {
@@ -179,8 +155,19 @@ h1 {
         left: 0%;
     }
     85%, 100% {
-        transform: translateX(-110%);
-        left: 110%;
+        transform: translateX(-130%);
+        left: 130%;
+    }
+}
+
+@keyframes rightleft {
+    0%, 15% {
+        transform: translateX(-100%);
+        left: 100%;
+    }
+    85%, 100% {
+        transform: translateX(10%);
+        left: 10%;
     }
 }
 
@@ -215,39 +202,22 @@ h1 {
 <body>
 
     <div class="red-alliance alliance">
-        <h1>RED ALLIANCE LOSS</h1>
 
-        <div id="rank_down" class="rank">
+        <div id="rank_neutral" class="rank">
             <div class="scoot">
-                10
+                18
             </div>
         </div>
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>Frostlite</span>
+                    <span>Mandelbrot&#39;s Interceptor</span>
                 </div>
-                <div class="rps">&#43;0</div>
             </div>
-            <div class="author">Dalrethliant</div>
+            <div class="author">Bluefish1818</div>
         </div>
 
-        <div id="rank_down_captain" class="rank">
-            <div class="scoot">
-                3
-            </div>
-        </div>
-        <div class="member">
-            <div class="ship">
-                <div class="name">
-                    <span>Avarice</span>
-                </div>
-                <div class="rps">&#43;1</div>
-            </div>
-            <div class="author">Lucifer</div>
-        </div>
-
-        <div id="rank_down" class="rank">
+        <div id="rank_neutral" class="rank">
             <div class="scoot">
                 17
             </div>
@@ -255,64 +225,75 @@ h1 {
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>SprayHazzard</span>
+                    <span>Ignorance is Wisdom</span>
                 </div>
-                <div class="rps">&#43;0</div>
             </div>
-            <div class="author">sumplkrum</div>
+            <div class="author">MonsPubis</div>
+        </div>
+
+        <div id="rank_neutral" class="rank">
+            <div class="scoot">
+                11
+            </div>
+        </div>
+        <div class="member">
+            <div class="ship">
+                <div class="name">
+                    <span>Big Iron 2.1</span>
+                </div>
+            </div>
+            <div class="author">Dukeslayer</div>
         </div>
 
     </div>
 
     <div class="blue-alliance alliance">
-        <h1>BLUE ALLIANCE VICTORY!</h1>
 
-        <div id="rank_up_captain" class="rank">
-            <div class="scoot">
-                8
-            </div>
-        </div>
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>Octal v2.3</span>
+                    <span>F-DRIVER</span>
                 </div>
-                <div class="rps">&#43;2</div>
             </div>
-            <div class="author">Debris Field</div>
+            <div class="author">YenYu</div>
+        </div>
+        <div id="rank_neutral" class="rank">
+            <div class="scoot">
+                24
+            </div>
         </div>
 
-        <div id="rank_up" class="rank">
-            <div class="scoot">
-                23
-            </div>
-        </div>
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>Lethal Kinetics 4 - Uncompleted Heretic</span>
+                    <span>The Throngler</span>
                 </div>
-                <div class="rps">&#43;2</div>
             </div>
-            <div class="author">Splinter</div>
+            <div class="author">Dazlezle</div>
+        </div>
+        <div id="rank_neutral" class="rank">
+            <div class="scoot">
+                16
+            </div>
         </div>
 
-        <div id="rank_up_captain" class="rank">
-            <div class="scoot">
-                2
-            </div>
-        </div>
         <div class="member">
             <div class="ship">
                 <div class="name">
-                    <span>Nanite</span>
+                    <span>SprayHazzard</span>
                 </div>
-                <div class="rps">&#43;5</div>
             </div>
-            <div class="author">Kepler</div>
+            <div class="author">sumplkrum</div>
+        </div>
+        <div id="rank_neutral" class="rank">
+            <div class="scoot">
+                22
+            </div>
         </div>
 
     </div>
+    
+    <div class="matchnumber">46</div>
 <script>
     let container = document.querySelectorAll(".name");
     let text = document.querySelectorAll(".name span");
@@ -322,6 +303,7 @@ h1 {
             text[i].classList.add("animate");
         }
     }
+    
 
 </script>
 </body>
