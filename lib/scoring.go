@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"fmt"
 	"log/slog"
+	"path/filepath"
 	"slices"
 	"time"
 
@@ -129,7 +130,7 @@ func (m *DRRTStandardMatchLog) ToSheetsBlock() [][]any {
 	out := make([][]any, len(m.Record))
 	for i, record := range m.Record {
 		performancerow := record.toSheetsRow()
-		performancerow = append(performancerow, m.Raw.Path)
+		performancerow = append(performancerow, filepath.Base(m.Raw.Path))
 		performancerow = append(performancerow, m.Timestamp.String())
 		out[i] = performancerow
 	}
