@@ -108,6 +108,11 @@ func main() {
 	drrt_directory_arg := flag.String("drrt-directory", "", "Set the directory the DRRT will be run in.")
 	log_file_name := flag.String("log-filename", "", "Send log messages to a file. If not set, log to standard error.")
 	mlog_dir_arg := flag.String("mlog-directory", lib.REASSEMBLY_DATA_DIR, "Send log messages to a file. If not set, log to standard error.")
+
+	nextupSavePath := flag.String("html-nextup", filepath.Join("html", "next.html"), "Specify path of \"next up\" OBS html template.")
+	gameSavePath := flag.String("html-game", filepath.Join("html", "next.html"), "Specify path of \"game\" OBS html template.")
+	victorySavePath := flag.String("html-victory", filepath.Join("html", "next.html"), "Specify path of \"victory\" OBS html template.")
+
 	pipewatch_arg := flag.String("pipe", lib.DRRT_MLOG_SIGNAL_PIPE_PATH, "Send log messages to a file. If not set, log to standard error.")
 	flag.Parse()
 	ships_directory := filepath.Join(*drrt_directory_arg, "Ships")
@@ -198,9 +203,9 @@ func main() {
 			if err != nil {
 				slog.Error("Failed to get ranks.", "err", err)
 			}
-			lib.UpdateNextUpQualifications(ships, shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices), mlogs, ranks)
-			lib.UpdateGameQualifications(ships, shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices), mlogs, ranks)
-			lib.UpdateVictoryQualifications(ships, mlogs, ranks)
+			lib.UpdateNextUpQualifications(*nextupSavePath, ships, shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices), mlogs, ranks)
+			lib.UpdateGameQualifications(*gameSavePath, ships, shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices), mlogs, ranks)
+			lib.UpdateVictoryQualifications(*victorySavePath, ships, mlogs, ranks)
 		case pipecmd_stop:
 			fmt.Println(lib.ANSI_BOLD + lib.ANSI_WHITE + "Stopping." + lib.ANSI_RESET)
 			break OuterLoop
@@ -261,6 +266,10 @@ func updateMatchLogs(path string, sheet *lib.DRRTDatasheet, ships []*rsmships.Sh
 }
 
 func shipidxsfromSchedule(idx int, schedule [][]any) []int {
+	if idx >= len(schedule) {
+		slog.Warn("Attempted to index match outside of schedule.", "lengthSchedule", len(schedule), "idx", idx)
+		idx = len(schedule) - 1
+	}
 	out := make([]int, len(schedule[idx]))
 	for i, val := range schedule[idx] {
 		pstr, ok := val.(string)
