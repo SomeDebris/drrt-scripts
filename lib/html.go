@@ -121,13 +121,13 @@ func formatRankPointAdditions(rankpointadd int) string {
 }
 
 
-func UpdateNextUp(ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
+func UpdateNextUpQualifications(outputPath string, ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
 	p := *NewStreamTemplateDataQualifications(ships, shipIdxsToDisplay, mlogs, ranks, false)
 	t, err := template.New("next_TEMPLATE.html").ParseFiles(next_template_path)
 	if err != nil {
 		slog.Error("Failed to parse template.", "err", err)
 	}
-	outfile, err := os.Create(filepath.Join("./html", "next.html"))
+	outfile, err := os.Create(outputPath)
 	if err != nil {
 		slog.Error("Failed to open template output file", "err", err)
 	}
@@ -141,13 +141,13 @@ func UpdateNextUp(ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRT
 		slog.Error("Failed to save template output", "err", err)
 	}
 }
-func UpdateGame(ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
+func UpdateGameQualifications(outputPath string, ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
 	p := *NewStreamTemplateDataQualifications(ships, shipIdxsToDisplay, mlogs, ranks, false)
 	t, err := template.New("game_TEMPLATE.html").ParseFiles(game_template_path)
 	if err != nil {
 		slog.Error("Failed to parse template.", "err", err)
 	}
-	outfile, err := os.Create(filepath.Join("./html", "game.html"))
+	outfile, err := os.Create(outputPath)
 	if err != nil {
 		slog.Error("Failed to open template output file", "err", err)
 	}
@@ -161,13 +161,13 @@ func UpdateGame(ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTSt
 		slog.Error("Failed to save template output", "err", err)
 	}
 }
-func UpdateVictory(ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
+func UpdateVictoryQualifications(outputPath string, ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
 	p := *NewStreamTemplateDataQualifications(ships, mlogs[len(mlogs)-1].ShipIndices, mlogs, ranks, true)
 	t, err := template.New("victory_TEMPLATE.html").ParseFiles(victory_template_path)
 	if err != nil {
 		slog.Error("Failed to parse template.", "err", err)
 	}
-	outfile, err := os.Create(filepath.Join("./html", "victory.html"))
+	outfile, err := os.Create(outputPath)
 	if err != nil {
 		slog.Error("Failed to open template output file", "err", err)
 	}
