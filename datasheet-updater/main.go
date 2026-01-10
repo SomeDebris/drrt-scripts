@@ -203,8 +203,9 @@ func main() {
 			if err != nil {
 				slog.Error("Failed to get ranks.", "err", err)
 			}
-			lib.UpdateNextUpQualifications(*nextupSavePath, ships, shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices), mlogs, ranks)
-			lib.UpdateGameQualifications(*gameSavePath, ships, shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices), mlogs, ranks)
+			nextidxs := shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices)
+			lib.UpdateNextUpQualifications(*nextupSavePath, ships, nextidxs, mlogs, ranks)
+			lib.UpdateGameQualifications(*gameSavePath, ships, nextidxs, mlogs, ranks)
 			lib.UpdateVictoryQualifications(*victorySavePath, ships, mlogs, ranks)
 		case pipecmd_stop:
 			fmt.Println(lib.ANSI_BOLD + lib.ANSI_WHITE + "Stopping." + lib.ANSI_RESET)
