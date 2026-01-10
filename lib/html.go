@@ -3,6 +3,7 @@ package lib
 import (
 	"bufio"
 	"cmp"
+	"fmt"
 	"html/template"
 	"log/slog"
 	"os"
@@ -26,26 +27,26 @@ var (
 	next_template_path    = filepath.Join(`html`, `next_TEMPLATE.html`)
 )
 
-type MlogOverlayParse struct {
+type StreamTemplateData struct {
 	Ranks           []int
 	RankBoxes       []string
 	Names           []string
 	Authors         []string
-	RankPoints      []int
+	RankPoints      []string
 	VictoryText     []string
 	MatchNumber     int
 	NextMatchNumber int
 }
 
 // disgusting
-func NewMlogOverlayParse(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int, showrankdelta bool) *MlogOverlayParse {
-	var out MlogOverlayParse
+func NewStreamTemplateDataQualifications(ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int, showrankdelta bool) *StreamTemplateData {
+	var out StreamTemplateData
 	lastmlog := mlogs[len(mlogs)-1]
 	out.Ranks      = make([]int, lastmlog.AllianceLength * 2)
 	out.RankBoxes  = make([]string, lastmlog.AllianceLength * 2)
 	out.Names      = make([]string, lastmlog.AllianceLength * 2)
 	out.Authors    = make([]string, lastmlog.AllianceLength * 2)
-	out.RankPoints = make([]int, lastmlog.AllianceLength * 2)
+	out.RankPoints = make([]string, lastmlog.AllianceLength * 2)
 
 	if lastmlog.Record[0].Result == Loss {
 		out.VictoryText = []string{"LOSS", "VICTORY!"}
@@ -57,7 +58,7 @@ func NewMlogOverlayParse(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTSt
 	out.NextMatchNumber = lastmlog.MatchNumber + 1
 
 
-	for i, idx := range shipidxs {
+	for i, idx := range shipIdxsToDisplay {
 		ship := ships[idx]
 		out.Names[i] = ShipAuthorFromCommonNamefmt(ship.Data.Name)[0]
 		out.Authors[i] = ship.Data.Author
@@ -74,13 +75,13 @@ func NewMlogOverlayParse(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTSt
 			out.RankBoxes[i] = boxrankneutral
 		}
 
-		out.RankPoints[i] = lastmlog.Record[i].RankPointsEarned
+		out.RankPoints[i] = formatRankPointAdditions(lastmlog.Record[i].RankPointsEarned)
 
 		if showrankdelta {
 			// stats now
-			stats := NewDRRTShipStats(lastmlog.ShipIndices[i], ships, mlogs)
+			stats := NewDRRTShipStats(idx, ships, mlogs)
 			// stats before the last match
-			statsprev := NewDRRTShipStats(lastmlog.ShipIndices[i], ships, mlogs[0:len(mlogs)-2])
+			statsprev := NewDRRTShipStats(idx, ships, mlogs[0:len(mlogs)-2])
 
 			rankScoreCurrent := stats.RankingScore()
 			rankScorePrev := statsprev.RankingScore()
@@ -107,8 +108,21 @@ func NewMlogOverlayParse(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTSt
 	return &out
 }
 
-func UpdateNextUp(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
-	p := *NewMlogOverlayParse(ships, shipidxs, mlogs, ranks, false)
+// Add a + sign if ranking points were added, + if 0 were added, and - if they were somehow subtracted. It should never be the case that rank points are negative.
+func formatRankPointAdditions(rankpointadd int) string {
+	switch cmp.Compare(rankpointadd, 0) {
+	case 1:
+		return fmt.Sprintf("+%d", rankpointadd)
+	case 0:
+		return fmt.Sprintf("+%d", rankpointadd)
+	default:
+		return fmt.Sprintf("%d", rankpointadd)
+	}
+}
+
+
+func UpdateNextUp(ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
+	p := *NewStreamTemplateDataQualifications(ships, shipIdxsToDisplay, mlogs, ranks, false)
 	t, err := template.New("next_TEMPLATE.html").ParseFiles(next_template_path)
 	if err != nil {
 		slog.Error("Failed to parse template.", "err", err)
@@ -127,8 +141,8 @@ func UpdateNextUp(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardM
 		slog.Error("Failed to save template output", "err", err)
 	}
 }
-func UpdateGame(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
-	p := *NewMlogOverlayParse(ships, shipidxs, mlogs, ranks, false)
+func UpdateGame(ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
+	p := *NewStreamTemplateDataQualifications(ships, shipIdxsToDisplay, mlogs, ranks, false)
 	t, err := template.New("game_TEMPLATE.html").ParseFiles(game_template_path)
 	if err != nil {
 		slog.Error("Failed to parse template.", "err", err)
@@ -148,7 +162,7 @@ func UpdateGame(ships []*rsmships.Ship, shipidxs []int, mlogs []*DRRTStandardMat
 	}
 }
 func UpdateVictory(ships []*rsmships.Ship, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
-	p := *NewMlogOverlayParse(ships, mlogs[len(mlogs)-1].ShipIndices, mlogs, ranks, true)
+	p := *NewStreamTemplateDataQualifications(ships, mlogs[len(mlogs)-1].ShipIndices, mlogs, ranks, true)
 	t, err := template.New("victory_TEMPLATE.html").ParseFiles(victory_template_path)
 	if err != nil {
 		slog.Error("Failed to parse template.", "err", err)
