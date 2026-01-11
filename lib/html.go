@@ -119,6 +119,7 @@ func NewStreamTemplateDataQualifications(ships []*rsmships.Ship, shipIdxsToDispl
 				}
 			}
 		}
+		slog.Debug("Selected rankbox.", "box", rankbox)
 		out.RankBoxes[alidx] = append(out.RankBoxes[alidx], rankbox)
 	}
 
@@ -174,9 +175,14 @@ func NewStreamTemplateDataPlayoffs(alliances []*rsmships.Fleet, nameToRank map[s
 			} else {
 				rankbox = boxrankneutral
 			}
+			slog.Debug("Selected rankbox.", "box", rankbox)
 			out.RankBoxes[i][j] = rankbox
+
+			out.RankPoints[i][j] = ""
 		}
 	}
+
+	return &out
 }
 
 
