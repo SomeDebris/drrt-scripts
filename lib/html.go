@@ -139,7 +139,7 @@ func formatRankPointAdditions(rankpointadd int) string {
 }
 
 // TODO
-func NewStreamTemplateDataPlayoffs(alliances []*rsmships.Fleet, nameToRank map[string]int, nCaptains int) *StreamTemplateData {
+func NewStreamTemplateDataPlayoffs(alliances []*rsmships.Fleet, nameToRank map[string]int, nCaptains int, victoryLeft bool) *StreamTemplateData {
 	var out StreamTemplateData
 	out.MatchNumber = 0
 	out.NextMatchNumber = 0
@@ -181,8 +181,57 @@ func NewStreamTemplateDataPlayoffs(alliances []*rsmships.Fleet, nameToRank map[s
 			out.RankPoints[i][j] = ""
 		}
 	}
+	if victoryLeft {
+		out.VictoryText = []string{fmt.Sprintf("ALLIANCE %d VICTORY!", allianceNumbers[0]), fmt.Sprintf("ALLIANCE %d LOSS", allianceNumbers[1])}
+	} else {
+		out.VictoryText = []string{fmt.Sprintf("ALLIANCE %d LOSS", allianceNumbers[0]), fmt.Sprintf("ALLIANCE %d VICTORY!", allianceNumbers[1])}
+	}
 
 	return &out
+}
+
+func writeTemplate(path string, p *StreamTemplateData, template *template.Template) error {
+	outfile, err := os.Create(path)
+	if err != nil {
+		slog.Error("Failed to open template output file", "err", err)
+		return err
+	}
+	defer outfile.Close()
+
+	writer := bufio.NewWriter(outfile)
+	defer writer.Flush()
+
+	err = template.Execute(writer, p)
+	if err != nil {
+		slog.Error("Failed to save template output", "err", err)
+		return err
+	}
+	return nil
+}
+
+func UpdateNextUpPlayoffs(outputPath string, alliances []*rsmships.Fleet, nameToRank map[string]int, nCaptains int) {
+	p := *NewStreamTemplateDataPlayoffs(alliances, nameToRank, 8, false)
+	template := next_template
+	err := writeTemplate(outputPath, &p, template)
+	if err != nil {
+		slog.Error("Error saving next-up.", "err", err)
+	}
+}
+func UpdateGamePlayoffs(outputPath string, alliances []*rsmships.Fleet, nameToRank map[string]int, nCaptains int) {
+	p := *NewStreamTemplateDataPlayoffs(alliances, nameToRank, 8, false)
+	template := game_template
+	err := writeTemplate(outputPath, &p, template)
+	if err != nil {
+		slog.Error("Error saving game.", "err", err)
+	}
+}
+func UpdateVictoryPlayoffs(outputPath string, alliances []*rsmships.Fleet, nameToRank map[string]int, nCaptains int, victoryLeft bool) {
+	p := *NewStreamTemplateDataPlayoffs(alliances, nameToRank, 8, victoryLeft)
+	template := victory_template
+	err := writeTemplate(outputPath, &p, template)
+	if err != nil {
+		slog.Error("Error saving game.", "err", err)
+	}
 }
 
 
