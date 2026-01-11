@@ -31,54 +31,67 @@ var (
 )
 
 type StreamTemplateData struct {
-	Ranks           []int
-	RankBoxes       []string
-	Names           []string
-	Authors         []string
-	RankPoints      []string
+	Ranks           [][]int
+	RankBoxes       [][]string
+	Names           [][]string
+	Authors         [][]string
+	RankPoints      [][]string
 	VictoryText     []string
 	MatchNumber     int
 	NextMatchNumber int
 }
 
 // disgusting
-func NewStreamTemplateDataQualifications(ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int, showrankdelta bool) *StreamTemplateData {
+func NewStreamTemplateDataQualifications(ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, nameToRank map[string]int, showrankdelta bool) *StreamTemplateData {
 	var out StreamTemplateData
 	lastmlog := mlogs[len(mlogs)-1]
-	out.Ranks      = make([]int, lastmlog.AllianceLength * 2)
-	out.RankBoxes  = make([]string, lastmlog.AllianceLength * 2)
-	out.Names      = make([]string, lastmlog.AllianceLength * 2)
-	out.Authors    = make([]string, lastmlog.AllianceLength * 2)
-	out.RankPoints = make([]string, lastmlog.AllianceLength * 2)
+	// there are 2 alliances in each match:
+	out.Ranks       = make([][]int, 2)
+	out.RankBoxes   = make([][]string, 2)
+	out.Names       = make([][]string, 2)
+	out.Authors     = make([][]string, 2)
+	out.RankPoints  = make([][]string, 2)
 
+	// there are two alliances:
 	if lastmlog.Record[0].Result == Loss {
-		out.VictoryText = []string{"LOSS", "VICTORY!"}
+		out.VictoryText = []string{"RED ALLIANCE LOSS", "BLUE ALLIANCE VICTORY!"}
 	} else {
-		out.VictoryText = []string{"VICTORY!", "LOSS"}
+		out.VictoryText = []string{"RED ALLIANCE VICTORY!", "BLUE ALLIANCE LOSS"}
 	}
 
-	out.MatchNumber = lastmlog.MatchNumber
+	out.MatchNumber     = lastmlog.MatchNumber
 	out.NextMatchNumber = lastmlog.MatchNumber + 1
 
-
+	// alliance index: 0 for left, 1 for right
+	var alidx int
 	for i, idx := range shipIdxsToDisplay {
-		ship := ships[idx]
-		out.Names[i] = ShipAuthorFromCommonNamefmt(ship.Data.Name)[0]
-		out.Authors[i] = ship.Data.Author
-		rank, ok := ranks[out.Names[i]]
-		if !ok {
-			slog.Error("Failed to index the ship name against the rank.")
-		}
-		out.Ranks[i] = rank
-		captain := rank <= 8
-
-		if captain {
-			out.RankBoxes[i] = boxrankneutral_captain
+		if i < len(shipIdxsToDisplay) / 2 {
+			alidx = 0
 		} else {
-			out.RankBoxes[i] = boxrankneutral
+			alidx = 1
 		}
+		
+		ship := ships[idx]
+		name := ShipAuthorFromCommonNamefmt(ship.Data.Name)[0]
+		out.Names[alidx]   = append(out.Names[alidx], name)
+		out.Authors[alidx] = append(out.Authors[alidx], ship.Data.Author)
 
-		out.RankPoints[i] = formatRankPointAdditions(lastmlog.Record[i].RankPointsEarned)
+		rank, ok := nameToRank[name]
+		if !ok {
+			slog.Error("Failed to index the ship name against the rank.", "name", name, "author", ship.Data.Author)
+		}
+		out.Ranks[alidx] = append(out.Ranks[alidx], rank)
+
+		rankpointsstring := formatRankPointAdditions(lastmlog.Record[i].RankPointsEarned)
+		out.RankPoints[alidx] = append(out.RankPoints[alidx], rankpointsstring)
+
+		var rankbox string
+		captain := rank <= 8
+		if captain {
+			rankbox = boxrankneutral_captain
+		} else {
+			rankbox = boxrankneutral
+		}
 
 		if showrankdelta {
 			// stats now
@@ -93,19 +106,20 @@ func NewStreamTemplateDataQualifications(ships []*rsmships.Ship, shipIdxsToDispl
 			if captain {
 				switch rankdirection {
 				case 1: //rank up
-					out.RankBoxes[i] = boxrankup_captain
+					rankbox = boxrankup_captain
 				case -1:
-					out.RankBoxes[i] = boxrankdown_captain
+					rankbox = boxrankdown_captain
 				}
 			} else {
 				switch rankdirection {
 				case 1: //rank up
-					out.RankBoxes[i] = boxrankup
+					rankbox = boxrankup
 				case -1:
-					out.RankBoxes[i] = boxrankdown
+					rankbox = boxrankdown
 				}
 			}
 		}
+		out.RankBoxes[alidx] = append(out.RankBoxes[alidx], rankbox)
 	}
 
 	return &out
@@ -119,12 +133,51 @@ func formatRankPointAdditions(rankpointadd int) string {
 	case 0:
 		return fmt.Sprintf("+%d", rankpointadd)
 	default:
-		return fmt.Sprintf("%d", rankpointadd)
+		return fmt.Sprintf("-%d", rankpointadd)
 	}
 }
 
 // TODO
-// func NewStreamTemplateDataPlayoffs(alliances []*rsmships.Fleet)
+func NewStreamTemplateDataPlayoffs(alliances []*rsmships.Fleet, nameToRank map[string]int, nCaptains int) *StreamTemplateData {
+	var out StreamTemplateData
+	out.MatchNumber = 0
+	out.NextMatchNumber = 0
+	// the first index of the fleet blueprints is the number of the alliance
+	allianceNumbers := make([]int, len(alliances))
+	for i, alliance := range alliances {
+		out.Ranks[i]       = make([]int,    len(alliance.Blueprints))
+		out.RankBoxes[i]   = make([]string, len(alliance.Blueprints))
+		out.Names[i]       = make([]string, len(alliance.Blueprints))
+		out.Authors[i]     = make([]string, len(alliance.Blueprints))
+		out.RankPoints[i]  = make([]string, len(alliance.Blueprints))
+
+		for j, ship := range alliance.Blueprints {
+			name := ShipAuthorFromCommonNamefmt(ship.Data.Name)[0]
+			out.Names[i][j] = name
+
+			out.Authors[i][j] = ship.Data.Author
+
+			rank, ok := nameToRank[name]
+			if !ok {
+				slog.Error("ship name not present in ranks map.", "function", "NewStreamTemplateDataPlayoffs", "name", name, "author", ship.Data.Author)
+			}
+			out.Ranks[i][j] = rank
+
+			if j <= 0 {
+				allianceNumbers[i] = rank
+			}
+
+			var rankbox string
+			captain := rank <= nCaptains
+			if rank > 0 && captain {
+				rankbox = boxrankneutral_captain
+			} else {
+				rankbox = boxrankneutral
+			}
+			out.RankBoxes[i][j] = rankbox
+		}
+	}
+}
 
 
 func UpdateNextUpQualifications(outputPath string, ships []*rsmships.Ship, shipIdxsToDisplay []int, mlogs []*DRRTStandardMatchLog, ranks map[string]int) {
