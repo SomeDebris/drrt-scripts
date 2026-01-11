@@ -170,18 +170,20 @@ func main() {
 	}
 	slog.Info("Found paths for ship files.", "count", len(ship_paths))
 	for i, path := range ship_paths {
-		slog.Debug("Ship path", "path", path)
-		slog.Debug("Full Ship path", "path", fullshippaths[i])
+		slog.Info("Ship path", "path", path)
+		slog.Info("Full Ship path", "path", fullshippaths[i])
 	}
 
 	ships := make([]*rsmships.Ship, len(ship_paths))
 	// unmarshal ship files
 	var unmarshal_wait_group sync.WaitGroup
 	lib.GoUnmarshalAllShipsFromPaths(&ships, fullshippaths, &unmarshal_wait_group)
+	unmarshal_wait_group.Wait()
 
 
 	var mlogs []*lib.DRRTStandardMatchLog
 	ranks := make(map[string]int)
+	ranks = lib.Must(drrtdatasheet.GetRanks())
 
 	var alliances []*rsmships.Fleet
 	if *isPlayoffs {
@@ -193,12 +195,13 @@ func main() {
 		}
 		fullalliancepaths := make([]string, len(alliancefleet_paths))
 		for i, path := range alliancefleet_paths {
-			fullshippaths[i] = filepath.Join(playf_directory, path)
+			slog.Info("Playoffs alliance path", "path", path, "dir", playf_directory)
+			fullalliancepaths[i] = filepath.Join(playf_directory, path)
 		}
-		slog.Info("Found paths for ship files.", "count", len(fullshippaths))
+		slog.Info("Found paths for ship files.", "count", len(fullalliancepaths))
 		for i, path := range alliancefleet_paths {
-			slog.Debug("Playoffs alliance path", "path", path)
-			slog.Debug("Full Playoffs alliance path", "path", fullshippaths[i])
+			slog.Info("Playoffs alliance path", "path", path)
+			slog.Info("Full Playoffs alliance path", "path", fullalliancepaths[i])
 		}
 		alliances = make([]*rsmships.Fleet, len(alliancefleet_paths))
 
@@ -248,7 +251,7 @@ func main() {
 			if !*isPlayoffs {
 				continue
 			}
-			idx := lib.Must(strconv.Atoi(data))
+			idx := lib.Must(strconv.Atoi(data)) - 1
 			switch playoffsstate {
 			case RequestLeft:
 				playingalliances[0] = alliances[idx]
@@ -257,9 +260,12 @@ func main() {
 				playingalliances[1] = alliances[idx]
 				playoffsstate = RequestVictory
 			case RequestVictory:
+				slog.Info("Dealing with alliance.")
 				lib.UpdateNextUpPlayoffs(*nextupSavePath, playingalliances, ranks, 8)
+				slog.Info("Dealing with alliance.")
 				lib.UpdateGamePlayoffs(*gameSavePath, playingalliances, ranks, 8)
-				if idx == 1 {
+				slog.Info("Dealing with alliance.")
+				if idx == 0 {
 					lib.UpdateVictoryPlayoffs(*victorySavePath, playingalliances, ranks, 8, true)
 				} else {
 					lib.UpdateVictoryPlayoffs(*victorySavePath, playingalliances, ranks, 8, false)

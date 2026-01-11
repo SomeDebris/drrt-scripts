@@ -143,9 +143,15 @@ func NewStreamTemplateDataPlayoffs(alliances []*rsmships.Fleet, nameToRank map[s
 	var out StreamTemplateData
 	out.MatchNumber = 0
 	out.NextMatchNumber = 0
+	out.Ranks       = make([][]int, 2)
+	out.RankBoxes   = make([][]string, 2)
+	out.Names       = make([][]string, 2)
+	out.Authors     = make([][]string, 2)
+	out.RankPoints  = make([][]string, 2)
 	// the first index of the fleet blueprints is the number of the alliance
 	allianceNumbers := make([]int, len(alliances))
 	for i, alliance := range alliances {
+		slog.Error("WHAT", "blueprints", len(alliance.Blueprints))
 		out.Ranks[i]       = make([]int,    len(alliance.Blueprints))
 		out.RankBoxes[i]   = make([]string, len(alliance.Blueprints))
 		out.Names[i]       = make([]string, len(alliance.Blueprints))
@@ -210,25 +216,25 @@ func writeTemplate(path string, p *StreamTemplateData, template *template.Templa
 }
 
 func UpdateNextUpPlayoffs(outputPath string, alliances []*rsmships.Fleet, nameToRank map[string]int, nCaptains int) {
-	p := *NewStreamTemplateDataPlayoffs(alliances, nameToRank, 8, false)
+	p := NewStreamTemplateDataPlayoffs(alliances, nameToRank, 8, false)
 	template := next_template
-	err := writeTemplate(outputPath, &p, template)
+	err := writeTemplate(outputPath, p, template)
 	if err != nil {
 		slog.Error("Error saving next-up.", "err", err)
 	}
 }
 func UpdateGamePlayoffs(outputPath string, alliances []*rsmships.Fleet, nameToRank map[string]int, nCaptains int) {
-	p := *NewStreamTemplateDataPlayoffs(alliances, nameToRank, 8, false)
+	p := NewStreamTemplateDataPlayoffs(alliances, nameToRank, 8, false)
 	template := game_template
-	err := writeTemplate(outputPath, &p, template)
+	err := writeTemplate(outputPath, p, template)
 	if err != nil {
 		slog.Error("Error saving game.", "err", err)
 	}
 }
 func UpdateVictoryPlayoffs(outputPath string, alliances []*rsmships.Fleet, nameToRank map[string]int, nCaptains int, victoryLeft bool) {
-	p := *NewStreamTemplateDataPlayoffs(alliances, nameToRank, 8, victoryLeft)
+	p := NewStreamTemplateDataPlayoffs(alliances, nameToRank, 8, victoryLeft)
 	template := victory_template
-	err := writeTemplate(outputPath, &p, template)
+	err := writeTemplate(outputPath, p, template)
 	if err != nil {
 		slog.Error("Error saving game.", "err", err)
 	}
