@@ -222,3 +222,20 @@ func GetJSONFilesSortedByModTime(dir string) ([]string, error) {
 
 	return ship_files, nil
 }
+
+func GoUnmarshalAllFleetsFromPaths(alliances *[]*rsmships.Fleet, paths []string, wg *sync.WaitGroup) {
+	for i, path := range paths {
+		wg.Add(1)
+
+		go func(i int, path string) {
+			defer wg.Done()
+			fleet, err := rsmships.UnmarshalFleetFromFile(path)
+			if err != nil {
+				slog.Error("Failed unmarshalling fleet", "path", path, "err", err)
+				return
+			}
+			(*alliances)[i] = &fleet
+			slog.Info("Unmarshalled fleet file.", "name", fleet.Name, "captain", fleet.Blueprints[0].Data. Name)
+		}(i, path)
+	}
+}

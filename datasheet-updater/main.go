@@ -34,6 +34,14 @@ const (
 	pipecmd_stop   = `stop`
 )
 
+type PlayoffsState int
+const (
+	Wait PlayoffsState = iota
+	RequestLeft
+	RequestRight
+	RequestVictory
+)
+
 
 // func getShipIndexFromName(name string, ships []*rsmships.Ship) int {
 // 	for i, ship := range ships {
@@ -112,10 +120,12 @@ func main() {
 	nextupSavePath := flag.String("html-nextup", filepath.Join("html", "next.html"), "Specify path of \"next up\" OBS html template.")
 	gameSavePath := flag.String("html-game", filepath.Join("html", "game.html"), "Specify path of \"game\" OBS html template.")
 	victorySavePath := flag.String("html-victory", filepath.Join("html", "victory.html"), "Specify path of \"victory\" OBS html template.")
+	isPlayoffs := flag.Bool("playoffs", false, "Declare whether playoffs or Quals are being run")
 
 	pipewatch_arg := flag.String("pipe", lib.DRRT_MLOG_SIGNAL_PIPE_PATH, "Send log messages to a file. If not set, log to standard error.")
 	flag.Parse()
 	ships_directory := filepath.Join(*drrt_directory_arg, "Ships")
+	playf_directory := filepath.Join(*drrt_directory_arg, "Playoffs")
 
 	// same tech used in scheduler/main.go
 	log_ref, log_writer_ref, err := lib.DRRTLoggerPreferences(*log_file_name, log_lvl)
@@ -168,18 +178,38 @@ func main() {
 	// unmarshal ship files
 	var unmarshal_wait_group sync.WaitGroup
 	lib.GoUnmarshalAllShipsFromPaths(&ships, fullshippaths, &unmarshal_wait_group)
-	unmarshal_wait_group.Wait()
 
-	nametoidx := lib.GetShipIdxFacMap(ships)
-	// mlogs, err := updateMatchLogs(drrtdatasheet, ships, nametoidx)
-	// if err != nil {
-	// 	slog.Error("Failed to update match logs for the first time.", "err", err)
-	// }
-		
 
 	var mlogs []*lib.DRRTStandardMatchLog
 	ranks := make(map[string]int)
+
+	var alliances []*rsmships.Fleet
+	if *isPlayoffs {
+		alliancefleet_paths, err := lib.GetJSONFilesSortedByModTime(playf_directory)
+		if err != nil {
+			slog.Error("Cannot get playoffs fleet paths.", "err", err)
+			exit_code = 1
+			return
+		}
+		fullalliancepaths := make([]string, len(alliancefleet_paths))
+		for i, path := range alliancefleet_paths {
+			fullshippaths[i] = filepath.Join(playf_directory, path)
+		}
+		slog.Info("Found paths for ship files.", "count", len(fullshippaths))
+		for i, path := range alliancefleet_paths {
+			slog.Debug("Playoffs alliance path", "path", path)
+			slog.Debug("Full Playoffs alliance path", "path", fullshippaths[i])
+		}
+		alliances = make([]*rsmships.Fleet, len(alliancefleet_paths))
+
+		lib.GoUnmarshalAllFleetsFromPaths(&alliances, fullalliancepaths, &unmarshal_wait_group)
+	}
+
+	unmarshal_wait_group.Wait()
+	nametoidx := lib.GetShipIdxFacMap(ships)
 	
+	playoffsstate := RequestLeft
+	playingalliances := make([]*rsmships.Fleet, 2)
 	// ASSUMPTION: you're running quals
 	// and you've already run the scheduler
 	OuterLoop:
@@ -195,19 +225,51 @@ func main() {
 		switch data {
 		case pipecmd_reload:
 			slog.Info("Recieved Reload command", "pipecmd", data)
-			mlogs, err = updateMatchLogs(*mlog_dir_arg, drrtdatasheet, ships, nametoidx)
-			if err != nil {
-				slog.Error("Failed to update match logs.", "err", err)
+			if !*isPlayoffs {
+				mlogs, err = updateMatchLogs(*mlog_dir_arg, drrtdatasheet, ships, nametoidx)
+				if err != nil {
+					slog.Error("Failed to update match logs.", "err", err)
+				}
+				ranks, err = drrtdatasheet.GetRanks()
+				if err != nil {
+					slog.Error("Failed to get ranks.", "err", err)
+				}
+				nextidxs := shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices)
+				lib.UpdateNextUpQualifications(*nextupSavePath, ships, nextidxs, mlogs, ranks)
+				lib.UpdateGameQualifications(*gameSavePath, ships, nextidxs, mlogs, ranks)
+				lib.UpdateVictoryQualifications(*victorySavePath, ships, mlogs, ranks)
+				slog.Info("Saved html templates", "pipecmd", data)
+			} else {
+				slog.Info("Request left alliance.", "pipecmd", data)
 			}
-			ranks, err = drrtdatasheet.GetRanks()
-			if err != nil {
-				slog.Error("Failed to get ranks.", "err", err)
+		case "1","2","3","4","5","6","7","8":
+			// this is an alliance number
+			slog.Info("Recieved alliance index command", "pipecmd", data)
+			if !*isPlayoffs {
+				continue
 			}
-			nextidxs := shipidxsfromSchedule(mlogs[len(mlogs)-1].MatchNumber, scheduleindices)
-			lib.UpdateNextUpQualifications(*nextupSavePath, ships, nextidxs, mlogs, ranks)
-			lib.UpdateGameQualifications(*gameSavePath, ships, nextidxs, mlogs, ranks)
-			lib.UpdateVictoryQualifications(*victorySavePath, ships, mlogs, ranks)
-			slog.Info("Saved html templates", "pipecmd", data)
+			idx := lib.Must(strconv.Atoi(data))
+			switch playoffsstate {
+			case RequestLeft:
+				playingalliances[0] = alliances[idx]
+				playoffsstate = RequestRight
+			case RequestRight:
+				playingalliances[1] = alliances[idx]
+				playoffsstate = RequestVictory
+			case RequestVictory:
+				lib.UpdateNextUpPlayoffs(*nextupSavePath, playingalliances, ranks, 8)
+				lib.UpdateGamePlayoffs(*gameSavePath, playingalliances, ranks, 8)
+				if idx == 1 {
+					lib.UpdateVictoryPlayoffs(*victorySavePath, playingalliances, ranks, 8, true)
+				} else {
+					lib.UpdateVictoryPlayoffs(*victorySavePath, playingalliances, ranks, 8, false)
+				}
+				slog.Info("Saved html templates", "pipecmd", data)
+
+				playoffsstate = RequestLeft
+			default:
+				fmt.Println(lib.ANSI_BOLD + lib.ANSI_FAIL + "Command \"" + data + "\" is an alliance index command, but i'm not ready for that." + lib.ANSI_RESET)
+			}
 		case pipecmd_stop:
 			fmt.Println(lib.ANSI_BOLD + lib.ANSI_WHITE + "Stopping." + lib.ANSI_RESET)
 			slog.Info("Recieved stop command", "pipecmd", data)
