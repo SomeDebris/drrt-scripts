@@ -77,7 +77,7 @@ func main() {
 	quals_directory := filepath.Join(*drrt_directory_arg, "Qualifications")
 	stags_directory := filepath.Join(*drrt_directory_arg, "Staging")
 	playf_directory := filepath.Join(*drrt_directory_arg, "Playoffs")
-	schej_directory := filepath.Join(*drrt_directory_arg, "schedules")
+	schej_directory := filepath.Join(*drrt_directory_arg, "schedule-files")
 
 	slog.Debug("Directories",
 		"ships",          ships_directory,
