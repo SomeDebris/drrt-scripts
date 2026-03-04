@@ -20,7 +20,7 @@ import (
 const (
 	SHEET_SCOPE          = `https://www.googleapis.com/auth/spreadsheets`
 	SHEET_SCOPE_RO       = `https://www.googleapis.com/auth/spreadsheets`
-	DRRT_SPREADSHEET_ID  = `1RTxlvsUHe6RXdOzsFxBWvxhul5pyJ0O2VaDVaVl-Uow`
+	DRRT_SPREADSHEET_ENV = `DRRT_SPREADSHEET_ID`
 	TOKEN_FNAME          = `token.json`
 	CREDENTIALS_FNAME    = `credentials_drrt.json`
 	RANGE_MATCH_SCHEDULE = `Calc!A1:F`
@@ -50,7 +50,7 @@ func NewDRRTDatasheet(id, matchschedulerange, shipentryrange, logrange, ranksran
 	p.RanksRange = ranksrange
 	srv, err := getSheetsService()
 	if err != nil {
-		slog.Warn("Failed to get google sheets service. Cannot assign value to this field.", "err", err)
+		slog.Error("Failed to get google sheets service. Cannot assign value to this field.", "err", err)
 		return p
 	}
 	p.Service = srv
@@ -58,7 +58,12 @@ func NewDRRTDatasheet(id, matchschedulerange, shipentryrange, logrange, ranksran
 }
 
 func NewDRRTDatasheetDefaults() *DRRTDatasheet {
-	return NewDRRTDatasheet(DRRT_SPREADSHEET_ID, RANGE_MATCH_SCHEDULE, RANGE_SHIP_ENTRY, RANGE_DATA_ENTRY, RANGE_RANKS)
+	// By default, exect enviromnemt variable DRRT_SPREADSHEET_ID
+	id := os.Getenv(DRRT_SPREADSHEET_ENV)
+	if id == "" {
+		slog.Error("DRRT spreadsheet ID environment variable does not exist.", "id", id, "var", DRRT_SPREADSHEET_ENV)
+	}
+	return NewDRRTDatasheet(id, RANGE_MATCH_SCHEDULE, RANGE_SHIP_ENTRY, RANGE_DATA_ENTRY, RANGE_RANKS)
 }
 
 
